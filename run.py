@@ -166,7 +166,7 @@ for run_number in range(run_number_total):
 				#  Links
 				{"Agent1": lambda l:l.agent1,
 				"Agent2": lambda l:l.agent2,
-				"Agent3": lambda l: l.trust
+				"Agent3": lambda l: l.aware
 				})
 
 		if AS_theory == 2 or PF_theory == 2:
@@ -205,7 +205,7 @@ for run_number in range(run_number_total):
 				#  Links
 				{"Agent1": lambda l:l.agent1,
 				"Agent2": lambda l:l.agent2,
-				"Agent3": lambda l: l.trust,
+				"Agent3": lambda l: l.aware,
 				},
 				# Teams AS
 				{"Lead": lambda c: c.lead.unique_id,
@@ -252,7 +252,7 @@ for run_number in range(run_number_total):
 				#  Links
 				{"Agent1": lambda l:l.agent1,
 				"Agent2": lambda l:l.agent2,
-				"Agent3": lambda l: l.trust,
+				"Agent3": lambda l: l.aware,
 				},
 				# Teams AS
 				{},

@@ -24,48 +24,48 @@ class Agent:
 			# if there are still resources left:
 			# First step: Check agents with less than 0.3
 			low_link_list = []
-			low_link_list_trust = []
+			low_link_list_aware = []
 			low_link = True
 			# Check if there are resources left or if there still low level links
 			while agents.resources_network > 0.0001 and low_link == True:
 				# print('Agent network resources: ' + str(agents.resources_network))
 				for links in link_list:
-					# finding all links related to this agent and with trust higher than 0 and lower than 0.3
-					if (links.agent1 == agents or links.agent2 == agents) and links.trust > 0 and links.trust < 0.3:
-						# print('Links list: ' + str(links) + ' with their trust: ' + str(links.trust))
+					# finding all links related to this agent and with aware higher than 0 and lower than 0.3
+					if (links.agent1 == agents or links.agent2 == agents) and links.aware > 0 and links.aware < 0.3:
+						# print('Links list: ' + str(links) + ' with their aware: ' + str(links.aware))
 						low_link_list.append(links)
-						low_link_list_trust.append(links.trust)
+						low_link_list_aware.append(links.aware)
 				# Make sure that the list is not 0
 				if len(low_link_list) > 0:
-					# print('Trust list: ' + str(low_link_list_trust))
-					index_min_trust = low_link_list_trust.index(min(low_link_list_trust))
-					# print('Chosen index: ' + str(index_min_trust))
-					# print(low_link_list[index_min_trust].trust)
-					# print('The link upgrade is link: ' + str(low_link_list[index_min_trust]) + ' with trust: ' + str(low_link_list[index_min_trust].trust))
-					# Calculating the change in trust depending on resources and affiliation weight
+					# print('Trust list: ' + str(low_link_list_aware))
+					index_min_aware = low_link_list_aware.index(min(low_link_list_aware))
+					# print('Chosen index: ' + str(index_min_aware))
+					# print(low_link_list[index_min_aware].aware)
+					# print('The link upgrade is link: ' + str(low_link_list[index_min_aware]) + ' with aware: ' + str(low_link_list[index_min_aware].aware))
+					# Calculating the change in aware depending on resources and affiliation weight
 					# Same affiliation
 					if links.agent1.affiliation == links.agent2.affiliation:
-						low_link_list[index_min_trust].trust += 0.04*agents.resources[0]
+						low_link_list[index_min_aware].aware += 0.04*agents.resources[0]
 					# Affiliation 1 and 2
 					if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
 				      (links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
-						low_link_list[index_min_trust].trust += 0.04*agents.resources[0]*affiliation_weights[0]
+						low_link_list[index_min_aware].aware += 0.04*agents.resources[0]*affiliation_weights[0]
 					# Affiliation 1 and 3
 					if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
 					  (links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
-						low_link_list[index_min_trust].trust += 0.04*agents.resources[0]*affiliation_weights[1]
+						low_link_list[index_min_aware].aware += 0.04*agents.resources[0]*affiliation_weights[1]
 					# Affiliation 2 and 3
 					if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
 					  (links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
-						low_link_list[index_min_trust].trust += 0.04*agents.resources[0]*affiliation_weights[2]
+						low_link_list[index_min_aware].aware += 0.04*agents.resources[0]*affiliation_weights[2]
 					agents.resources_network -= 0.04*agents.resources[0]
 					# print('        ')
 					# print('        ')
 					low_link_list = []
-					low_link_list_trust = []
+					low_link_list_aware = []
 				# if it is, stop the loop
 				else:
-					# print('Loop stops now because there is no more low trust.')
+					# print('Loop stops now because there is no more low aware.')
 					low_link = False
 			# 
 			# Second step: Make new links:
@@ -76,56 +76,56 @@ class Agent:
 				shuffled_list_links = link_list
 				random.shuffle(shuffled_list_links)
 				for links in shuffled_list_links:
-					if (links.agent1 == agents or links.agent2 == agents) and links.trust == 0:
+					if (links.agent1 == agents or links.agent2 == agents) and links.aware == 0:
 						new_link_list.append(links)
 				if len(new_link_list) > 0:
 					# Same affiliation
 					if links.agent1.affiliation == links.agent2.affiliation:
-						random.choice(new_link_list).trust += 0.04*agents.resources[0]
+						random.choice(new_link_list).aware += 0.04*agents.resources[0]
 					# Affiliation 1 and 2
 					if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
 				      (links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
-						random.choice(new_link_list).trust += 0.04*agents.resources[0]*affiliation_weights[0]
+						random.choice(new_link_list).aware += 0.04*agents.resources[0]*affiliation_weights[0]
 					# Affiliation 1 and 3
 					if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
 					  (links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
-						random.choice(new_link_list).trust += 0.04*agents.resources[0]*affiliation_weights[1]
+						random.choice(new_link_list).aware += 0.04*agents.resources[0]*affiliation_weights[1]
 					# Affiliation 2 and 3
 					if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
 					  (links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
-						random.choice(new_link_list).trust += 0.04*agents.resources[0]*affiliation_weights[2]
+						random.choice(new_link_list).aware += 0.04*agents.resources[0]*affiliation_weights[2]
 					agents.resources_network -= 0.04*agents.resources[0]
 					new_link_list = []
 				else:
-						# print('Loop stops now because there is no more 0 trust links.')
+						# print('Loop stops now because there is no more 0 aware links.')
 					new_link = False
 
-			# Third step: Raise trust of remaining links:
+			# Third step: Raise aware of remaining links:
 			normal_link_list = []
 			normal_link = True
 			while agents.resources_network > 0.0001 and normal_link == True:
 				for links in link_list:
-					if (links.agent1 == agents or links.agent2 == agents) and links.trust <= 1 and links.trust != -1:
+					if (links.agent1 == agents or links.agent2 == agents) and links.aware <= 1 and links.aware != -1:
 						normal_link_list.append(links)
 				if len(normal_link_list) > 0:
 					normal_link_to_change = random.choice(normal_link_list)
 					if links.agent1.affiliation == links.agent2.affiliation:
-						normal_link_to_change.trust += 0.04*agents.resources[0]
+						normal_link_to_change.aware += 0.04*agents.resources[0]
 					# Affiliation 1 and 2
 					if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
 				      (links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
-						normal_link_to_change.trust += 0.04*agents.resources[0]*affiliation_weights[0]
+						normal_link_to_change.aware += 0.04*agents.resources[0]*affiliation_weights[0]
 					# Affiliation 1 and 3
 					if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
 					  (links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
-						normal_link_to_change.trust += 0.04*agents.resources[0]*affiliation_weights[1]
+						normal_link_to_change.aware += 0.04*agents.resources[0]*affiliation_weights[1]
 					# Affiliation 2 and 3
 					if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
 					  (links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
-						normal_link_to_change.trust += 0.04*agents.resources[0]*affiliation_weights[2]
-					# Make sure that no link will have a trust level higher than 1
-					if normal_link_to_change.trust > 1:
-						normal_link_to_change.trust = 1
+						normal_link_to_change.aware += 0.04*agents.resources[0]*affiliation_weights[2]
+					# Make sure that no link will have a aware level higher than 1
+					if normal_link_to_change.aware > 1:
+						normal_link_to_change.aware = 1
 					agents.resources_network -= 0.04*agents.resources[0]
 					normal_link_list = []
 				else:
@@ -136,7 +136,7 @@ class Agent:
 
 			# First step: Check agents with more than 0.7 and similar beliefs
 			high_link_list = []
-			high_link_list_trust = []
+			high_link_list_aware = []
 			high_link = True
 			# Check if there are resources left or if there still high level links
 			while agents.resources_network > 0.0001 and high_link == True:
@@ -144,50 +144,50 @@ class Agent:
 					# finding all links related to this agent and with lower than than 0.7 and with similar belief:
 					# similar belief is defined as if one of the two agents has their selected problem with 0.2 of the other.
 					if AS_theory != 2:
-						if (links.agent1 == agents or links.agent2 == agents) and links.trust > 0.7 and links.trust <= 1 and \
+						if (links.agent1 == agents or links.agent2 == agents) and links.aware > 0.7 and links.aware <= 1 and \
 						(abs(links.agent1.belieftree[0][links.agent1.select_as_issue][1] - links.agent1.belieftree[0][links.agent2.select_as_issue][1]) < 0.2 or 
 						  abs(links.agent2.belieftree[0][links.agent1.select_as_issue][1] - links.agent2.belieftree[0][links.agent2.select_as_issue][1]) < 0.2):
 							high_link_list.append(links)
-							high_link_list_trust.append(links.trust)	
+							high_link_list_aware.append(links.aware)	
 					if AS_theory == 2:			
-						if (links.agent1 == agents or links.agent2 == agents) and links.trust > 0.7 and links.trust <= 1 and \
+						if (links.agent1 == agents or links.agent2 == agents) and links.aware > 0.7 and links.aware <= 1 and \
 						(abs(links.agent1.belieftree[0][links.agent1.select_problem_3S_as][1] - links.agent1.belieftree[0][links.agent2.select_problem_3S_as][1]) < 0.2 or 
 						  abs(links.agent2.belieftree[0][links.agent1.select_problem_3S_as][1] - links.agent2.belieftree[0][links.agent2.select_problem_3S_as][1]) < 0.2):
 							high_link_list.append(links)
-							high_link_list_trust.append(links.trust)
+							high_link_list_aware.append(links.aware)
 				# Make sure that the list is not 0
 				if len(high_link_list) > 0:
-					index_min_trust = high_link_list_trust.index(min(high_link_list_trust))
-					# Calculating the change in trust depending on resources and affiliation weight
+					index_min_aware = high_link_list_aware.index(min(high_link_list_aware))
+					# Calculating the change in aware depending on resources and affiliation weight
 					# Same affiliation
 					if links.agent1.affiliation == links.agent2.affiliation:
 						# print('Same affiliation')
-						high_link_list[index_min_trust].trust += 0.04*agents.resources[0]
+						high_link_list[index_min_aware].aware += 0.04*agents.resources[0]
 					# Affiliation 1 and 2
 					if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
 					  (links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
 						# print('Affiliation 1 and 2')
-						high_link_list[index_min_trust].trust += 0.04*agents.resources[0]*affiliation_weights[0]
+						high_link_list[index_min_aware].aware += 0.04*agents.resources[0]*affiliation_weights[0]
 					# Affiliation 1 and 3
 					if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
 					  (links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
 					# print(' Affiliation 1 and 3')
-						high_link_list[index_min_trust].trust += 0.04*agents.resources[0]*affiliation_weights[1]
+						high_link_list[index_min_aware].aware += 0.04*agents.resources[0]*affiliation_weights[1]
 						# Affiliation 2 and 3
 					if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
 					  (links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
 						# print('Affiliation 2 and 3')
-						high_link_list[index_min_trust].trust += 0.04*agents.resources[0]*affiliation_weights[2]
+						high_link_list[index_min_aware].aware += 0.04*agents.resources[0]*affiliation_weights[2]
 					# Check that it is smaller than 1
-					if high_link_list[index_min_trust].trust > 1:
-						high_link_list[index_min_trust].trust = 1
+					if high_link_list[index_min_aware].aware > 1:
+						high_link_list[index_min_aware].aware = 1
 					agents.resources_network -= 0.04*agents.resources[0]
-					# print(high_link_list[index_min_trust].trust)
+					# print(high_link_list[index_min_aware].aware)
 					high_link_list = []
-					high_link_list_trust = []
+					high_link_list_aware = []
 				# if it is, stop the loop
 				else:
-					# print('Loop stops now because there is no more low trust.')
+					# print('Loop stops now because there is no more low aware.')
 					high_link = False
 
 			# Second step: Check agents with that are 0 and similar beliefs
@@ -199,53 +199,53 @@ class Agent:
 				shuffled_list_links = link_list
 				random.shuffle(shuffled_list_links)
 				for links in shuffled_list_links:
-					# finding all links related to this agent and with trust of 0 and with similar belief:
+					# finding all links related to this agent and with aware of 0 and with similar belief:
 					# similar belief is defined as if one of the two agents has their selected problem with 0.2 of the other.
 					if AS_theory != 2:
-						if (links.agent1 == agents or links.agent2 == agents) and links.trust == 0 and \
+						if (links.agent1 == agents or links.agent2 == agents) and links.aware == 0 and \
 						(abs(links.agent1.belieftree[0][links.agent1.select_as_issue][1] - links.agent1.belieftree[0][links.agent2.select_as_issue][1]) < 0.2 or 
 						  abs(links.agent2.belieftree[0][links.agent1.select_as_issue][1] - links.agent2.belieftree[0][links.agent2.select_as_issue][1]) < 0.2):
-							# print(str(links) + ' with their trust: ' + str(links.trust))
+							# print(str(links) + ' with their aware: ' + str(links.aware))
 							new_link_list.append(links)
 					if AS_theory == 2:
-						if (links.agent1 == agents or links.agent2 == agents) and links.trust == 0 and \
+						if (links.agent1 == agents or links.agent2 == agents) and links.aware == 0 and \
 						(abs(links.agent1.belieftree[0][links.agent1.select_problem_3S_as][1] - links.agent1.belieftree[0][links.agent2.select_problem_3S_as][1]) < 0.2 or 
 						  abs(links.agent2.belieftree[0][links.agent1.select_problem_3S_as][1] - links.agent2.belieftree[0][links.agent2.select_problem_3S_as][1]) < 0.2):
-							# print(str(links) + ' with their trust: ' + str(links.trust))
+							# print(str(links) + ' with their aware: ' + str(links.aware))
 							new_link_list.append(links)
 						
 				# Make sure that the list is not 0
 				if len(new_link_list) > 0:
-					# Calculating the change in trust depending on resources and affiliation weight
+					# Calculating the change in aware depending on resources and affiliation weight
 					# Same affiliation
 					if links.agent1.affiliation == links.agent2.affiliation:
 						# print('Same affiliation')
-						random.choice(new_link_list).trust += 0.04*agents.resources[0]
+						random.choice(new_link_list).aware += 0.04*agents.resources[0]
 					# Affiliation 1 and 2
 					if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
 					  (links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
 						# print('Affiliation 1 and 2')
-						random.choice(new_link_list).trust += 0.04*agents.resources[0]*affiliation_weights[0]
+						random.choice(new_link_list).aware += 0.04*agents.resources[0]*affiliation_weights[0]
 					# Affiliation 1 and 3
 					if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
 					  (links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
 						# print(' Affiliation 1 and 3')
-						random.choice(new_link_list).trust += 0.04*agents.resources[0]*affiliation_weights[1]
+						random.choice(new_link_list).aware += 0.04*agents.resources[0]*affiliation_weights[1]
 					# Affiliation 2 and 3
 					if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
 					  (links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
 						# print('Affiliation 2 and 3')
-						random.choice(new_link_list).trust += 0.04*agents.resources[0]*affiliation_weights[2]
+						random.choice(new_link_list).aware += 0.04*agents.resources[0]*affiliation_weights[2]
 					agents.resources_network -= 0.04*agents.resources[0]
 					new_link_list = []
 				# if it is, stop the loop
 				else:
-					# print('Loop stops now because there is no more low trust.')
+					# print('Loop stops now because there is no more low aware.')
 					new_link = False
 				
-			# Third step: Raise agents with low trust
+			# Third step: Raise agents with low aware
 			medium_link_list = []
-			medium_link_list_trust = []
+			medium_link_list_aware = []
 			medium_link = True
 			# Check if there are resources left or if there still high level links
 			while agents.resources_network > 0.0001 and medium_link == True:
@@ -253,42 +253,42 @@ class Agent:
 				for links in link_list:
 					# finding all links related to this agent and with lower than than 0.7 and with similar belief:
 					# similar belief is defined as if one of the two agents has their selected problem with 0.2 of the other.
-					if (links.agent1 == agents or links.agent2 == agents) and links.trust < 0.7 and links.trust > 0:
-						# print(str(links) + ' with their trust: ' + str(links.trust))
+					if (links.agent1 == agents or links.agent2 == agents) and links.aware < 0.7 and links.aware > 0:
+						# print(str(links) + ' with their aware: ' + str(links.aware))
 						medium_link_list.append(links)
-						medium_link_list_trust.append(links.trust)
+						medium_link_list_aware.append(links.aware)
 				# print(medium_link_list)
 						
 				# Make sure that the list is not 0
 				if len(medium_link_list) > 0:
-					index_min_trust = medium_link_list_trust.index(min(medium_link_list_trust))
-					# Calculating the change in trust depending on resources and affiliation weight
+					index_min_aware = medium_link_list_aware.index(min(medium_link_list_aware))
+					# Calculating the change in aware depending on resources and affiliation weight
 					# Same affiliation
 					if links.agent1.affiliation == links.agent2.affiliation:
 						# print('Same affiliation')
-						medium_link_list[index_min_trust].trust += 0.04*agents.resources[0]
+						medium_link_list[index_min_aware].aware += 0.04*agents.resources[0]
 					# Affiliation 1 and 2
 					if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
 					  (links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
 						# print('Affiliation 1 and 2')
-						medium_link_list[index_min_trust].trust += 0.04*agents.resources[0]*affiliation_weights[0]
+						medium_link_list[index_min_aware].aware += 0.04*agents.resources[0]*affiliation_weights[0]
 					# Affiliation 1 and 3
 					if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
 					  (links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
 						# print(' Affiliation 1 and 3')
-						medium_link_list[index_min_trust].trust += 0.04*agents.resources[0]*affiliation_weights[1]
+						medium_link_list[index_min_aware].aware += 0.04*agents.resources[0]*affiliation_weights[1]
 					# Affiliation 2 and 3
 					if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
 					  (links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
 						# print('Affiliation 2 and 3')
-						medium_link_list[index_min_trust].trust += 0.04*agents.resources[0]*affiliation_weights[2]
+						medium_link_list[index_min_aware].aware += 0.04*agents.resources[0]*affiliation_weights[2]
 					agents.resources_network -= 0.04*agents.resources[0]
-					# print('Tadah! ' + str(medium_link_list[index_min_trust].trust))
+					# print('Tadah! ' + str(medium_link_list[index_min_aware].aware))
 					medium_link_list = []
-					medium_link_list_trust = []
+					medium_link_list_aware = []
 				# if it is, stop the loop
 				else:
-					# print('Loop stops now because there is no more low trust.')
+					# print('Loop stops now because there is no more low aware.')
 					medium_link = False
 
 			# Fourth step: Check agents with that are 0 and similar beliefs
@@ -300,39 +300,39 @@ class Agent:
 				shuffled_list_links = link_list
 				random.shuffle(shuffled_list_links)
 				for links in shuffled_list_links:
-					# finding all links related to this agent and with trust of 0:
+					# finding all links related to this agent and with aware of 0:
 					# similar belief is defined as if one of the two agents has their selected problem with 0.2 of the other.
-					if (links.agent1 == agents or links.agent2 == agents) and links.trust == 0:
-						# print(str(links) + ' with their trust: ' + str(links.trust))
+					if (links.agent1 == agents or links.agent2 == agents) and links.aware == 0:
+						# print(str(links) + ' with their aware: ' + str(links.aware))
 						new2_link_list.append(links)
 						
 				# Make sure that the list is not 0
 				if len(new2_link_list) > 0:
-					# Calculating the change in trust depending on resources and affiliation weight
+					# Calculating the change in aware depending on resources and affiliation weight
 					# Same affiliation
 					if links.agent1.affiliation == links.agent2.affiliation:
 						# print('Same affiliation')
-						random.choice(new2_link_list).trust += 0.04*agents.resources[0]
+						random.choice(new2_link_list).aware += 0.04*agents.resources[0]
 					# Affiliation 1 and 2
 					if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
 					  (links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
 						# print('Affiliation 1 and 2')
-						random.choice(new2_link_list).trust += 0.04*agents.resources[0]*affiliation_weights[0]
+						random.choice(new2_link_list).aware += 0.04*agents.resources[0]*affiliation_weights[0]
 					# Affiliation 1 and 3
 					if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
 					  (links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
 						# print(' Affiliation 1 and 3')
-						random.choice(new2_link_list).trust += 0.04*agents.resources[0]*affiliation_weights[1]
+						random.choice(new2_link_list).aware += 0.04*agents.resources[0]*affiliation_weights[1]
 					# Affiliation 2 and 3
 					if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
 					  (links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
 						# print('Affiliation 2 and 3')
-						random.choice(new2_link_list).trust += 0.04*agents.resources[0]*affiliation_weights[2]
+						random.choice(new2_link_list).aware += 0.04*agents.resources[0]*affiliation_weights[2]
 					agents.resources_network -= 0.04*agents.resources[0]
 					new2_link_list = []
 				# if it is, stop the loop
 				else:
-					# print('Loop stops now because there is no more low trust.')
+					# print('Loop stops now because there is no more low aware.')
 					new2_link = False
 
 	def network_upkeep_pf(self, agents, link_list, affiliation_weights, agenda_as_issue, agenda_prob_3S_as, PF_theory):
@@ -343,48 +343,48 @@ class Agent:
 			# if there are still resources left:
 			# First step: Check agents with less than 0.3
 			low_link_list = []
-			low_link_list_trust = []
+			low_link_list_aware = []
 			low_link = True
 			# Check if there are resources left or if there still low level links
 			while agents.resources_network > 0.0001 and low_link == True:
 				# print('Agent network resources: ' + str(agents.resources_network))
 				for links in link_list:
-					# finding all links related to this agent and with trust higher than 0 and lower than 0.3
-					if (links.agent1 == agents or links.agent2 == agents) and links.trust > 0 and links.trust < 0.3:
-						# print('Links list: ' + str(links) + ' with their trust: ' + str(links.trust))
+					# finding all links related to this agent and with aware higher than 0 and lower than 0.3
+					if (links.agent1 == agents or links.agent2 == agents) and links.aware > 0 and links.aware < 0.3:
+						# print('Links list: ' + str(links) + ' with their aware: ' + str(links.aware))
 						low_link_list.append(links)
-						low_link_list_trust.append(links.trust)
+						low_link_list_aware.append(links.aware)
 				# Make sure that the list is not 0
 				if len(low_link_list) > 0:
-					# print('Trust list: ' + str(low_link_list_trust))
-					index_min_trust = low_link_list_trust.index(min(low_link_list_trust))
-					# print('Chosen index: ' + str(index_min_trust))
-					# print(low_link_list[index_min_trust].trust)
-					# print('The link upgrade is link: ' + str(low_link_list[index_min_trust]) + ' with trust: ' + str(low_link_list[index_min_trust].trust))
-					# Calculating the change in trust depending on resources and affiliation weight
+					# print('Trust list: ' + str(low_link_list_aware))
+					index_min_aware = low_link_list_aware.index(min(low_link_list_aware))
+					# print('Chosen index: ' + str(index_min_aware))
+					# print(low_link_list[index_min_aware].aware)
+					# print('The link upgrade is link: ' + str(low_link_list[index_min_aware]) + ' with aware: ' + str(low_link_list[index_min_aware].aware))
+					# Calculating the change in aware depending on resources and affiliation weight
 					# Same affiliation
 					if links.agent1.affiliation == links.agent2.affiliation:
-						low_link_list[index_min_trust].trust += 0.04*agents.resources[0]
+						low_link_list[index_min_aware].aware += 0.04*agents.resources[0]
 					# Affiliation 1 and 2
 					if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
 				      (links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
-						low_link_list[index_min_trust].trust += 0.04*agents.resources[0]*affiliation_weights[0]
+						low_link_list[index_min_aware].aware += 0.04*agents.resources[0]*affiliation_weights[0]
 					# Affiliation 1 and 3
 					if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
 					  (links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
-						low_link_list[index_min_trust].trust += 0.04*agents.resources[0]*affiliation_weights[1]
+						low_link_list[index_min_aware].aware += 0.04*agents.resources[0]*affiliation_weights[1]
 					# Affiliation 2 and 3
 					if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
 					  (links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
-						low_link_list[index_min_trust].trust += 0.04*agents.resources[0]*affiliation_weights[2]
+						low_link_list[index_min_aware].aware += 0.04*agents.resources[0]*affiliation_weights[2]
 					agents.resources_network -= 0.04*agents.resources[0]
 					# print('        ')
 					# print('        ')
 					low_link_list = []
-					low_link_list_trust = []
+					low_link_list_aware = []
 				# if it is, stop the loop
 				else:
-					# print('Loop stops now because there is no more low trust.')
+					# print('Loop stops now because there is no more low aware.')
 					low_link = False
 			# 
 			# Second step: Make new links:
@@ -395,56 +395,56 @@ class Agent:
 				shuffled_list_links = link_list
 				random.shuffle(shuffled_list_links)
 				for links in shuffled_list_links:
-					if (links.agent1 == agents or links.agent2 == agents) and links.trust == 0:
+					if (links.agent1 == agents or links.agent2 == agents) and links.aware == 0:
 						new_link_list.append(links)
 				if len(new_link_list) > 0:
 					# Same affiliation
 					if links.agent1.affiliation == links.agent2.affiliation:
-						random.choice(new_link_list).trust += 0.04*agents.resources[0]
+						random.choice(new_link_list).aware += 0.04*agents.resources[0]
 					# Affiliation 1 and 2
 					if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
 				      (links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
-						random.choice(new_link_list).trust += 0.04*agents.resources[0]*affiliation_weights[0]
+						random.choice(new_link_list).aware += 0.04*agents.resources[0]*affiliation_weights[0]
 					# Affiliation 1 and 3
 					if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
 					  (links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
-						random.choice(new_link_list).trust += 0.04*agents.resources[0]*affiliation_weights[1]
+						random.choice(new_link_list).aware += 0.04*agents.resources[0]*affiliation_weights[1]
 					# Affiliation 2 and 3
 					if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
 					  (links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
-						random.choice(new_link_list).trust += 0.04*agents.resources[0]*affiliation_weights[2]
+						random.choice(new_link_list).aware += 0.04*agents.resources[0]*affiliation_weights[2]
 					agents.resources_network -= 0.04*agents.resources[0]
 					new_link_list = []
 				else:
-						# print('Loop stops now because there is no more 0 trust links.')
+						# print('Loop stops now because there is no more 0 aware links.')
 					new_link = False
 
-			# Third step: Raise trust of remaining links:
+			# Third step: Raise aware of remaining links:
 			normal_link_list = []
 			normal_link = True
 			while agents.resources_network > 0.0001 and normal_link == True:
 				for links in link_list:
-					if (links.agent1 == agents or links.agent2 == agents) and links.trust <= 1 and links.trust != -1:
+					if (links.agent1 == agents or links.agent2 == agents) and links.aware <= 1 and links.aware != -1:
 						normal_link_list.append(links)
 				if len(normal_link_list) > 0:
 					normal_link_to_change = random.choice(normal_link_list)
 					if links.agent1.affiliation == links.agent2.affiliation:
-						normal_link_to_change.trust += 0.04*agents.resources[0]
+						normal_link_to_change.aware += 0.04*agents.resources[0]
 					# Affiliation 1 and 2
 					if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
 				      (links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
-						normal_link_to_change.trust += 0.04*agents.resources[0]*affiliation_weights[0]
+						normal_link_to_change.aware += 0.04*agents.resources[0]*affiliation_weights[0]
 					# Affiliation 1 and 3
 					if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
 					  (links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
-						normal_link_to_change.trust += 0.04*agents.resources[0]*affiliation_weights[1]
+						normal_link_to_change.aware += 0.04*agents.resources[0]*affiliation_weights[1]
 					# Affiliation 2 and 3
 					if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
 					  (links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
-						normal_link_to_change.trust += 0.04*agents.resources[0]*affiliation_weights[2]
-					# Make sure that no link will have a trust level higher than 1
-					if normal_link_to_change.trust > 1:
-						normal_link_to_change.trust = 1
+						normal_link_to_change.aware += 0.04*agents.resources[0]*affiliation_weights[2]
+					# Make sure that no link will have a aware level higher than 1
+					if normal_link_to_change.aware > 1:
+						normal_link_to_change.aware = 1
 					agents.resources_network -= 0.04*agents.resources[0]
 					normal_link_list = []
 				else:
@@ -461,51 +461,51 @@ class Agent:
 
 			# First step: Check agents with more than 0.7 and similar beliefs
 			high_link_list = []
-			high_link_list_trust = []
+			high_link_list_aware = []
 			high_link = True
 			# Check if there are resources left or if there still high level links
 			while agents.resources_network > 0.0001 and high_link == True:
 				for links in link_list:
 					# finding all links related to this agent and with lower than than 0.7 and with similar belief:
 					# similar belief is defined as if one of the two agents has their selected problem with 0.2 of the other.
-					if (links.agent1 == agents or links.agent2 == agents) and links.trust > 0.7 and links.trust <= 1 and \
+					if (links.agent1 == agents or links.agent2 == agents) and links.aware > 0.7 and links.aware <= 1 and \
 					(abs(links.agent1.belieftree[0][same_belief_issue][1] - links.agent1.belieftree[0][same_belief_issue][1]) < 0.2 or 
 					  abs(links.agent2.belieftree[0][same_belief_issue][1] - links.agent2.belieftree[0][same_belief_issue][1]) < 0.2):
 						high_link_list.append(links)
-						high_link_list_trust.append(links.trust)					
+						high_link_list_aware.append(links.aware)					
 				# Make sure that the list is not 0
 				if len(high_link_list) > 0:
-					index_min_trust = high_link_list_trust.index(min(high_link_list_trust))
-					# Calculating the change in trust depending on resources and affiliation weight
+					index_min_aware = high_link_list_aware.index(min(high_link_list_aware))
+					# Calculating the change in aware depending on resources and affiliation weight
 					# Same affiliation
 					if links.agent1.affiliation == links.agent2.affiliation:
 						# print('Same affiliation')
-						high_link_list[index_min_trust].trust += 0.04*agents.resources[0]
+						high_link_list[index_min_aware].aware += 0.04*agents.resources[0]
 					# Affiliation 1 and 2
 					if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
 					  (links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
 						# print('Affiliation 1 and 2')
-						high_link_list[index_min_trust].trust += 0.04*agents.resources[0]*affiliation_weights[0]
+						high_link_list[index_min_aware].aware += 0.04*agents.resources[0]*affiliation_weights[0]
 					# Affiliation 1 and 3
 					if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
 					  (links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
 					# print(' Affiliation 1 and 3')
-						high_link_list[index_min_trust].trust += 0.04*agents.resources[0]*affiliation_weights[1]
+						high_link_list[index_min_aware].aware += 0.04*agents.resources[0]*affiliation_weights[1]
 						# Affiliation 2 and 3
 					if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
 					  (links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
 						# print('Affiliation 2 and 3')
-						high_link_list[index_min_trust].trust += 0.04*agents.resources[0]*affiliation_weights[2]
+						high_link_list[index_min_aware].aware += 0.04*agents.resources[0]*affiliation_weights[2]
 					# Check that it is smaller than 1
-					if high_link_list[index_min_trust].trust > 1:
-						high_link_list[index_min_trust].trust = 1
+					if high_link_list[index_min_aware].aware > 1:
+						high_link_list[index_min_aware].aware = 1
 					agents.resources_network -= 0.04*agents.resources[0]
-					# print(high_link_list[index_min_trust].trust)
+					# print(high_link_list[index_min_aware].aware)
 					high_link_list = []
-					high_link_list_trust = []
+					high_link_list_aware = []
 				# if it is, stop the loop
 				else:
-					# print('Loop stops now because there is no more low trust.')
+					# print('Loop stops now because there is no more low aware.')
 					high_link = False
 
 			# Second step: Check agents with that are 0 and similar beliefs
@@ -517,46 +517,46 @@ class Agent:
 				shuffled_list_links = link_list
 				random.shuffle(shuffled_list_links)
 				for links in shuffled_list_links:
-					# finding all links related to this agent and with trust of 0 and with similar belief:
+					# finding all links related to this agent and with aware of 0 and with similar belief:
 					# similar belief is defined as if one of the two agents has their selected problem with 0.2 of the other.
-					if (links.agent1 == agents or links.agent2 == agents) and links.trust == 0 and \
+					if (links.agent1 == agents or links.agent2 == agents) and links.aware == 0 and \
 					(abs(links.agent1.belieftree[0][same_belief_issue][1] - links.agent1.belieftree[0][same_belief_issue][1]) < 0.2 or 
 					  abs(links.agent2.belieftree[0][same_belief_issue][1] - links.agent2.belieftree[0][same_belief_issue][1]) < 0.2):
-						# print(str(links) + ' with their trust: ' + str(links.trust))
+						# print(str(links) + ' with their aware: ' + str(links.aware))
 						new_link_list.append(links)
 						
 				# Make sure that the list is not 0
 				if len(new_link_list) > 0:
-					# Calculating the change in trust depending on resources and affiliation weight
+					# Calculating the change in aware depending on resources and affiliation weight
 					# Same affiliation
 					if links.agent1.affiliation == links.agent2.affiliation:
 						# print('Same affiliation')
-						random.choice(new_link_list).trust += 0.04*agents.resources[0]
+						random.choice(new_link_list).aware += 0.04*agents.resources[0]
 					# Affiliation 1 and 2
 					if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
 					  (links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
 						# print('Affiliation 1 and 2')
-						random.choice(new_link_list).trust += 0.04*agents.resources[0]*affiliation_weights[0]
+						random.choice(new_link_list).aware += 0.04*agents.resources[0]*affiliation_weights[0]
 					# Affiliation 1 and 3
 					if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
 					  (links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
 						# print(' Affiliation 1 and 3')
-						random.choice(new_link_list).trust += 0.04*agents.resources[0]*affiliation_weights[1]
+						random.choice(new_link_list).aware += 0.04*agents.resources[0]*affiliation_weights[1]
 					# Affiliation 2 and 3
 					if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
 					  (links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
 						# print('Affiliation 2 and 3')
-						random.choice(new_link_list).trust += 0.04*agents.resources[0]*affiliation_weights[2]
+						random.choice(new_link_list).aware += 0.04*agents.resources[0]*affiliation_weights[2]
 					agents.resources_network -= 0.04*agents.resources[0]
 					new_link_list = []
 				# if it is, stop the loop
 				else:
-					# print('Loop stops now because there is no more low trust.')
+					# print('Loop stops now because there is no more low aware.')
 					new_link = False
 				
-			# Third step: Raise agents with low trust
+			# Third step: Raise agents with low aware
 			medium_link_list = []
-			medium_link_list_trust = []
+			medium_link_list_aware = []
 			medium_link = True
 			# Check if there are resources left or if there still high level links
 			while agents.resources_network > 0.0001 and medium_link == True:
@@ -564,42 +564,42 @@ class Agent:
 				for links in link_list:
 					# finding all links related to this agent and with lower than than 0.7 and with similar belief:
 					# similar belief is defined as if one of the two agents has their selected problem with 0.2 of the other.
-					if (links.agent1 == agents or links.agent2 == agents) and links.trust < 0.7 and links.trust > 0:
-						# print(str(links) + ' with their trust: ' + str(links.trust))
+					if (links.agent1 == agents or links.agent2 == agents) and links.aware < 0.7 and links.aware > 0:
+						# print(str(links) + ' with their aware: ' + str(links.aware))
 						medium_link_list.append(links)
-						medium_link_list_trust.append(links.trust)
+						medium_link_list_aware.append(links.aware)
 				# print(medium_link_list)
 						
 				# Make sure that the list is not 0
 				if len(medium_link_list) > 0:
-					index_min_trust = medium_link_list_trust.index(min(medium_link_list_trust))
-					# Calculating the change in trust depending on resources and affiliation weight
+					index_min_aware = medium_link_list_aware.index(min(medium_link_list_aware))
+					# Calculating the change in aware depending on resources and affiliation weight
 					# Same affiliation
 					if links.agent1.affiliation == links.agent2.affiliation:
 						# print('Same affiliation')
-						medium_link_list[index_min_trust].trust += 0.04*agents.resources[0]
+						medium_link_list[index_min_aware].aware += 0.04*agents.resources[0]
 					# Affiliation 1 and 2
 					if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
 					  (links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
 						# print('Affiliation 1 and 2')
-						medium_link_list[index_min_trust].trust += 0.04*agents.resources[0]*affiliation_weights[0]
+						medium_link_list[index_min_aware].aware += 0.04*agents.resources[0]*affiliation_weights[0]
 					# Affiliation 1 and 3
 					if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
 					  (links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
 						# print(' Affiliation 1 and 3')
-						medium_link_list[index_min_trust].trust += 0.04*agents.resources[0]*affiliation_weights[1]
+						medium_link_list[index_min_aware].aware += 0.04*agents.resources[0]*affiliation_weights[1]
 					# Affiliation 2 and 3
 					if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
 					  (links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
 						# print('Affiliation 2 and 3')
-						medium_link_list[index_min_trust].trust += 0.04*agents.resources[0]*affiliation_weights[2]
+						medium_link_list[index_min_aware].aware += 0.04*agents.resources[0]*affiliation_weights[2]
 					agents.resources_network -= 0.04*agents.resources[0]
-					# print('Tadah! ' + str(medium_link_list[index_min_trust].trust))
+					# print('Tadah! ' + str(medium_link_list[index_min_aware].aware))
 					medium_link_list = []
-					medium_link_list_trust = []
+					medium_link_list_aware = []
 				# if it is, stop the loop
 				else:
-					# print('Loop stops now because there is no more low trust.')
+					# print('Loop stops now because there is no more low aware.')
 					medium_link = False
 
 			# Fourth step: Check agents with that are 0 and similar beliefs
@@ -611,39 +611,39 @@ class Agent:
 				shuffled_list_links = link_list
 				random.shuffle(shuffled_list_links)
 				for links in shuffled_list_links:
-					# finding all links related to this agent and with trust of 0:
+					# finding all links related to this agent and with aware of 0:
 					# similar belief is defined as if one of the two agents has their selected problem with 0.2 of the other.
-					if (links.agent1 == agents or links.agent2 == agents) and links.trust == 0:
-						# print(str(links) + ' with their trust: ' + str(links.trust))
+					if (links.agent1 == agents or links.agent2 == agents) and links.aware == 0:
+						# print(str(links) + ' with their aware: ' + str(links.aware))
 						new2_link_list.append(links)
 						
 				# Make sure that the list is not 0
 				if len(new2_link_list) > 0:
-					# Calculating the change in trust depending on resources and affiliation weight
+					# Calculating the change in aware depending on resources and affiliation weight
 					# Same affiliation
 					if links.agent1.affiliation == links.agent2.affiliation:
 						# print('Same affiliation')
-						random.choice(new2_link_list).trust += 0.04*agents.resources[0]
+						random.choice(new2_link_list).aware += 0.04*agents.resources[0]
 					# Affiliation 1 and 2
 					if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
 					  (links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
 						# print('Affiliation 1 and 2')
-						random.choice(new2_link_list).trust += 0.04*agents.resources[0]*affiliation_weights[0]
+						random.choice(new2_link_list).aware += 0.04*agents.resources[0]*affiliation_weights[0]
 					# Affiliation 1 and 3
 					if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
 					  (links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
 						# print(' Affiliation 1 and 3')
-						random.choice(new2_link_list).trust += 0.04*agents.resources[0]*affiliation_weights[1]
+						random.choice(new2_link_list).aware += 0.04*agents.resources[0]*affiliation_weights[1]
 					# Affiliation 2 and 3
 					if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
 					  (links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
 						# print('Affiliation 2 and 3')
-						random.choice(new2_link_list).trust += 0.04*agents.resources[0]*affiliation_weights[2]
+						random.choice(new2_link_list).aware += 0.04*agents.resources[0]*affiliation_weights[2]
 					agents.resources_network -= 0.04*agents.resources[0]
 					new2_link_list = []
 				# if it is, stop the loop
 				else:
-					# print('Loop stops now because there is no more low trust.')
+					# print('Loop stops now because there is no more low aware.')
 					new2_link = False
 
 	def agent_team_threeS_as(self, agents, agent_action_list, team_list_as, team_list_as_total, link_list, team_number_as, tick_number, threeS_link_list_as, deep_core, \
@@ -906,8 +906,8 @@ class Agent:
 						shuffled_list_links = link_list
 						random.shuffle(shuffled_list_links)
 						for links in shuffled_list_links:
-							# Make sure that there is trust
-							if links.trust > 0:
+							# Make sure that there is aware
+							if links.aware > 0:
 								# print(links)
 								
 								# Make sure it is not in a team already and enough resources for the searching agent and that it is known that the other agent's state is not None
@@ -1073,8 +1073,8 @@ class Agent:
 						shuffled_list_links = link_list
 						random.shuffle(shuffled_list_links)
 						for links in shuffled_list_links:
-							# Make sure that there is trust
-							if links.trust > 0:
+							# Make sure that there is aware
+							if links.aware > 0:
 								# print(links)
 								
 								# Make sure it is not in a team already and enough resources for the searching agent and that it is known that the other agent's state is not None
@@ -1250,8 +1250,8 @@ class Agent:
 							random.shuffle(shuffled_list_links)
 							for links in shuffled_list_links:
 
-								# Make sure that there is trust
-								if links.trust > 0:
+								# Make sure that there is aware
+								if links.aware > 0:
 									
 									# Make sure it is not in a team already and enough resources for the searching agent and that it is known that the other agent's state is not Non
 									if links.agent1 == agents and links.agent2.team_as[0] == None and agents.resources[1] > 0.02 * agents.resources[0] and agents.belieftree[1+links.agent2.unique_id][agents.select_problem_3S_as][0] != 'No':
@@ -1415,8 +1415,8 @@ class Agent:
 							random.shuffle(shuffled_list_links)
 							for links in shuffled_list_links:
 
-								# Make sure that there is trust
-								if links.trust > 0:
+								# Make sure that there is aware
+								if links.aware > 0:
 									
 									# Make sure it is not in a team already and enough resources for the searching agent and that it is known that the other agent's state is not Non
 									if links.agent1 == agents and links.agent2.team_as[0] == None and agents.resources[1] > 0.02 * agents.resources[0] and agents.belieftree[1+links.agent2.unique_id][agents.select_problem_3S_as][0] != 'No':
@@ -1816,8 +1816,8 @@ class Agent:
 						shuffled_list_links = link_list
 						random.shuffle(shuffled_list_links)
 						for links in shuffled_list_links:
-							# Make sure that there is trust
-							if links.trust > 0:
+							# Make sure that there is aware
+							if links.aware > 0:
 								# print(links)
 								
 								# Make sure it is not in a team already and enough resources for the searching agent and that it is known that the other agent's state is not None
@@ -1984,8 +1984,8 @@ class Agent:
 						shuffled_list_links = link_list
 						random.shuffle(shuffled_list_links)
 						for links in shuffled_list_links:
-							# Make sure that there is trust
-							if links.trust > 0:
+							# Make sure that there is aware
+							if links.aware > 0:
 								# print(links)
 								
 								# Make sure it is not in a team already and enough resources for the searching agent and that it is known that the other agent's state is not None
@@ -2162,8 +2162,8 @@ class Agent:
 							random.shuffle(shuffled_list_links)
 							for links in shuffled_list_links:
 
-								# Make sure that there is trust
-								if links.trust > 0:
+								# Make sure that there is aware
+								if links.aware > 0:
 									
 									# Make sure it is not in a team already and enough resources for the searching agent and that it is known that the other agent's state is not Non
 									if links.agent1 == agents and links.agent2.team_pf[0] == None and agents.resources[1] > 0.02 * agents.resources[0] and agents.belieftree[1+links.agent2.unique_id][agents.select_problem_3S_pf][0] != 'No':
@@ -2328,8 +2328,8 @@ class Agent:
 							random.shuffle(shuffled_list_links)
 							for links in shuffled_list_links:
 
-								# Make sure that there is trust
-								if links.trust > 0:
+								# Make sure that there is aware
+								if links.aware > 0:
 									
 									# Make sure it is not in a team already and enough resources for the searching agent and that it is known that the other agent's state is not Non
 									if links.agent1 == agents and links.agent2.team_pf[0] == None and agents.resources[1] > 0.02 * agents.resources[0] and agents.belieftree[1+links.agent2.unique_id][agents.select_problem_3S_pf][0] != 'No':

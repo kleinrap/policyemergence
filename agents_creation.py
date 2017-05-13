@@ -1430,8 +1430,8 @@ class Policymakers(Agent):
 			total_grade_list_links = []
 			for links in link_list:
 
-				# Making sure that the link is attached to the agent and has a trust higher than 0
-				if (links.agent1 == agents or links.agent2 == agents) and links.trust > 0:
+				# Making sure that the link is attached to the agent and has a aware higher than 0
+				if (links.agent1 == agents or links.agent2 == agents) and links.aware > 0:
 					total_grade_list_links.append(links)
 
 					# Definition the action weight parameter
@@ -1457,7 +1457,7 @@ class Policymakers(Agent):
 							# Performing the action
 							agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] += \
 								(agents.belieftree[0][cw_of_interest[cw]][0] - agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0]) * \
-								agents.resources[0] * resources_weight_action * links.trust * resources_potency
+								agents.resources[0] * resources_weight_action * links.aware * resources_potency
 							# 1-1 check
 							agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = \
 								self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0])
@@ -1489,7 +1489,7 @@ class Policymakers(Agent):
 							# Performing the action
 							agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] += \
 								(agents.belieftree[0][cw_of_interest[cw]][0] - agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0]) * \
-								agents.resources[0] * resources_weight_action * links.trust * resources_potency
+								agents.resources[0] * resources_weight_action * links.aware * resources_potency
 							# 1-1 check
 							agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] = \
 								self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0])
@@ -1521,7 +1521,7 @@ class Policymakers(Agent):
 						# Performing the action
 						agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1] += \
 							(agents.belieftree[0][agents.select_as_issue][1] - agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1]) * \
-							agents.resources[0] * resources_weight_action * links.trust * links.conflict_level[0][agents.select_as_issue][1] * actionWeight * resources_potency
+							agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][agents.select_as_issue][1] * actionWeight * resources_potency
 						# 1-1 check
 						agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1] = \
 							self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1])
@@ -1552,7 +1552,7 @@ class Policymakers(Agent):
 						# Performing the action
 						agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1] += \
 							(agents.belieftree[0][agents.select_as_issue][1] - agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1]) * \
-							agents.resources[0] * resources_weight_action * links.trust * links.conflict_level[1][agents.select_as_issue][1] * actionWeight * resources_potency
+							agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[1][agents.select_as_issue][1] * actionWeight * resources_potency
 						# 1-1 check
 						agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1] = \
 							self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1])
@@ -1584,7 +1584,7 @@ class Policymakers(Agent):
 						# Performing the action
 						agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0] += \
 							(agents.belieftree[0][agents.select_as_issue][0] - agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0]) * \
-							agents.resources[0] * resources_weight_action * links.trust * links.conflict_level[0][agents.select_as_issue][0] * actionWeight * resources_potency
+							agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][agents.select_as_issue][0] * actionWeight * resources_potency
 						# 1-1 check
 						agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0] = \
 							self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0])
@@ -1615,7 +1615,7 @@ class Policymakers(Agent):
 						# Performing the action
 						agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0] += \
 							(agents.belieftree[0][agents.select_as_issue][0] - agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0]) * \
-							agents.resources[0] * resources_weight_action * links.trust * links.conflict_level[1][agents.select_as_issue][0] * actionWeight * resources_potency
+							agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[1][agents.select_as_issue][0] * actionWeight * resources_potency
 						# 1-1 check
 						agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0] = \
 							self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0])
@@ -1693,8 +1693,8 @@ class Policymakers(Agent):
 						# To simplify the notations
 						best_action = cw_of_interest[best_action]
 
-						# Update of the trust decay parameter
-						links.trust_decay = 5
+						# Update of the aware decay parameter
+						links.aware_decay = 5
 
 						# print('Causal affected: ' + str(best_action))
 						# best_action = len(self.deep_core) + len(self.policy_core) + len(self.secondary) + best_action
@@ -1702,7 +1702,7 @@ class Policymakers(Agent):
 							
 							# print('Before: ' + str(links.agent2.belieftree[0][best_action][0]))
 							links.agent2.belieftree[0][best_action][0] += (agents.belieftree[0][best_action][0] - links.agent2.belieftree[0][best_action][0]) * \
-								agents.resources[0] * resources_weight_action * links.trust * resources_potency
+								agents.resources[0] * resources_weight_action * links.aware * resources_potency
 							# print('After: ' + str(links.agent2.belieftree[0][best_action][0]))
 							# 1-1 check
 							links.agent2.belieftree[0][best_action][0] = \
@@ -1727,7 +1727,7 @@ class Policymakers(Agent):
 						if links.agent2 == agents:
 							# print('Before: ' + str(links.agent1.belieftree[0][best_action][0]))
 							links.agent1.belieftree[0][best_action][0] += (agents.belieftree[0][best_action][0] - links.agent1.belieftree[0][best_action][0]) * \
-								agents.resources[0] * resources_weight_action * links.trust * resources_potency
+								agents.resources[0] * resources_weight_action * links.aware * resources_potency
 							# print('After: ' + str(links.agent1.belieftree[0][best_action][0]))
 							# 1-1 check
 							links.agent1.belieftree[0][best_action][0] = \
@@ -1751,13 +1751,13 @@ class Policymakers(Agent):
 					# If the index is in the second part of the list, then the aim influence action is the best
 					if best_action == len(cw_of_interest):
 						# print('Implementing a aim influence action:')
-						links.trust_decay = 5
+						links.aware_decay = 5
 						# print('Aim me - problem')
 
 						if links.agent1 == agents:
 							# print('Before: ' + str(links.agent2.belieftree[0][agents.select_as_issue][1]))
 							links.agent2.belieftree[0][agents.select_as_issue][1] += (agents.belieftree[0][agents.select_as_issue][1] - links.agent2.belieftree[0][agents.select_as_issue][1]) * \
-								agents.resources[0] * resources_weight_action * links.trust * resources_potency
+								agents.resources[0] * resources_weight_action * links.aware * resources_potency
 							# print('After: ' + str(links.agent2.belieftree[0][agents.select_as_issue][1]))
 							# 1-1 check
 							links.agent2.belieftree[0][agents.select_as_issue][1] = \
@@ -1780,7 +1780,7 @@ class Policymakers(Agent):
 						if links.agent2 == agents:
 							# print('Before: ' + str(links.agent1.belieftree[0][agents.select_as_issue][1]))
 							links.agent1.belieftree[0][agents.select_as_issue][1] += (agents.belieftree[0][agents.select_as_issue][1] - links.agent1.belieftree[0][agents.select_as_issue][1]) * \
-								agents.resources[0] * resources_weight_action * links.trust * resources_potency
+								agents.resources[0] * resources_weight_action * links.aware * resources_potency
 							# print('After: ' + str(links.agent1.belieftree[0][agents.select_as_issue][1]))
 							# 1-1 check
 							links.agent1.belieftree[0][agents.select_as_issue][1] = \
@@ -1800,13 +1800,13 @@ class Policymakers(Agent):
 					# If the index is in the first part of the list, then the state influence action is the best
 					if best_action == len(cw_of_interest) + 1:
 						# print('Implementing a state influence action:')
-						links.trust_decay = 5
+						links.aware_decay = 5
 						# print('State me - problem')
 
 						if links.agent1 == agents:
 							# print('Before: ' + str(links.agent2.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 							links.agent2.belieftree[0][agents.select_as_issue][0] += (agents.belieftree[0][agents.select_as_issue][0] - links.agent2.belieftree[0][agents.select_as_issue][0]) * \
-								agents.resources[0] * resources_weight_action * links.trust * resources_potency
+								agents.resources[0] * resources_weight_action * links.aware * resources_potency
 							# print('After: ' + str(links.agent2.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 							links.agent2.belieftree[0][agents.select_as_issue][0] = \
 								self.one_minus_one_check2(links.agent2.belieftree[0][agents.select_as_issue][0])
@@ -1828,7 +1828,7 @@ class Policymakers(Agent):
 						if links.agent2 == agents:
 							# print('Before: ' + str(links.agent1.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 							links.agent1.belieftree[0][agents.select_as_issue][0] += (agents.belieftree[0][agents.select_as_issue][0] - links.agent1.belieftree[0][agents.select_as_issue][0]) * \
-								agents.resources[0] * resources_weight_action * links.trust * resources_potency
+								agents.resources[0] * resources_weight_action * links.aware * resources_potency
 							# print('After: ' + str(links.agent1.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 							# 1-1 check
 							links.agent1.belieftree[0][agents.select_as_issue][0] = \
@@ -1883,8 +1883,8 @@ class Policymakers(Agent):
 			total_grade_list_links = []
 			for links in link_list:
 				
-				# Making sure that the link is attached to the agent and has a trust higher than 0
-				if (links.agent1 == agents or links.agent2 == agents) and links.trust > 0:
+				# Making sure that the link is attached to the agent and has a aware higher than 0
+				if (links.agent1 == agents or links.agent2 == agents) and links.aware > 0:
 					total_grade_list_links.append(links)
 					# Definition the action weight parameter
 					if type(links.agent1) == Policymakers or type(links.agent2) == Policymakers:
@@ -1911,7 +1911,7 @@ class Policymakers(Agent):
 							# print('Old value of the CR: ' + str(agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0]))
 							agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] += \
 								(agents.belieftree[0][cw_of_interest[cw]][0] - agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0]) * \
-								agents.resources[0] * resources_weight_action * links.trust * resources_potency
+								agents.resources[0] * resources_weight_action * links.aware * resources_potency
 							# print('New value of the CR: ' + str(agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0]))
 							# 1-1 check
 							agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = \
@@ -1946,7 +1946,7 @@ class Policymakers(Agent):
 							# print('Old value of the CR: ' + str(agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0]))
 							agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] += \
 								(agents.belieftree[0][cw_of_interest[cw]][0] - agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0]) * \
-								agents.resources[0] * resources_weight_action * links.trust * resources_potency
+								agents.resources[0] * resources_weight_action * links.aware * resources_potency
 							# print('New value of the CR: ' + str(agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0]))
 							# 1-1 check
 							agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] = \
@@ -1993,7 +1993,7 @@ class Policymakers(Agent):
 								# print('Old value of the aim: ' + str(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1]))
 								agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1] += \
 									(agents.belieftree[0][issue_of_interest[issue_num]][1] - agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1]) * \
-									agents.resources[0] * resources_weight_action * links.trust * links.conflict_level[0][issue_of_interest[issue_num]][1] * actionWeight * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][issue_of_interest[issue_num]][1] * actionWeight * resources_potency
 								# 1-1 check
 								agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1] = \
 									self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1])
@@ -2034,7 +2034,7 @@ class Policymakers(Agent):
 								# print('Old value of the aim: ' + str(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1]))
 								agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1] += \
 									(agents.belieftree[0][issue_of_interest[issue_num]][1] - agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1]) * \
-									agents.resources[0] * resources_weight_action * links.trust * links.conflict_level[1][issue_of_interest[issue_num]][1] * actionWeight * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[1][issue_of_interest[issue_num]][1] * actionWeight * resources_potency
 								# 1-1 check
 								agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1] = \
 									self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1])
@@ -2082,7 +2082,7 @@ class Policymakers(Agent):
 								# print('Old value of the aim: ' + str(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0]))
 								agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0] += \
 									(agents.belieftree[0][issue_of_interest[issue_num]][0] - agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0]) * \
-									agents.resources[0] * resources_weight_action * links.trust * links.conflict_level[0][issue_of_interest[issue_num]][0] * actionWeight * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][issue_of_interest[issue_num]][0] * actionWeight * resources_potency
 								# 1-1 check
 								agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0] = \
 									self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0])
@@ -2123,7 +2123,7 @@ class Policymakers(Agent):
 								# print('Old value of the aim: ' + str(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0]))
 								agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0] += \
 									(agents.belieftree[0][issue_of_interest[issue_num]][0] - agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0]) * \
-									agents.resources[0] * resources_weight_action * links.trust * links.conflict_level[0][issue_of_interest[issue_num]][0] * actionWeight * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][issue_of_interest[issue_num]][0] * actionWeight * resources_potency
 								# 1-1 check
 								agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0] = \
 									self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0])
@@ -2175,14 +2175,14 @@ class Policymakers(Agent):
 						# print('of_interest[0]: ' + str(of_interest[0]))
 						# print('of_interest[0][best_action]: ' + str(of_interest[0][best_action]))
 
-						# Update of the trust decay parameter
-						links.trust_decay = 5
+						# Update of the aware decay parameter
+						links.aware_decay = 5
 
 						if links.agent1 == agents:
 							# print('Before: ' + str(links.agent2.belieftree[0][len(self.deep_core) + len(self.policy_core) + len(self.secondary) + best_action][0]))
 							links.agent2.belieftree[0][of_interest[0][best_action]][0] += \
 								(agents.belieftree[0][of_interest[0][best_action]][0] - links.agent2.belieftree[0][of_interest[0][best_action]][0]) * \
-								agents.resources[0] * resources_weight_action * links.trust * resources_potency
+								agents.resources[0] * resources_weight_action * links.aware * resources_potency
 							# print('After: ' + str(links.agent2.belieftree[0][len(self.deep_core) + len(self.policy_core) + len(self.secondary) + best_action][0]))
 							# 1-1 check
 							if links.agent2.belieftree[0][of_interest[0][best_action]][0] > 1:
@@ -2212,7 +2212,7 @@ class Policymakers(Agent):
 							# print('Before: ' + str(links.agent1.belieftree[0][len(self.deep_core) + len(self.policy_core) + len(self.secondary) + best_action][0]))
 							links.agent1.belieftree[0][of_interest[0][best_action]][0] += \
 								(agents.belieftree[0][of_interest[0][best_action]][0] - links.agent1.belieftree[0][of_interest[0][best_action]][0]) * \
-								agents.resources[0] * resources_weight_action * links.trust * resources_potency
+								agents.resources[0] * resources_weight_action * links.aware * resources_potency
 							# print('After: ' + str(links.agent1.belieftree[0][len(self.deep_core) + len(self.policy_core) + len(self.secondary) + best_action][0]))
 							# 1-1 check
 							if links.agent1.belieftree[0][of_interest[0][best_action]][0] > 1:
@@ -2246,13 +2246,13 @@ class Policymakers(Agent):
 						# print('of_interest[1]: ' + str(of_interest[1]))
 						# print('of_interest[1][best_action - len(cw_of_interest)]: ' + str(of_interest[1][best_action - len(cw_of_interest)]))
 						
-						# Update of the trust decay parameter
-						links.trust_decay = 5
+						# Update of the aware decay parameter
+						links.aware_decay = 5
 
 						if links.agent1 == agents:
 							links.agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest)] ][1] += \
 								(agents.belieftree[0][of_interest[1][best_action - len(cw_of_interest)] ][1] - links.agent2.belieftree[0][agenda_as_issue][1]) * \
-								agents.resources[0] * resources_weight_action * links.trust * resources_potency
+								agents.resources[0] * resources_weight_action * links.aware * resources_potency
 							# 1-1 check
 							links.agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest)]][1] = \
 								self.one_minus_one_check2(links.agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest)]][1])		
@@ -2271,7 +2271,7 @@ class Policymakers(Agent):
 							# print('Before: ' + str(links.agent1.belieftree[0][len(self.deep_core) + agents.select_problem][1]))
 							links.agent1.belieftree[0][of_interest[1][best_action - len(cw_of_interest)] ][1] += \
 								(agents.belieftree[0][of_interest[1][best_action - len(cw_of_interest)] ][1] - links.agent1.belieftree[0][of_interest[1][best_action - len(cw_of_interest)] ][1]) * \
-								agents.resources[0] * resources_weight_action * links.trust * resources_potency
+								agents.resources[0] * resources_weight_action * links.aware * resources_potency
 							# print('After: ' + str(links.agent1.belieftree[0][len(self.deep_core) + agents.select_problem][1]))
 							# 1-1 check
 							links.agent1.belieftree[0][of_interest[1][best_action - len(cw_of_interest)]][1] = \
@@ -2296,14 +2296,14 @@ class Policymakers(Agent):
 						# print('of_interest[1]: ' + str(of_interest[1]))
 						# print('of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]: ' + str(of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]))
 
-						# Update of the trust decay parameter
-						links.trust_decay = 5
+						# Update of the aware decay parameter
+						links.aware_decay = 5
 
 						if links.agent1 == agents:
 							links.agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0] += \
 								(agents.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0] - \
 								links.agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][1]) * \
-								agents.resources[0] * resources_weight_action * links.trust * resources_potency
+								agents.resources[0] * resources_weight_action * links.aware * resources_potency
 							# 1-1 check
 							links.agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0] = \
 								self.one_minus_one_check2(links.agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0])
@@ -2324,7 +2324,7 @@ class Policymakers(Agent):
 							links.agent1.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0] += \
 								(agents.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0] - \
 								links.agent1.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0]) * \
-								agents.resources[0] * resources_weight_action * links.trust * resources_potency
+								agents.resources[0] * resources_weight_action * links.aware * resources_potency
 							# 1-1 check
 							links.agent1.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0] = \
 								self.one_minus_one_check2(links.agent1.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0])
@@ -2371,8 +2371,8 @@ class Policymakers(Agent):
 			total_grade_list_links = []
 			for links in link_list:
 
-				# Making sure that the link is attached to the agent and has a trust higher than 0
-				if (links.agent1 == agents or links.agent2 == agents) and links.trust > 0:
+				# Making sure that the link is attached to the agent and has a aware higher than 0
+				if (links.agent1 == agents or links.agent2 == agents) and links.aware > 0:
 					total_grade_list_links.append(links)
 
 					# Definition the action weight parameter
@@ -2398,7 +2398,7 @@ class Policymakers(Agent):
 									check_none = 1
 								# Performing the action
 								cw_grade = (agents.belieftree[0][cw_of_interest[cw]][0] - agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# Adding the grade to the grade list
 								total_grade_list.append(cw_grade)
 								#  Reset to None after finding the grade
@@ -2414,7 +2414,7 @@ class Policymakers(Agent):
 									check_none = 1
 								# Performing the action
 								cw_grade = (agents.belieftree[0][cw_of_interest[cw]][0] - agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# Adding the grade to the grade list
 								total_grade_list.append(cw_grade)
 								# Reset to None after finding the grade
@@ -2437,7 +2437,7 @@ class Policymakers(Agent):
 									check_none = 1
 								# Performing the action
 								impact_grade = (agents.belieftree_policy[0][agents.select_policy_3S_as][impact] - agents.belieftree_policy[1 + links.agent2.unique_id][agents.select_policy_3S_as][impact]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# Adding the grade to the grade list
 								total_grade_list.append(impact_grade)
 								#  Reset to None after finding the grade
@@ -2452,7 +2452,7 @@ class Policymakers(Agent):
 									agents.belieftree_policy[1 + links.agent1.unique_id][agents.select_policy_3S_as][impact] = 0
 									check_none = 1
 								impact_grade = (agents.belieftree_policy[0][agents.select_policy_3S_as][impact] - agents.belieftree_policy[1 + links.agent1.unique_id][agents.select_policy_3S_as][impact]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# Adding the grade to the grade list
 								total_grade_list.append(impact_grade)
 								# Reset to None after finding the grade
@@ -2468,7 +2468,7 @@ class Policymakers(Agent):
 							check_none = 1
 						# Performing the action
 						aim_grade_issue = (agents.belieftree[0][agents.select_problem_3S_as][1] - agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_as][1]) * \
-							agents.resources[0] * resources_weight_action * links.trust * links.conflict_level[0][agents.select_problem_3S_as][1] * actionWeight * resources_potency
+							agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][agents.select_problem_3S_as][1] * actionWeight * resources_potency
 						#  Reset to None after finding the grade
 						if check_none == 1:
 							agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_as][1] = None
@@ -2483,7 +2483,7 @@ class Policymakers(Agent):
 							check_none = 1
 						# Performing the action
 						aim_grade_issue = (agents.belieftree[0][agents.select_problem_3S_as][1] - agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_as][1]) * \
-							agents.resources[0] * resources_weight_action * links.trust * links.conflict_level[1][agents.select_problem_3S_as][1] * actionWeight * resources_potency
+							agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[1][agents.select_problem_3S_as][1] * actionWeight * resources_potency
 						#  Reset to None after finding the grade
 						if check_none == 1:
 							agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_as][1] = None
@@ -2499,7 +2499,7 @@ class Policymakers(Agent):
 							check_none = 1
 						# Performing the action
 						state_grade_issue = (agents.belieftree[0][agents.select_problem_3S_as][0] - agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_as][0]) * \
-							agents.resources[0] * resources_weight_action * links.trust * links.conflict_level[0][agents.select_problem_3S_as][0] * actionWeight * resources_potency
+							agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][agents.select_problem_3S_as][0] * actionWeight * resources_potency
 						#  Reset to None after finding the grade
 						if check_none == 1:
 							agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_as][0] = None
@@ -2514,7 +2514,7 @@ class Policymakers(Agent):
 							check_none = 1
 						# Performing the action
 						state_grade_issue = (agents.belieftree[0][agents.select_problem_3S_as][0] - agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_as][0]) * \
-							agents.resources[0] * resources_weight_action * links.trust * links.conflict_level[1][agents.select_problem_3S_as][0] * actionWeight * resources_potency
+							agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[1][agents.select_problem_3S_as][0] * actionWeight * resources_potency
 						#  Reset to None after finding the grade
 						if check_none == 1:
 							agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_as][0] = None
@@ -2569,8 +2569,8 @@ class Policymakers(Agent):
 					if (links.agent1 == agents and links.agent2.unique_id == agent_best_action) or (links.agent1.unique_id == agent_best_action and links.agent2 == agents):
 						# print(links)
 
-						# Updating the trust decay parameter
-						links.trust_decay = 5
+						# Updating the aware decay parameter
+						links.aware_decay = 5
 
 						# If the index is in the first part of the list, then the framing action is the best
 						if best_action <= len(cw_of_interest) - 1:
@@ -2587,7 +2587,7 @@ class Policymakers(Agent):
 								
 								# print('Before: ' + str(links.agent2.belieftree[0][best_action][0]))
 								links.agent2.belieftree[0][best_action][0] += (agents.belieftree[0][best_action][0] - links.agent2.belieftree[0][best_action][0]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent2.belieftree[0][best_action][0]))
 								# 1-1 check
 								links.agent2.belieftree[0][best_action][0] = \
@@ -2613,7 +2613,7 @@ class Policymakers(Agent):
 
 								# print('Before: ' + str(links.agent1.belieftree[0][best_action][0]))
 								links.agent1.belieftree[0][best_action][0] += (agents.belieftree[0][best_action][0] - links.agent1.belieftree[0][best_action][0]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent1.belieftree[0][best_action][0]))
 								# 1-1 check
 								links.agent1.belieftree[0][best_action][0] = \
@@ -2643,7 +2643,7 @@ class Policymakers(Agent):
 							if links.agent1 == agents:
 								# print('Before: ' + str(links.agent2.belieftree[0][agents.select_problem_3S_as][1]))
 								links.agent2.belieftree[0][agents.select_problem_3S_as][1] += (agents.belieftree[0][agents.select_problem_3S_as][1] - links.agent2.belieftree[0][agents.select_problem_3S_as][1]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent2.belieftree[0][agents.select_problem_3S_as][1]))
 								# 1-1 check
 								links.agent2.belieftree[0][agents.select_problem_3S_as][1] = \
@@ -2667,7 +2667,7 @@ class Policymakers(Agent):
 
 								# print('Before: ' + str(links.agent1.belieftree[0][agents.select_problem_3S_as][1]))
 								links.agent1.belieftree[0][agents.select_problem_3S_as][1] += (agents.belieftree[0][agents.select_problem_3S_as][1] - links.agent1.belieftree[0][agents.select_problem_3S_as][1]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent1.belieftree[0][agents.select_problem_3S_as][1]))
 								# 1-1 check
 								links.agent1.belieftree[0][agents.select_problem_3S_as][1] = \
@@ -2693,7 +2693,7 @@ class Policymakers(Agent):
 							if links.agent1 == agents:
 								# print('Before: ' + str(links.agent2.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								links.agent2.belieftree[0][agents.select_problem_3S_as][0] += (agents.belieftree[0][agents.select_problem_3S_as][0] - links.agent2.belieftree[0][agents.select_problem_3S_as][0]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent2.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								links.agent2.belieftree[0][agents.select_problem_3S_as][0] = \
 									self.one_minus_one_check2(links.agent2.belieftree[0][agents.select_problem_3S_as][0])
@@ -2715,7 +2715,7 @@ class Policymakers(Agent):
 							if links.agent2 == agents:
 								# print('Before: ' + str(links.agent1.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								links.agent1.belieftree[0][agents.select_problem_3S_as][0] += (agents.belieftree[0][agents.select_problem_3S_as][0] - links.agent1.belieftree[0][agents.select_problem_3S_as][0]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent1.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								# 1-1 check
 								links.agent1.belieftree[0][agents.select_problem_3S_as][0] = \
@@ -2741,8 +2741,8 @@ class Policymakers(Agent):
 					if (links.agent1 == agents and links.agent2.unique_id == agent_best_action) or (links.agent1.unique_id == agent_best_action and links.agent2 == agents):
 						# print(links)
 
-						# Updating the trust decay parameter
-						links.trust_decay = 5
+						# Updating the aware decay parameter
+						links.aware_decay = 5
 
 						# If the index is in the first part of the list, then the framing action is the best
 						if best_action <= impact_number - 1:
@@ -2756,7 +2756,7 @@ class Policymakers(Agent):
 								# print('Before: ' + str(links.agent2.belieftree_policy[0][agents.select_policy_3S_as][best_action]))
 								links.agent2.belieftree_policy[0][agents.select_policy_3S_as][best_action] += (agents.belieftree[0][agents.select_policy_3S_as][best_action] - \
 									links.agent2.belieftree_policy[0][agents.select_policy_3S_as][best_action]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent2.belieftree_policy[0][agents.select_policy_3S_as][best_action]))
 								# 1-1 check
 								links.agent2.belieftree_policy[0][agents.select_policy_3S_as][best_action] = \
@@ -2783,7 +2783,7 @@ class Policymakers(Agent):
 								# print('Before: ' + str(links.agent1.belieftree_policy[0][agents.select_policy_3S_as][best_action]))
 								links.agent1.belieftree_policy[0][agents.select_policy_3S_as][best_action] += (agents.belieftree_policy[0][agents.select_policy_3S_as][best_action] - \
 									links.agent1.belieftree_policy[0][agents.select_policy_3S_as][best_action]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent1.belieftree_policy[0][agents.select_policy_3S_as][best_action]))
 								# 1-1 check
 								links.agent1.belieftree_policy[0][agents.select_policy_3S_as][best_action] = \
@@ -2813,7 +2813,7 @@ class Policymakers(Agent):
 							if links.agent1 == agents:
 								# print('Before: ' + str(links.agent2.belieftree[0][agents.select_problem_3S_as][1]))
 								links.agent2.belieftree[0][agents.select_problem_3S_as][1] += (agents.belieftree[0][agents.select_problem_3S_as][1] - links.agent2.belieftree[0][agents.select_problem_3S_as][1]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent2.belieftree[0][agents.select_problem_3S_as][1]))
 								# 1-1 check
 								links.agent2.belieftree[0][agents.select_problem_3S_as][1] = \
@@ -2837,7 +2837,7 @@ class Policymakers(Agent):
 
 								# print('Before: ' + str(links.agent1.belieftree[0][agents.select_problem_3S_as][1]))
 								links.agent1.belieftree[0][agents.select_problem_3S_as][1] += (agents.belieftree[0][agents.select_problem_3S_as][1] - links.agent1.belieftree[0][agents.select_problem_3S_as][1]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent1.belieftree[0][agents.select_problem_3S_as][1]))
 								# 1-1 check
 								links.agent1.belieftree[0][agents.select_problem_3S_as][1] = \
@@ -2863,7 +2863,7 @@ class Policymakers(Agent):
 							if links.agent1 == agents:
 								# print('Before: ' + str(links.agent2.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								links.agent2.belieftree[0][agents.select_problem_3S_as][0] += (agents.belieftree[0][agents.select_problem_3S_as][0] - links.agent2.belieftree[0][agents.select_problem_3S_as][0]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent2.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								links.agent2.belieftree[0][agents.select_problem_3S_as][0] = \
 									self.one_minus_one_check2(links.agent2.belieftree[0][agents.select_problem_3S_as][0])
@@ -2885,7 +2885,7 @@ class Policymakers(Agent):
 							if links.agent2 == agents:
 								# print('Before: ' + str(links.agent1.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								links.agent1.belieftree[0][agents.select_problem_3S_as][0] += (agents.belieftree[0][agents.select_problem_3S_as][0] - links.agent1.belieftree[0][agents.select_problem_3S_as][0]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent1.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								# 1-1 check
 								links.agent1.belieftree[0][agents.select_problem_3S_as][0] = \
@@ -2943,8 +2943,8 @@ class Policymakers(Agent):
 			total_grade_list_links = []
 			for links in link_list:
 
-				# Making sure that the link is attached to the agent and has a trust higher than 0
-				if (links.agent1 == agents or links.agent2 == agents) and links.trust > 0:
+				# Making sure that the link is attached to the agent and has a aware higher than 0
+				if (links.agent1 == agents or links.agent2 == agents) and links.aware > 0:
 					total_grade_list_links.append(links)
 
 					# Definition the action weight parameter
@@ -2970,7 +2970,7 @@ class Policymakers(Agent):
 									check_none = 1
 								# Performing the action
 								cw_grade = (agents.belieftree[0][cw_of_interest[cw]][0] - agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# Adding the grade to the grade list
 								total_grade_list.append(cw_grade)
 								#  Reset to None after finding the grade
@@ -2986,7 +2986,7 @@ class Policymakers(Agent):
 									check_none = 1
 								# Performing the action
 								cw_grade = (agents.belieftree[0][cw_of_interest[cw]][0] - agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# Adding the grade to the grade list
 								total_grade_list.append(cw_grade)
 								# Reset to None after finding the grade
@@ -3009,7 +3009,7 @@ class Policymakers(Agent):
 									check_none = 1
 								# Performing the action
 								impact_grade = (agents.belieftree_instrument[0][agents.select_policy_3S_pf][impact] - agents.belieftree_instrument[1 + links.agent2.unique_id][agents.select_policy_3S_pf][impact]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# Adding the grade to the grade list
 								total_grade_list.append(impact_grade)
 								#  Reset to None after finding the grade
@@ -3024,7 +3024,7 @@ class Policymakers(Agent):
 									agents.belieftree_instrument[1 + links.agent1.unique_id][agents.select_policy_3S_pf][impact] = 0
 									check_none = 1
 								impact_grade = (agents.belieftree_instrument[0][agents.select_policy_3S_pf][impact] - agents.belieftree_instrument[1 + links.agent1.unique_id][agents.select_policy_3S_pf][impact]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# Adding the grade to the grade list
 								total_grade_list.append(impact_grade)
 								# Reset to None after finding the grade
@@ -3040,7 +3040,7 @@ class Policymakers(Agent):
 							check_none = 1
 						# Performing the action
 						aim_grade_issue = (agents.belieftree[0][agents.select_problem_3S_pf][1] - agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_pf][1]) * \
-							agents.resources[0] * resources_weight_action * links.trust * links.conflict_level[0][agents.select_problem_3S_pf][1] * actionWeight * resources_potency
+							agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][agents.select_problem_3S_pf][1] * actionWeight * resources_potency
 						#  Reset to None after finding the grade
 						if check_none == 1:
 							agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_pf][1] = None
@@ -3055,7 +3055,7 @@ class Policymakers(Agent):
 							check_none = 1
 						# Performing the action
 						aim_grade_issue = (agents.belieftree[0][agents.select_problem_3S_pf][1] - agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_pf][1]) * \
-							agents.resources[0] * resources_weight_action * links.trust * links.conflict_level[1][agents.select_problem_3S_pf][1] * actionWeight * resources_potency
+							agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[1][agents.select_problem_3S_pf][1] * actionWeight * resources_potency
 						#  Reset to None after finding the grade
 						if check_none == 1:
 							agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_pf][1] = None
@@ -3071,7 +3071,7 @@ class Policymakers(Agent):
 							check_none = 1
 						# Performing the action
 						state_grade_issue = (agents.belieftree[0][agents.select_problem_3S_pf][0] - agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_pf][0]) * \
-							agents.resources[0] * resources_weight_action * links.trust * links.conflict_level[0][agents.select_problem_3S_pf][0] * actionWeight * resources_potency
+							agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][agents.select_problem_3S_pf][0] * actionWeight * resources_potency
 						#  Reset to None after finding the grade
 						if check_none == 1:
 							agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_pf][0] = None
@@ -3086,7 +3086,7 @@ class Policymakers(Agent):
 							check_none = 1
 						# Performing the action
 						state_grade_issue = (agents.belieftree[0][agents.select_problem_3S_pf][0] - agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_pf][0]) * \
-							agents.resources[0] * resources_weight_action * links.trust * links.conflict_level[1][agents.select_problem_3S_pf][0] * actionWeight * resources_potency
+							agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[1][agents.select_problem_3S_pf][0] * actionWeight * resources_potency
 						#  Reset to None after finding the grade
 						if check_none == 1:
 							agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_pf][0] = None
@@ -3137,8 +3137,8 @@ class Policymakers(Agent):
 					if (links.agent1 == agents and links.agent2.unique_id == agent_best_action) or (links.agent1.unique_id == agent_best_action and links.agent2 == agents):
 						# print(links)
 
-						# Updating the trust decay parameter
-						links.trust_decay = 5
+						# Updating the aware decay parameter
+						links.aware_decay = 5
 
 						# If the index is in the first part of the list, then the framing action is the best
 						if best_action <= len(cw_of_interest) - 1:
@@ -3155,7 +3155,7 @@ class Policymakers(Agent):
 								
 								# print('Before: ' + str(links.agent2.belieftree[0][best_action][0]))
 								links.agent2.belieftree[0][best_action][0] += (agents.belieftree[0][best_action][0] - links.agent2.belieftree[0][best_action][0]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent2.belieftree[0][best_action][0]))
 								# 1-1 check
 								links.agent2.belieftree[0][best_action][0] = \
@@ -3180,7 +3180,7 @@ class Policymakers(Agent):
 							if links.agent2 == agents:
 								# print('Before: ' + str(links.agent1.belieftree[0][best_action][0]))
 								links.agent1.belieftree[0][best_action][0] += (agents.belieftree[0][best_action][0] - links.agent1.belieftree[0][best_action][0]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent1.belieftree[0][best_action][0]))
 								# 1-1 check
 								links.agent1.belieftree[0][best_action][0] = \
@@ -3210,7 +3210,7 @@ class Policymakers(Agent):
 							if links.agent1 == agents:
 								# print('Before: ' + str(links.agent2.belieftree[0][agents.select_problem_3S_pf][1]))
 								links.agent2.belieftree[0][agents.select_problem_3S_pf][1] += (agents.belieftree[0][agents.select_problem_3S_pf][1] - links.agent2.belieftree[0][agents.select_problem_3S_pf][1]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent2.belieftree[0][agents.select_problem_3S_pf][1]))
 								# 1-1 check
 								links.agent2.belieftree[0][agents.select_problem_3S_pf][1] = \
@@ -3233,7 +3233,7 @@ class Policymakers(Agent):
 							if links.agent2 == agents:
 								# print('Before: ' + str(links.agent1.belieftree[0][agents.select_problem_3S_pf][1]))
 								links.agent1.belieftree[0][agents.select_problem_3S_pf][1] += (agents.belieftree[0][agents.select_problem_3S_pf][1] - links.agent1.belieftree[0][agents.select_problem_3S_pf][1]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent1.belieftree[0][agents.select_problem_3S_pf][1]))
 								# 1-1 check
 								links.agent1.belieftree[0][agents.select_problem_3S_pf][1] = \
@@ -3259,7 +3259,7 @@ class Policymakers(Agent):
 							if links.agent1 == agents:
 								# print('Before: ' + str(links.agent2.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								links.agent2.belieftree[0][agents.select_problem_3S_pf][0] += (agents.belieftree[0][agents.select_problem_3S_pf][0] - links.agent2.belieftree[0][agents.select_problem_3S_pf][0]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent2.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								links.agent2.belieftree[0][agents.select_problem_3S_pf][0] = \
 									self.one_minus_one_check2(links.agent2.belieftree[0][agents.select_problem_3S_pf][0])
@@ -3281,7 +3281,7 @@ class Policymakers(Agent):
 							if links.agent2 == agents:
 								# print('Before: ' + str(links.agent1.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								links.agent1.belieftree[0][agents.select_problem_3S_pf][0] += (agents.belieftree[0][agents.select_problem_3S_pf][0] - links.agent1.belieftree[0][agents.select_problem_3S_pf][0]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent1.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								# 1-1 check
 								links.agent1.belieftree[0][agents.select_problem_3S_pf][0] = \
@@ -3307,8 +3307,8 @@ class Policymakers(Agent):
 					if (links.agent1 == agents and links.agent2.unique_id == agent_best_action) or (links.agent1.unique_id == agent_best_action and links.agent2 == agents):
 						# print(links)
 
-						# Updating the trust decay parameter
-						links.trust_decay = 5
+						# Updating the aware decay parameter
+						links.aware_decay = 5
 
 						# If the index is in the first part of the list, then the framing action is the best
 						if best_action <= impact_number - 1:
@@ -3322,7 +3322,7 @@ class Policymakers(Agent):
 								# print('Before: ' + str(links.agent2.belieftree_instrument[0][agents.select_policy_3S_pf][best_action]))
 								links.agent2.belieftree_instrument[0][agents.select_policy_3S_pf][best_action] += (agents.belieftree_instrument[0][agents.select_policy_3S_pf][best_action] - \
 									links.agent2.belieftree_instrument[0][agents.select_policy_3S_pf][best_action]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent2.belieftree_instrument[0][agents.select_policy_3S_pf][best_action]))
 								# 1-1 check
 								links.agent2.belieftree_instrument[0][agents.select_policy_3S_pf][best_action] = \
@@ -3349,7 +3349,7 @@ class Policymakers(Agent):
 								# print('Before: ' + str(links.agent1.belieftree_instrument[0][agents.select_policy_3S_pf][best_action]))
 								links.agent1.belieftree_instrument[0][agents.select_policy_3S_pf][best_action] += (agents.belieftree_instrument[0][agents.select_policy_3S_pf][best_action] - \
 									links.agent1.belieftree_instrument[0][agents.select_policy_3S_pf][best_action]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent1.belieftree_instrument[0][agents.select_policy_3S_pf][best_action]))
 								# 1-1 check
 								links.agent1.belieftree_instrument[0][agents.select_policy_3S_pf][best_action] = \
@@ -3379,7 +3379,7 @@ class Policymakers(Agent):
 							if links.agent1 == agents:
 								# print('Before: ' + str(links.agent2.belieftree[0][agents.select_problem_3S_pf][1]))
 								links.agent2.belieftree[0][agents.select_problem_3S_pf][1] += (agents.belieftree[0][agents.select_problem_3S_pf][1] - links.agent2.belieftree[0][agents.select_problem_3S_pf][1]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent2.belieftree[0][agents.select_problem_3S_pf][1]))
 								# 1-1 check
 								links.agent2.belieftree[0][agents.select_problem_3S_pf][1] = \
@@ -3403,7 +3403,7 @@ class Policymakers(Agent):
 
 								# print('Before: ' + str(links.agent1.belieftree[0][agents.select_problem_3S_pf][1]))
 								links.agent1.belieftree[0][agents.select_problem_3S_pf][1] += (agents.belieftree[0][agents.select_problem_3S_pf][1] - links.agent1.belieftree[0][agents.select_problem_3S_pf][1]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent1.belieftree[0][agents.select_problem_3S_pf][1]))
 								# 1-1 check
 								links.agent1.belieftree[0][agents.select_problem_3S_pf][1] = \
@@ -3429,7 +3429,7 @@ class Policymakers(Agent):
 							if links.agent1 == agents:
 								# print('Before: ' + str(links.agent2.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								links.agent2.belieftree[0][agents.select_problem_3S_pf][0] += (agents.belieftree[0][agents.select_problem_3S_pf][0] - links.agent2.belieftree[0][agents.select_problem_3S_pf][0]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent2.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								links.agent2.belieftree[0][agents.select_problem_3S_pf][0] = \
 									self.one_minus_one_check2(links.agent2.belieftree[0][agents.select_problem_3S_pf][0])
@@ -3451,7 +3451,7 @@ class Policymakers(Agent):
 							if links.agent2 == agents:
 								# print('Before: ' + str(links.agent1.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								links.agent1.belieftree[0][agents.select_problem_3S_pf][0] += (agents.belieftree[0][agents.select_problem_3S_pf][0] - links.agent1.belieftree[0][agents.select_problem_3S_pf][0]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent1.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								# 1-1 check
 								links.agent1.belieftree[0][agents.select_problem_3S_pf][0] = \
@@ -3842,8 +3842,8 @@ class Policyentres(Agent):
 			total_grade_list_links = []
 			for links in link_list:
 
-				# Making sure that the link is attached to the agent and has a trust higher than 0
-				if (links.agent1 == agents or links.agent2 == agents) and links.trust > 0:
+				# Making sure that the link is attached to the agent and has a aware higher than 0
+				if (links.agent1 == agents or links.agent2 == agents) and links.aware > 0:
 					total_grade_list_links.append(links)
 
 					# Definition the action weight parameter
@@ -3869,7 +3869,7 @@ class Policyentres(Agent):
 							# Performing the action
 							agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] += \
 								(agents.belieftree[0][cw_of_interest[cw]][0] - agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0]) * \
-								agents.resources[0] * resources_weight_action * links.trust * resources_potency
+								agents.resources[0] * resources_weight_action * links.aware * resources_potency
 							# 1-1 check
 							agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = \
 								self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0])
@@ -3901,7 +3901,7 @@ class Policyentres(Agent):
 							# Performing the action
 							agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] += \
 								(agents.belieftree[0][cw_of_interest[cw]][0] - agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0]) * \
-								agents.resources[0] * resources_weight_action * links.trust * resources_potency
+								agents.resources[0] * resources_weight_action * links.aware * resources_potency
 							# 1-1 check
 							agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] = \
 								self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0])
@@ -3933,7 +3933,7 @@ class Policyentres(Agent):
 						# Performing the action
 						agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1] += \
 							(agents.belieftree[0][agents.select_as_issue][1] - agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1]) * \
-							agents.resources[0] * resources_weight_action * links.trust * links.conflict_level[0][agents.select_as_issue][1] * actionWeight * resources_potency
+							agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][agents.select_as_issue][1] * actionWeight * resources_potency
 						# 1-1 check
 						agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1] = \
 							self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1])
@@ -3964,7 +3964,7 @@ class Policyentres(Agent):
 						# Performing the action
 						agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1] += \
 							(agents.belieftree[0][agents.select_as_issue][1] - agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1]) * \
-							agents.resources[0] * resources_weight_action * links.trust * links.conflict_level[1][agents.select_as_issue][1] * actionWeight * resources_potency
+							agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[1][agents.select_as_issue][1] * actionWeight * resources_potency
 						# 1-1 check
 						agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1] = \
 							self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1])
@@ -3996,7 +3996,7 @@ class Policyentres(Agent):
 						# Performing the action
 						agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0] += \
 							(agents.belieftree[0][agents.select_as_issue][0] - agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0]) * \
-							agents.resources[0] * resources_weight_action * links.trust * links.conflict_level[0][agents.select_as_issue][0] * actionWeight * resources_potency
+							agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][agents.select_as_issue][0] * actionWeight * resources_potency
 						# 1-1 check
 						agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0] = \
 							self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0])
@@ -4027,7 +4027,7 @@ class Policyentres(Agent):
 						# Performing the action
 						agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0] += \
 							(agents.belieftree[0][agents.select_as_issue][0] - agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0]) * \
-							agents.resources[0] * resources_weight_action * links.trust * links.conflict_level[1][agents.select_as_issue][0] * actionWeight * resources_potency
+							agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[1][agents.select_as_issue][0] * actionWeight * resources_potency
 						# 1-1 check
 						agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0] = \
 							self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0])
@@ -4105,8 +4105,8 @@ class Policyentres(Agent):
 						# To simplify the notations
 						best_action = cw_of_interest[best_action]
 
-						# Update of the trust decay parameter
-						links.trust_decay = 5
+						# Update of the aware decay parameter
+						links.aware_decay = 5
 
 						# print('Causal affected: ' + str(best_action))
 						# best_action = len(self.deep_core) + len(self.policy_core) + len(self.secondary) + best_action
@@ -4114,7 +4114,7 @@ class Policyentres(Agent):
 							
 							# print('Before: ' + str(links.agent2.belieftree[0][best_action][0]))
 							links.agent2.belieftree[0][best_action][0] += (agents.belieftree[0][best_action][0] - links.agent2.belieftree[0][best_action][0]) * \
-								agents.resources[0] * resources_weight_action * links.trust * resources_potency
+								agents.resources[0] * resources_weight_action * links.aware * resources_potency
 							# print('After: ' + str(links.agent2.belieftree[0][best_action][0]))
 							# 1-1 check
 							links.agent2.belieftree[0][best_action][0] = \
@@ -4139,7 +4139,7 @@ class Policyentres(Agent):
 						if links.agent2 == agents:
 							# print('Before: ' + str(links.agent1.belieftree[0][best_action][0]))
 							links.agent1.belieftree[0][best_action][0] += (agents.belieftree[0][best_action][0] - links.agent1.belieftree[0][best_action][0]) * \
-								agents.resources[0] * resources_weight_action * links.trust * resources_potency
+								agents.resources[0] * resources_weight_action * links.aware * resources_potency
 							# print('After: ' + str(links.agent1.belieftree[0][best_action][0]))
 							# 1-1 check
 							links.agent1.belieftree[0][best_action][0] = \
@@ -4163,13 +4163,13 @@ class Policyentres(Agent):
 					# If the index is in the second part of the list, then the aim influence action is the best
 					if best_action == len(cw_of_interest):
 						# print('Implementing a aim influence action:')
-						links.trust_decay = 5
+						links.aware_decay = 5
 						# print('Aim me - problem')
 
 						if links.agent1 == agents:
 							# print('Before: ' + str(links.agent2.belieftree[0][agents.select_as_issue][1]))
 							links.agent2.belieftree[0][agents.select_as_issue][1] += (agents.belieftree[0][agents.select_as_issue][1] - links.agent2.belieftree[0][agents.select_as_issue][1]) * \
-								agents.resources[0] * resources_weight_action * links.trust * resources_potency
+								agents.resources[0] * resources_weight_action * links.aware * resources_potency
 							# print('After: ' + str(links.agent2.belieftree[0][agents.select_as_issue][1]))
 							# 1-1 check
 							links.agent2.belieftree[0][agents.select_as_issue][1] = \
@@ -4192,7 +4192,7 @@ class Policyentres(Agent):
 						if links.agent2 == agents:
 							# print('Before: ' + str(links.agent1.belieftree[0][agents.select_as_issue][1]))
 							links.agent1.belieftree[0][agents.select_as_issue][1] += (agents.belieftree[0][agents.select_as_issue][1] - links.agent1.belieftree[0][agents.select_as_issue][1]) * \
-								agents.resources[0] * resources_weight_action * links.trust * resources_potency
+								agents.resources[0] * resources_weight_action * links.aware * resources_potency
 							# print('After: ' + str(links.agent1.belieftree[0][agents.select_as_issue][1]))
 							# 1-1 check
 							links.agent1.belieftree[0][agents.select_as_issue][1] = \
@@ -4212,13 +4212,13 @@ class Policyentres(Agent):
 					# If the index is in the first part of the list, then the state influence action is the best
 					if best_action == len(cw_of_interest) + 1:
 						# print('Implementing a state influence action:')
-						links.trust_decay = 5
+						links.aware_decay = 5
 						# print('State me - problem')
 
 						if links.agent1 == agents:
 							# print('Before: ' + str(links.agent2.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 							links.agent2.belieftree[0][agents.select_as_issue][0] += (agents.belieftree[0][agents.select_as_issue][0] - links.agent2.belieftree[0][agents.select_as_issue][0]) * \
-								agents.resources[0] * resources_weight_action * links.trust * resources_potency
+								agents.resources[0] * resources_weight_action * links.aware * resources_potency
 							# print('After: ' + str(links.agent2.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 							links.agent2.belieftree[0][agents.select_as_issue][0] = \
 								self.one_minus_one_check2(links.agent2.belieftree[0][agents.select_as_issue][0])
@@ -4240,7 +4240,7 @@ class Policyentres(Agent):
 						if links.agent2 == agents:
 							# print('Before: ' + str(links.agent1.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 							links.agent1.belieftree[0][agents.select_as_issue][0] += (agents.belieftree[0][agents.select_as_issue][0] - links.agent1.belieftree[0][agents.select_as_issue][0]) * \
-								agents.resources[0] * resources_weight_action * links.trust * resources_potency
+								agents.resources[0] * resources_weight_action * links.aware * resources_potency
 							# print('After: ' + str(links.agent1.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 							# 1-1 check
 							links.agent1.belieftree[0][agents.select_as_issue][0] = \
@@ -4295,8 +4295,8 @@ class Policyentres(Agent):
 			total_grade_list_links = []
 			for links in link_list:
 				
-				# Making sure that the link is attached to the agent and has a trust higher than 0
-				if (links.agent1 == agents or links.agent2 == agents) and links.trust > 0:
+				# Making sure that the link is attached to the agent and has a aware higher than 0
+				if (links.agent1 == agents or links.agent2 == agents) and links.aware > 0:
 					total_grade_list_links.append(links)
 					# Definition the action weight parameter
 					if type(links.agent1) == Policymakers or type(links.agent2) == Policymakers:
@@ -4323,7 +4323,7 @@ class Policyentres(Agent):
 							# print('Old value of the CR: ' + str(agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0]))
 							agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] += \
 								(agents.belieftree[0][cw_of_interest[cw]][0] - agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0]) * \
-								agents.resources[0] * resources_weight_action * links.trust * resources_potency
+								agents.resources[0] * resources_weight_action * links.aware * resources_potency
 							# print('New value of the CR: ' + str(agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0]))
 							# 1-1 check
 							agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = \
@@ -4358,7 +4358,7 @@ class Policyentres(Agent):
 							# print('Old value of the CR: ' + str(agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0]))
 							agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] += \
 								(agents.belieftree[0][cw_of_interest[cw]][0] - agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0]) * \
-								agents.resources[0] * resources_weight_action * links.trust * resources_potency
+								agents.resources[0] * resources_weight_action * links.aware * resources_potency
 							# print('New value of the CR: ' + str(agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0]))
 							# 1-1 check
 							agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] = \
@@ -4405,7 +4405,7 @@ class Policyentres(Agent):
 								# print('Old value of the aim: ' + str(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1]))
 								agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1] += \
 									(agents.belieftree[0][issue_of_interest[issue_num]][1] - agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1]) * \
-									agents.resources[0] * resources_weight_action * links.trust * links.conflict_level[0][issue_of_interest[issue_num]][1] * actionWeight * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][issue_of_interest[issue_num]][1] * actionWeight * resources_potency
 								# 1-1 check
 								agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1] = \
 									self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1])
@@ -4446,7 +4446,7 @@ class Policyentres(Agent):
 								# print('Old value of the aim: ' + str(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1]))
 								agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1] += \
 									(agents.belieftree[0][issue_of_interest[issue_num]][1] - agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1]) * \
-									agents.resources[0] * resources_weight_action * links.trust * links.conflict_level[1][issue_of_interest[issue_num]][1] * actionWeight * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[1][issue_of_interest[issue_num]][1] * actionWeight * resources_potency
 								# 1-1 check
 								agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1] = \
 									self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1])
@@ -4494,7 +4494,7 @@ class Policyentres(Agent):
 								# print('Old value of the aim: ' + str(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0]))
 								agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0] += \
 									(agents.belieftree[0][issue_of_interest[issue_num]][0] - agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0]) * \
-									agents.resources[0] * resources_weight_action * links.trust * links.conflict_level[0][issue_of_interest[issue_num]][0] * actionWeight * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][issue_of_interest[issue_num]][0] * actionWeight * resources_potency
 								# 1-1 check
 								agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0] = \
 									self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0])
@@ -4535,7 +4535,7 @@ class Policyentres(Agent):
 								# print('Old value of the aim: ' + str(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0]))
 								agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0] += \
 									(agents.belieftree[0][issue_of_interest[issue_num]][0] - agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0]) * \
-									agents.resources[0] * resources_weight_action * links.trust * links.conflict_level[0][issue_of_interest[issue_num]][0] * actionWeight * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][issue_of_interest[issue_num]][0] * actionWeight * resources_potency
 								# 1-1 check
 								agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0] = \
 									self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0])
@@ -4587,14 +4587,14 @@ class Policyentres(Agent):
 						# print('of_interest[0]: ' + str(of_interest[0]))
 						# print('of_interest[0][best_action]: ' + str(of_interest[0][best_action]))
 
-						# Update of the trust decay parameter
-						links.trust_decay = 5
+						# Update of the aware decay parameter
+						links.aware_decay = 5
 
 						if links.agent1 == agents:
 							# print('Before: ' + str(links.agent2.belieftree[0][len(self.deep_core) + len(self.policy_core) + len(self.secondary) + best_action][0]))
 							links.agent2.belieftree[0][of_interest[0][best_action]][0] += \
 								(agents.belieftree[0][of_interest[0][best_action]][0] - links.agent2.belieftree[0][of_interest[0][best_action]][0]) * \
-								agents.resources[0] * resources_weight_action * links.trust * resources_potency
+								agents.resources[0] * resources_weight_action * links.aware * resources_potency
 							# print('After: ' + str(links.agent2.belieftree[0][len(self.deep_core) + len(self.policy_core) + len(self.secondary) + best_action][0]))
 							# 1-1 check
 							if links.agent2.belieftree[0][of_interest[0][best_action]][0] > 1:
@@ -4624,7 +4624,7 @@ class Policyentres(Agent):
 							# print('Before: ' + str(links.agent1.belieftree[0][len(self.deep_core) + len(self.policy_core) + len(self.secondary) + best_action][0]))
 							links.agent1.belieftree[0][of_interest[0][best_action]][0] += \
 								(agents.belieftree[0][of_interest[0][best_action]][0] - links.agent1.belieftree[0][of_interest[0][best_action]][0]) * \
-								agents.resources[0] * resources_weight_action * links.trust * resources_potency
+								agents.resources[0] * resources_weight_action * links.aware * resources_potency
 							# print('After: ' + str(links.agent1.belieftree[0][len(self.deep_core) + len(self.policy_core) + len(self.secondary) + best_action][0]))
 							# 1-1 check
 							if links.agent1.belieftree[0][of_interest[0][best_action]][0] > 1:
@@ -4658,13 +4658,13 @@ class Policyentres(Agent):
 						# print('of_interest[1]: ' + str(of_interest[1]))
 						# print('of_interest[1][best_action - len(cw_of_interest)]: ' + str(of_interest[1][best_action - len(cw_of_interest)]))
 						
-						# Update of the trust decay parameter
-						links.trust_decay = 5
+						# Update of the aware decay parameter
+						links.aware_decay = 5
 
 						if links.agent1 == agents:
 							links.agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest)] ][1] += \
 								(agents.belieftree[0][of_interest[1][best_action - len(cw_of_interest)] ][1] - links.agent2.belieftree[0][agenda_as_issue][1]) * \
-								agents.resources[0] * resources_weight_action * links.trust * resources_potency
+								agents.resources[0] * resources_weight_action * links.aware * resources_potency
 							# 1-1 check
 							links.agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest)]][1] = \
 								self.one_minus_one_check2(links.agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest)]][1])		
@@ -4683,7 +4683,7 @@ class Policyentres(Agent):
 							# print('Before: ' + str(links.agent1.belieftree[0][len(self.deep_core) + agents.select_problem][1]))
 							links.agent1.belieftree[0][of_interest[1][best_action - len(cw_of_interest)] ][1] += \
 								(agents.belieftree[0][of_interest[1][best_action - len(cw_of_interest)] ][1] - links.agent1.belieftree[0][of_interest[1][best_action - len(cw_of_interest)] ][1]) * \
-								agents.resources[0] * resources_weight_action * links.trust * resources_potency
+								agents.resources[0] * resources_weight_action * links.aware * resources_potency
 							# print('After: ' + str(links.agent1.belieftree[0][len(self.deep_core) + agents.select_problem][1]))
 							# 1-1 check
 							links.agent1.belieftree[0][of_interest[1][best_action - len(cw_of_interest)]][1] = \
@@ -4708,14 +4708,14 @@ class Policyentres(Agent):
 						# print('of_interest[1]: ' + str(of_interest[1]))
 						# print('of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]: ' + str(of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]))
 
-						# Update of the trust decay parameter
-						links.trust_decay = 5
+						# Update of the aware decay parameter
+						links.aware_decay = 5
 
 						if links.agent1 == agents:
 							links.agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0] += \
 								(agents.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0] - \
 								links.agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][1]) * \
-								agents.resources[0] * resources_weight_action * links.trust * resources_potency
+								agents.resources[0] * resources_weight_action * links.aware * resources_potency
 							# 1-1 check
 							links.agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0] = \
 								self.one_minus_one_check2(links.agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0])
@@ -4736,7 +4736,7 @@ class Policyentres(Agent):
 							links.agent1.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0] += \
 								(agents.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0] - \
 								links.agent1.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0]) * \
-								agents.resources[0] * resources_weight_action * links.trust * resources_potency
+								agents.resources[0] * resources_weight_action * links.aware * resources_potency
 							# 1-1 check
 							links.agent1.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0] = \
 								self.one_minus_one_check2(links.agent1.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0])
@@ -4784,8 +4784,8 @@ class Policyentres(Agent):
 			total_grade_list_links = []
 			for links in link_list:
 
-				# Making sure that the link is attached to the agent and has a trust higher than 0
-				if (links.agent1 == agents or links.agent2 == agents) and links.trust > 0:
+				# Making sure that the link is attached to the agent and has a aware higher than 0
+				if (links.agent1 == agents or links.agent2 == agents) and links.aware > 0:
 					total_grade_list_links.append(links)
 
 					# Definition the action weight parameter
@@ -4811,7 +4811,7 @@ class Policyentres(Agent):
 									check_none = 1
 								# Performing the action
 								cw_grade = (agents.belieftree[0][cw_of_interest[cw]][0] - agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# Adding the grade to the grade list
 								total_grade_list.append(cw_grade)
 								#  Reset to None after finding the grade
@@ -4827,7 +4827,7 @@ class Policyentres(Agent):
 									check_none = 1
 								# Performing the action
 								cw_grade = (agents.belieftree[0][cw_of_interest[cw]][0] - agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# Adding the grade to the grade list
 								total_grade_list.append(cw_grade)
 								# Reset to None after finding the grade
@@ -4850,7 +4850,7 @@ class Policyentres(Agent):
 									check_none = 1
 								# Performing the action
 								impact_grade = (agents.belieftree_policy[0][agents.select_policy_3S_as][impact] - agents.belieftree_policy[1 + links.agent2.unique_id][agents.select_policy_3S_as][impact]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# Adding the grade to the grade list
 								total_grade_list.append(impact_grade)
 								#  Reset to None after finding the grade
@@ -4865,7 +4865,7 @@ class Policyentres(Agent):
 									agents.belieftree_policy[1 + links.agent1.unique_id][agents.select_policy_3S_as][impact] = 0
 									check_none = 1
 								impact_grade = (agents.belieftree_policy[0][agents.select_policy_3S_as][impact] - agents.belieftree_policy[1 + links.agent1.unique_id][agents.select_policy_3S_as][impact]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# Adding the grade to the grade list
 								total_grade_list.append(impact_grade)
 								# Reset to None after finding the grade
@@ -4881,7 +4881,7 @@ class Policyentres(Agent):
 							check_none = 1
 						# Performing the action
 						aim_grade_issue = (agents.belieftree[0][agents.select_problem_3S_as][1] - agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_as][1]) * \
-							agents.resources[0] * resources_weight_action * links.trust * links.conflict_level[0][agents.select_problem_3S_as][1] * actionWeight * resources_potency
+							agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][agents.select_problem_3S_as][1] * actionWeight * resources_potency
 						#  Reset to None after finding the grade
 						if check_none == 1:
 							agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_as][1] = None
@@ -4896,7 +4896,7 @@ class Policyentres(Agent):
 							check_none = 1
 						# Performing the action
 						aim_grade_issue = (agents.belieftree[0][agents.select_problem_3S_as][1] - agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_as][1]) * \
-							agents.resources[0] * resources_weight_action * links.trust * links.conflict_level[1][agents.select_problem_3S_as][1] * actionWeight * resources_potency
+							agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[1][agents.select_problem_3S_as][1] * actionWeight * resources_potency
 						#  Reset to None after finding the grade
 						if check_none == 1:
 							agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_as][1] = None
@@ -4912,7 +4912,7 @@ class Policyentres(Agent):
 							check_none = 1
 						# Performing the action
 						state_grade_issue = (agents.belieftree[0][agents.select_problem_3S_as][0] - agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_as][0]) * \
-							agents.resources[0] * resources_weight_action * links.trust * links.conflict_level[0][agents.select_problem_3S_as][0] * actionWeight * resources_potency
+							agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][agents.select_problem_3S_as][0] * actionWeight * resources_potency
 						#  Reset to None after finding the grade
 						if check_none == 1:
 							agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_as][0] = None
@@ -4927,7 +4927,7 @@ class Policyentres(Agent):
 							check_none = 1
 						# Performing the action
 						state_grade_issue = (agents.belieftree[0][agents.select_problem_3S_as][0] - agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_as][0]) * \
-							agents.resources[0] * resources_weight_action * links.trust * links.conflict_level[1][agents.select_problem_3S_as][0] * actionWeight * resources_potency
+							agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[1][agents.select_problem_3S_as][0] * actionWeight * resources_potency
 						#  Reset to None after finding the grade
 						if check_none == 1:
 							agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_as][0] = None
@@ -4982,8 +4982,8 @@ class Policyentres(Agent):
 					if (links.agent1 == agents and links.agent2.unique_id == agent_best_action) or (links.agent1.unique_id == agent_best_action and links.agent2 == agents):
 						# print(links)
 
-						# Updating the trust decay parameter
-						links.trust_decay = 5
+						# Updating the aware decay parameter
+						links.aware_decay = 5
 
 						# If the index is in the first part of the list, then the framing action is the best
 						if best_action <= len(cw_of_interest) - 1:
@@ -5000,7 +5000,7 @@ class Policyentres(Agent):
 								
 								# print('Before: ' + str(links.agent2.belieftree[0][best_action][0]))
 								links.agent2.belieftree[0][best_action][0] += (agents.belieftree[0][best_action][0] - links.agent2.belieftree[0][best_action][0]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent2.belieftree[0][best_action][0]))
 								# 1-1 check
 								links.agent2.belieftree[0][best_action][0] = \
@@ -5026,7 +5026,7 @@ class Policyentres(Agent):
 
 								# print('Before: ' + str(links.agent1.belieftree[0][best_action][0]))
 								links.agent1.belieftree[0][best_action][0] += (agents.belieftree[0][best_action][0] - links.agent1.belieftree[0][best_action][0]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent1.belieftree[0][best_action][0]))
 								# 1-1 check
 								links.agent1.belieftree[0][best_action][0] = \
@@ -5056,7 +5056,7 @@ class Policyentres(Agent):
 							if links.agent1 == agents:
 								# print('Before: ' + str(links.agent2.belieftree[0][agents.select_problem_3S_as][1]))
 								links.agent2.belieftree[0][agents.select_problem_3S_as][1] += (agents.belieftree[0][agents.select_problem_3S_as][1] - links.agent2.belieftree[0][agents.select_problem_3S_as][1]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent2.belieftree[0][agents.select_problem_3S_as][1]))
 								# 1-1 check
 								links.agent2.belieftree[0][agents.select_problem_3S_as][1] = \
@@ -5080,7 +5080,7 @@ class Policyentres(Agent):
 
 								# print('Before: ' + str(links.agent1.belieftree[0][agents.select_problem_3S_as][1]))
 								links.agent1.belieftree[0][agents.select_problem_3S_as][1] += (agents.belieftree[0][agents.select_problem_3S_as][1] - links.agent1.belieftree[0][agents.select_problem_3S_as][1]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent1.belieftree[0][agents.select_problem_3S_as][1]))
 								# 1-1 check
 								links.agent1.belieftree[0][agents.select_problem_3S_as][1] = \
@@ -5106,7 +5106,7 @@ class Policyentres(Agent):
 							if links.agent1 == agents:
 								# print('Before: ' + str(links.agent2.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								links.agent2.belieftree[0][agents.select_problem_3S_as][0] += (agents.belieftree[0][agents.select_problem_3S_as][0] - links.agent2.belieftree[0][agents.select_problem_3S_as][0]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent2.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								links.agent2.belieftree[0][agents.select_problem_3S_as][0] = \
 									self.one_minus_one_check2(links.agent2.belieftree[0][agents.select_problem_3S_as][0])
@@ -5128,7 +5128,7 @@ class Policyentres(Agent):
 							if links.agent2 == agents:
 								# print('Before: ' + str(links.agent1.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								links.agent1.belieftree[0][agents.select_problem_3S_as][0] += (agents.belieftree[0][agents.select_problem_3S_as][0] - links.agent1.belieftree[0][agents.select_problem_3S_as][0]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent1.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								# 1-1 check
 								links.agent1.belieftree[0][agents.select_problem_3S_as][0] = \
@@ -5154,8 +5154,8 @@ class Policyentres(Agent):
 					if (links.agent1 == agents and links.agent2.unique_id == agent_best_action) or (links.agent1.unique_id == agent_best_action and links.agent2 == agents):
 						# print(links)
 
-						# Updating the trust decay parameter
-						links.trust_decay = 5
+						# Updating the aware decay parameter
+						links.aware_decay = 5
 
 						# If the index is in the first part of the list, then the framing action is the best
 						if best_action <= impact_number - 1:
@@ -5169,7 +5169,7 @@ class Policyentres(Agent):
 								# print('Before: ' + str(links.agent2.belieftree_policy[0][agents.select_policy_3S_as][best_action]))
 								links.agent2.belieftree_policy[0][agents.select_policy_3S_as][best_action] += (agents.belieftree[0][agents.select_policy_3S_as][best_action] - \
 									links.agent2.belieftree_policy[0][agents.select_policy_3S_as][best_action]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent2.belieftree_policy[0][agents.select_policy_3S_as][best_action]))
 								# 1-1 check
 								links.agent2.belieftree_policy[0][agents.select_policy_3S_as][best_action] = \
@@ -5196,7 +5196,7 @@ class Policyentres(Agent):
 								# print('Before: ' + str(links.agent1.belieftree_policy[0][agents.select_policy_3S_as][best_action]))
 								links.agent1.belieftree_policy[0][agents.select_policy_3S_as][best_action] += (agents.belieftree_policy[0][agents.select_policy_3S_as][best_action] - \
 									links.agent1.belieftree_policy[0][agents.select_policy_3S_as][best_action]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent1.belieftree_policy[0][agents.select_policy_3S_as][best_action]))
 								# 1-1 check
 								links.agent1.belieftree_policy[0][agents.select_policy_3S_as][best_action] = \
@@ -5226,7 +5226,7 @@ class Policyentres(Agent):
 							if links.agent1 == agents:
 								# print('Before: ' + str(links.agent2.belieftree[0][agents.select_problem_3S_as][1]))
 								links.agent2.belieftree[0][agents.select_problem_3S_as][1] += (agents.belieftree[0][agents.select_problem_3S_as][1] - links.agent2.belieftree[0][agents.select_problem_3S_as][1]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent2.belieftree[0][agents.select_problem_3S_as][1]))
 								# 1-1 check
 								links.agent2.belieftree[0][agents.select_problem_3S_as][1] = \
@@ -5250,7 +5250,7 @@ class Policyentres(Agent):
 
 								# print('Before: ' + str(links.agent1.belieftree[0][agents.select_problem_3S_as][1]))
 								links.agent1.belieftree[0][agents.select_problem_3S_as][1] += (agents.belieftree[0][agents.select_problem_3S_as][1] - links.agent1.belieftree[0][agents.select_problem_3S_as][1]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent1.belieftree[0][agents.select_problem_3S_as][1]))
 								# 1-1 check
 								links.agent1.belieftree[0][agents.select_problem_3S_as][1] = \
@@ -5276,7 +5276,7 @@ class Policyentres(Agent):
 							if links.agent1 == agents:
 								# print('Before: ' + str(links.agent2.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								links.agent2.belieftree[0][agents.select_problem_3S_as][0] += (agents.belieftree[0][agents.select_problem_3S_as][0] - links.agent2.belieftree[0][agents.select_problem_3S_as][0]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent2.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								links.agent2.belieftree[0][agents.select_problem_3S_as][0] = \
 									self.one_minus_one_check2(links.agent2.belieftree[0][agents.select_problem_3S_as][0])
@@ -5298,7 +5298,7 @@ class Policyentres(Agent):
 							if links.agent2 == agents:
 								# print('Before: ' + str(links.agent1.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								links.agent1.belieftree[0][agents.select_problem_3S_as][0] += (agents.belieftree[0][agents.select_problem_3S_as][0] - links.agent1.belieftree[0][agents.select_problem_3S_as][0]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent1.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								# 1-1 check
 								links.agent1.belieftree[0][agents.select_problem_3S_as][0] = \
@@ -5356,8 +5356,8 @@ class Policyentres(Agent):
 			total_grade_list_links = []
 			for links in link_list:
 
-				# Making sure that the link is attached to the agent and has a trust higher than 0
-				if (links.agent1 == agents or links.agent2 == agents) and links.trust > 0:
+				# Making sure that the link is attached to the agent and has a aware higher than 0
+				if (links.agent1 == agents or links.agent2 == agents) and links.aware > 0:
 					total_grade_list_links.append(links)
 
 					# Definition the action weight parameter
@@ -5383,7 +5383,7 @@ class Policyentres(Agent):
 									check_none = 1
 								# Performing the action
 								cw_grade = (agents.belieftree[0][cw_of_interest[cw]][0] - agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# Adding the grade to the grade list
 								total_grade_list.append(cw_grade)
 								#  Reset to None after finding the grade
@@ -5399,7 +5399,7 @@ class Policyentres(Agent):
 									check_none = 1
 								# Performing the action
 								cw_grade = (agents.belieftree[0][cw_of_interest[cw]][0] - agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# Adding the grade to the grade list
 								total_grade_list.append(cw_grade)
 								# Reset to None after finding the grade
@@ -5422,7 +5422,7 @@ class Policyentres(Agent):
 									check_none = 1
 								# Performing the action
 								impact_grade = (agents.belieftree_instrument[0][agents.select_policy_3S_pf][impact] - agents.belieftree_instrument[1 + links.agent2.unique_id][agents.select_policy_3S_pf][impact]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# Adding the grade to the grade list
 								total_grade_list.append(impact_grade)
 								#  Reset to None after finding the grade
@@ -5437,7 +5437,7 @@ class Policyentres(Agent):
 									agents.belieftree_instrument[1 + links.agent1.unique_id][agents.select_policy_3S_pf][impact] = 0
 									check_none = 1
 								impact_grade = (agents.belieftree_instrument[0][agents.select_policy_3S_pf][impact] - agents.belieftree_instrument[1 + links.agent1.unique_id][agents.select_policy_3S_pf][impact]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# Adding the grade to the grade list
 								total_grade_list.append(impact_grade)
 								# Reset to None after finding the grade
@@ -5453,7 +5453,7 @@ class Policyentres(Agent):
 							check_none = 1
 						# Performing the action
 						aim_grade_issue = (agents.belieftree[0][agents.select_problem_3S_pf][1] - agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_pf][1]) * \
-							agents.resources[0] * resources_weight_action * links.trust * links.conflict_level[0][agents.select_problem_3S_pf][1] * actionWeight * resources_potency
+							agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][agents.select_problem_3S_pf][1] * actionWeight * resources_potency
 						#  Reset to None after finding the grade
 						if check_none == 1:
 							agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_pf][1] = None
@@ -5468,7 +5468,7 @@ class Policyentres(Agent):
 							check_none = 1
 						# Performing the action
 						aim_grade_issue = (agents.belieftree[0][agents.select_problem_3S_pf][1] - agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_pf][1]) * \
-							agents.resources[0] * resources_weight_action * links.trust * links.conflict_level[1][agents.select_problem_3S_pf][1] * actionWeight * resources_potency
+							agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[1][agents.select_problem_3S_pf][1] * actionWeight * resources_potency
 						#  Reset to None after finding the grade
 						if check_none == 1:
 							agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_pf][1] = None
@@ -5484,7 +5484,7 @@ class Policyentres(Agent):
 							check_none = 1
 						# Performing the action
 						state_grade_issue = (agents.belieftree[0][agents.select_problem_3S_pf][0] - agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_pf][0]) * \
-							agents.resources[0] * resources_weight_action * links.trust * links.conflict_level[0][agents.select_problem_3S_pf][0] * actionWeight * resources_potency
+							agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][agents.select_problem_3S_pf][0] * actionWeight * resources_potency
 						#  Reset to None after finding the grade
 						if check_none == 1:
 							agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_pf][0] = None
@@ -5499,7 +5499,7 @@ class Policyentres(Agent):
 							check_none = 1
 						# Performing the action
 						state_grade_issue = (agents.belieftree[0][agents.select_problem_3S_pf][0] - agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_pf][0]) * \
-							agents.resources[0] * resources_weight_action * links.trust * links.conflict_level[1][agents.select_problem_3S_pf][0] * actionWeight * resources_potency
+							agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[1][agents.select_problem_3S_pf][0] * actionWeight * resources_potency
 						#  Reset to None after finding the grade
 						if check_none == 1:
 							agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_pf][0] = None
@@ -5550,8 +5550,8 @@ class Policyentres(Agent):
 					if (links.agent1 == agents and links.agent2.unique_id == agent_best_action) or (links.agent1.unique_id == agent_best_action and links.agent2 == agents):
 						# print(links)
 
-						# Updating the trust decay parameter
-						links.trust_decay = 5
+						# Updating the aware decay parameter
+						links.aware_decay = 5
 
 						# If the index is in the first part of the list, then the framing action is the best
 						if best_action <= len(cw_of_interest) - 1:
@@ -5568,7 +5568,7 @@ class Policyentres(Agent):
 								
 								# print('Before: ' + str(links.agent2.belieftree[0][best_action][0]))
 								links.agent2.belieftree[0][best_action][0] += (agents.belieftree[0][best_action][0] - links.agent2.belieftree[0][best_action][0]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent2.belieftree[0][best_action][0]))
 								# 1-1 check
 								links.agent2.belieftree[0][best_action][0] = \
@@ -5593,7 +5593,7 @@ class Policyentres(Agent):
 							if links.agent2 == agents:
 								# print('Before: ' + str(links.agent1.belieftree[0][best_action][0]))
 								links.agent1.belieftree[0][best_action][0] += (agents.belieftree[0][best_action][0] - links.agent1.belieftree[0][best_action][0]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent1.belieftree[0][best_action][0]))
 								# 1-1 check
 								links.agent1.belieftree[0][best_action][0] = \
@@ -5623,7 +5623,7 @@ class Policyentres(Agent):
 							if links.agent1 == agents:
 								# print('Before: ' + str(links.agent2.belieftree[0][agents.select_problem_3S_pf][1]))
 								links.agent2.belieftree[0][agents.select_problem_3S_pf][1] += (agents.belieftree[0][agents.select_problem_3S_pf][1] - links.agent2.belieftree[0][agents.select_problem_3S_pf][1]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent2.belieftree[0][agents.select_problem_3S_pf][1]))
 								# 1-1 check
 								links.agent2.belieftree[0][agents.select_problem_3S_pf][1] = \
@@ -5646,7 +5646,7 @@ class Policyentres(Agent):
 							if links.agent2 == agents:
 								# print('Before: ' + str(links.agent1.belieftree[0][agents.select_problem_3S_pf][1]))
 								links.agent1.belieftree[0][agents.select_problem_3S_pf][1] += (agents.belieftree[0][agents.select_problem_3S_pf][1] - links.agent1.belieftree[0][agents.select_problem_3S_pf][1]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent1.belieftree[0][agents.select_problem_3S_pf][1]))
 								# 1-1 check
 								links.agent1.belieftree[0][agents.select_problem_3S_pf][1] = \
@@ -5672,7 +5672,7 @@ class Policyentres(Agent):
 							if links.agent1 == agents:
 								# print('Before: ' + str(links.agent2.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								links.agent2.belieftree[0][agents.select_problem_3S_pf][0] += (agents.belieftree[0][agents.select_problem_3S_pf][0] - links.agent2.belieftree[0][agents.select_problem_3S_pf][0]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent2.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								links.agent2.belieftree[0][agents.select_problem_3S_pf][0] = \
 									self.one_minus_one_check2(links.agent2.belieftree[0][agents.select_problem_3S_pf][0])
@@ -5694,7 +5694,7 @@ class Policyentres(Agent):
 							if links.agent2 == agents:
 								# print('Before: ' + str(links.agent1.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								links.agent1.belieftree[0][agents.select_problem_3S_pf][0] += (agents.belieftree[0][agents.select_problem_3S_pf][0] - links.agent1.belieftree[0][agents.select_problem_3S_pf][0]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent1.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								# 1-1 check
 								links.agent1.belieftree[0][agents.select_problem_3S_pf][0] = \
@@ -5720,8 +5720,8 @@ class Policyentres(Agent):
 					if (links.agent1 == agents and links.agent2.unique_id == agent_best_action) or (links.agent1.unique_id == agent_best_action and links.agent2 == agents):
 						# print(links)
 
-						# Updating the trust decay parameter
-						links.trust_decay = 5
+						# Updating the aware decay parameter
+						links.aware_decay = 5
 
 						# If the index is in the first part of the list, then the framing action is the best
 						if best_action <= impact_number - 1:
@@ -5735,7 +5735,7 @@ class Policyentres(Agent):
 								# print('Before: ' + str(links.agent2.belieftree_instrument[0][agents.select_policy_3S_pf][best_action]))
 								links.agent2.belieftree_instrument[0][agents.select_policy_3S_pf][best_action] += (agents.belieftree_instrument[0][agents.select_policy_3S_pf][best_action] - \
 									links.agent2.belieftree_instrument[0][agents.select_policy_3S_pf][best_action]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent2.belieftree_instrument[0][agents.select_policy_3S_pf][best_action]))
 								# 1-1 check
 								links.agent2.belieftree_instrument[0][agents.select_policy_3S_pf][best_action] = \
@@ -5762,7 +5762,7 @@ class Policyentres(Agent):
 								# print('Before: ' + str(links.agent1.belieftree_instrument[0][agents.select_policy_3S_pf][best_action]))
 								links.agent1.belieftree_instrument[0][agents.select_policy_3S_pf][best_action] += (agents.belieftree_instrument[0][agents.select_policy_3S_pf][best_action] - \
 									links.agent1.belieftree_instrument[0][agents.select_policy_3S_pf][best_action]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent1.belieftree_instrument[0][agents.select_policy_3S_pf][best_action]))
 								# 1-1 check
 								links.agent1.belieftree_instrument[0][agents.select_policy_3S_pf][best_action] = \
@@ -5792,7 +5792,7 @@ class Policyentres(Agent):
 							if links.agent1 == agents:
 								# print('Before: ' + str(links.agent2.belieftree[0][agents.select_problem_3S_pf][1]))
 								links.agent2.belieftree[0][agents.select_problem_3S_pf][1] += (agents.belieftree[0][agents.select_problem_3S_pf][1] - links.agent2.belieftree[0][agents.select_problem_3S_pf][1]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent2.belieftree[0][agents.select_problem_3S_pf][1]))
 								# 1-1 check
 								links.agent2.belieftree[0][agents.select_problem_3S_pf][1] = \
@@ -5816,7 +5816,7 @@ class Policyentres(Agent):
 
 								# print('Before: ' + str(links.agent1.belieftree[0][agents.select_problem_3S_pf][1]))
 								links.agent1.belieftree[0][agents.select_problem_3S_pf][1] += (agents.belieftree[0][agents.select_problem_3S_pf][1] - links.agent1.belieftree[0][agents.select_problem_3S_pf][1]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent1.belieftree[0][agents.select_problem_3S_pf][1]))
 								# 1-1 check
 								links.agent1.belieftree[0][agents.select_problem_3S_pf][1] = \
@@ -5842,7 +5842,7 @@ class Policyentres(Agent):
 							if links.agent1 == agents:
 								# print('Before: ' + str(links.agent2.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								links.agent2.belieftree[0][agents.select_problem_3S_pf][0] += (agents.belieftree[0][agents.select_problem_3S_pf][0] - links.agent2.belieftree[0][agents.select_problem_3S_pf][0]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent2.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								links.agent2.belieftree[0][agents.select_problem_3S_pf][0] = \
 									self.one_minus_one_check2(links.agent2.belieftree[0][agents.select_problem_3S_pf][0])
@@ -5864,7 +5864,7 @@ class Policyentres(Agent):
 							if links.agent2 == agents:
 								# print('Before: ' + str(links.agent1.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								links.agent1.belieftree[0][agents.select_problem_3S_pf][0] += (agents.belieftree[0][agents.select_problem_3S_pf][0] - links.agent1.belieftree[0][agents.select_problem_3S_pf][0]) * \
-									agents.resources[0] * resources_weight_action * links.trust * resources_potency
+									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent1.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								# 1-1 check
 								links.agent1.belieftree[0][agents.select_problem_3S_pf][0] = \

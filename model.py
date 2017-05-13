@@ -56,7 +56,7 @@ class PolicyEmergence(Model):
 		# Policy and instruments related inputs
 		self.instruments = inputs_dict["Instruments"]
 		self.policies = inputs_dict["Policies"]
-		self.trust_decay_coefficient = inputs_dict["Trust_decay_coefficient"]
+		self.aware_decay_coefficient = inputs_dict["Trust_decay_coefficient"]
 		self.conflict_level_coef = inputs_dict["conflict_level_coef"]
 
 		self.coalition_threshold = inputs_dict["coalition_threshold"]
@@ -959,31 +959,31 @@ class PolicyEmergence(Model):
 
 
 
-		# Updating the trust and trust decay parameters
+		# Updating the aware and aware decay parameters
 		for links in self.link_list:
 
-			# The trust decays by 1 for every tick
-			if links.trust_decay > 0:
-				links.trust_decay -= 1
-			# print(links.trust_decay)
+			# The aware decays by 1 for every tick
+			if links.aware_decay > 0:
+				links.aware_decay -= 1
+			# print(links.aware_decay)
 
 			# Make sure that nothing goes negative
-			if links.trust_decay < 0:
-				links.trust_decay = 0
+			if links.aware_decay < 0:
+				links.aware_decay = 0
 
-			# if links.trust_decay < 4 and links.trust_decay !=0:
-			# 	print('TRUST DECAY 3: ' + str(links.trust_decay))
+			# if links.aware_decay < 4 and links.aware_decay !=0:
+			# 	print('TRUST DECAY 3: ' + str(links.aware_decay))
 
-			if links.trust_decay == 0:
+			if links.aware_decay == 0:
 				# print('--')
-				# print(links.trust)
-				# Make sure only links with positive trust are considered
-				if links.trust > 0:
-					links.trust -= self.trust_decay_coefficient
+				# print(links.aware)
+				# Make sure only links with positive aware are considered
+				if links.aware > 0:
+					links.aware -= self.aware_decay_coefficient
 				# Make sure the links that are negative but not -1 are set to 0.
-				if links.trust < 0 and links.trust != -1:
-					links.trust = 0
-				# print(links.trust)
+				if links.aware < 0 and links.aware != -1:
+					links.aware = 0
+				# print(links.aware)
 				# print('-')
 
 	def run_model(self, step_count=1):
@@ -1809,19 +1809,19 @@ class PolicyEmergence(Model):
 		coalition_agent_list = copy.copy(agent_action_list)
 		# Run this loop until less than 10\% of the actors are left coalition-less
 		while len(coalition_agent_list) > round(0.1 * len(agent_action_list), 0):
-			# Finding the agent with the most trust
-			agent_trust_sum_list = []
+			# Finding the agent with the most aware
+			agent_aware_sum_list = []
 			for agents in coalition_agent_list:
 				# print(' ')
 				# print(agents.unique_id)
-				agent_trust_sum = 0
+				agent_aware_sum = 0
 				for links in link_list:
 					if agents == links.agent1 or agents == links.agent2:
-						agent_trust_sum += links.trust
-				agent_trust_sum_list.append(agent_trust_sum)
+						agent_aware_sum += links.aware
+				agent_aware_sum_list.append(agent_aware_sum)
 			# Deciding the leader
-			max_trust_agent = agent_trust_sum_list.index(max(agent_trust_sum_list))
-			leader = coalition_agent_list[max_trust_agent]
+			max_aware_agent = agent_aware_sum_list.index(max(agent_aware_sum_list))
+			leader = coalition_agent_list[max_aware_agent]
 			coalition_agent_list.remove(leader)
 			# print(leader)
 			# Choosing the coalition members
@@ -1890,19 +1890,19 @@ class PolicyEmergence(Model):
 		coalition_agent_list = copy.copy(agent_action_list)
 		# Run this loop until less than 10\% of the actors are left coalition-less
 		while len(coalition_agent_list) > round(0.1 * len(agent_action_list), 0):
-			# Finding the agent with the most trust
-			agent_trust_sum_list = []
+			# Finding the agent with the most aware
+			agent_aware_sum_list = []
 			for agents in coalition_agent_list:
 				# print(' ')
 				# print(agents.unique_id)
-				agent_trust_sum = 0
+				agent_aware_sum = 0
 				for links in link_list:
 					if agents == links.agent1 or agents == links.agent2:
-						agent_trust_sum += links.trust
-				agent_trust_sum_list.append(agent_trust_sum)
+						agent_aware_sum += links.aware
+				agent_aware_sum_list.append(agent_aware_sum)
 			# Deciding the leader
-			max_trust_agent = agent_trust_sum_list.index(max(agent_trust_sum_list))
-			leader = coalition_agent_list[max_trust_agent]
+			max_aware_agent = agent_aware_sum_list.index(max(agent_aware_sum_list))
+			leader = coalition_agent_list[max_aware_agent]
 			coalition_agent_list.remove(leader)
 			# print(leader)
 			# Choosing the coalition members

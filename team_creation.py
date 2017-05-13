@@ -517,7 +517,7 @@ class Team():
 						# print('Added 1 - ' + str(agent_network))
 						self.new_link_threeS_as(link_list, agent_network, teams, threeS_link_list_as, threeS_link_list_as_total, threeS_link_id_as, len_DC, len_PC, conflict_level_coef)
 
-			# If the shadow network exists then update the trust, conflict level, trust_decay
+			# If the shadow network exists then update the aware, conflict level, aware_decay
 			if network_existence_check == True:
 				# Checking that no new members where added - in which case new links would have to be created
 				list_agent2 = []
@@ -570,16 +570,16 @@ class Team():
 					# Select the links related to this team only
 					if links.agent1 == teams:
 						# Make sure to select an existing link
-						if links.trust != -1:
-							# Update of the trust level
-							for agent_check_trust in teams.members:
+						if links.aware != -1:
+							# Update of the aware level
+							for agent_check_aware in teams.members:
 								for links_check in link_list:
-									if links.agent2 == links_check.agent1 and agent_check_trust == links_check.agent2:
-										if links_check.trust > links.trust:
-											links.trust = links_check.trust
-									if links.agent2 == links_check.agent2 and agent_check_trust == links_check.agent1:
-										if links_check.trust > links.trust:
-											links.trust = links_check.trust
+									if links.agent2 == links_check.agent1 and agent_check_aware == links_check.agent2:
+										if links_check.aware > links.aware:
+											links.aware = links_check.aware
+									if links.agent2 == links_check.agent2 and agent_check_aware == links_check.agent1:
+										if links_check.aware > links.aware:
+											links.aware = links_check.aware
 
 							# Update of the conflict level
 							conflict_level = [conflict_level_coef[1], conflict_level_coef[1]]
@@ -634,7 +634,7 @@ class Team():
 						link_count = 0
 						for links in threeS_link_list_as:
 							# Make sure to select an existing link
-							if links.trust != -1:
+							if links.aware != -1:
 								# Make sure to only select the links related to this team
 								if teams == links.agent1:
 									link_count += 1
@@ -653,7 +653,7 @@ class Team():
 											check_none = 1
 										cw_grade = abs((agents_in_team.belieftree[0][cw_of_interest[cw]][0] - \
 										  agents_in_team.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0]) * \
-										  teams.resources[0] * 0.1 * links.trust * actionWeight)
+										  teams.resources[0] * 0.1 * links.aware * actionWeight)
 										total_agent_grades.append(cw_grade)
 										# None reset
 										if check_none == 1:
@@ -665,7 +665,7 @@ class Team():
 										agents_in_team.belieftree[1 + links.agent2.unique_id][teams.issue][0] = 0
 										check_none = 1
 									state_grade = abs((agents_in_team.belieftree[0][teams.issue][0] - \
-									  agents_in_team.belieftree[1 + links.agent2.unique_id][teams.issue][0]) * teams.resources[0] * 0.1 * links.trust * links.conflict_level[0] * actionWeight)
+									  agents_in_team.belieftree[1 + links.agent2.unique_id][teams.issue][0]) * teams.resources[0] * 0.1 * links.aware * links.conflict_level[0] * actionWeight)
 									total_agent_grades.append(state_grade)
 									# None reset
 									if check_none == 1:
@@ -677,7 +677,7 @@ class Team():
 										agents_in_team.belieftree[1 + links.agent2.unique_id][teams.issue][1] = 0
 										check_none = 1
 									aim_grade = abs((agents_in_team.belieftree[0][teams.issue][1] - \
-									  agents_in_team.belieftree[1 + links.agent2.unique_id][teams.issue][1]) * teams.resources[0] * 0.1 * links.trust * links.conflict_level[1] * actionWeight)
+									  agents_in_team.belieftree[1 + links.agent2.unique_id][teams.issue][1]) * teams.resources[0] * 0.1 * links.aware * links.conflict_level[1] * actionWeight)
 									total_agent_grades.append(aim_grade)
 									# None reset
 									if check_none == 1:
@@ -710,7 +710,7 @@ class Team():
 							# Make sure to only select the links related to this team
 							if teams == links.agent1:
 								# Make sure to select an existing link
-								if links.trust != -1:
+								if links.aware != -1:
 									list_links_teams.append(links)
 
 					# Implement framing action
@@ -724,7 +724,7 @@ class Team():
 						# print('Before: ' + str(list_links_teams[acted_upon_agent].agent2.belieftree[0][len(deep_core) + len(policy_core) + len(secondary) + best_action - 1][0]))
 						list_links_teams[acted_upon_agent].agent2.belieftree[0][cw_of_interest[best_action]][0] += \
 							(teams.members[acting_agent].belieftree[0][cw_of_interest[best_action]][0] - list_links_teams[acted_upon_agent].agent2.belieftree[0][cw_of_interest[best_action]][0]) * \
-							teams.resources[0] * 0.1 * list_links_teams[acted_upon_agent].trust
+							teams.resources[0] * 0.1 * list_links_teams[acted_upon_agent].aware
 						# print('After: ' + str(list_links_teams[acted_upon_agent].agent2.belieftree[0][cw_of_interest[best_action]][0]))
 						# 1-1 check
 						list_links_teams[acted_upon_agent].agent2.belieftree[0][cw_of_interest[best_action]][0] = \
@@ -750,7 +750,7 @@ class Team():
 
 						list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][0] += (teams.members[acting_agent].belieftree[0][teams.issue][0] - \
 						  list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][0]) * teams.resources[0] * 0.1 * \
-						  list_links_teams[acted_upon_agent].trust
+						  list_links_teams[acted_upon_agent].aware
 						# 1-1 check
 						list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][0] = \
 							self.one_minus_one_check2(list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][0])
@@ -775,7 +775,7 @@ class Team():
 
 						list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][1] += (teams.members[acting_agent].belieftree[0][teams.issue][1] - \
 						  list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][1]) * teams.resources[0] * 0.1 * \
-						  list_links_teams[acted_upon_agent].trust
+						  list_links_teams[acted_upon_agent].aware
 						# 1-1 check
 						list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][1] = \
 							self.one_minus_one_check2(list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][1])
@@ -816,7 +816,7 @@ class Team():
 						link_count = 0
 						for links in threeS_link_list_as:
 							# Make sure to select an existing link
-							if links.trust != -1:
+							if links.aware != -1:
 								# Make sure to only select the links related to this team
 								if teams == links.agent1:
 									link_count += 1
@@ -835,7 +835,7 @@ class Team():
 											check_none = 1
 										impact_grade = abs((agents_in_team.belieftree_policy[0][teams.issue][impact] - \
 										  agents_in_team.belieftree_policy[1 + links.agent2.unique_id][teams.issue][impact]) * \
-										  teams.resources[0] * 0.1 * links.trust * actionWeight)
+										  teams.resources[0] * 0.1 * links.aware * actionWeight)
 										total_agent_grades.append(impact_grade)
 										# None reset
 										if check_none == 1:
@@ -847,7 +847,7 @@ class Team():
 										agents_in_team.belieftree[1 + links.agent2.unique_id][teams.issue][0] = 0
 										check_none = 1
 									state_grade = abs((agents_in_team.belieftree[0][teams.issue][0] - \
-									  agents_in_team.belieftree[1 + links.agent2.unique_id][teams.issue][0]) * teams.resources[0] * 0.1 * links.trust * links.conflict_level[0] * actionWeight)
+									  agents_in_team.belieftree[1 + links.agent2.unique_id][teams.issue][0]) * teams.resources[0] * 0.1 * links.aware * links.conflict_level[0] * actionWeight)
 									total_agent_grades.append(state_grade)
 									# None reset
 									if check_none == 1:
@@ -859,7 +859,7 @@ class Team():
 										agents_in_team.belieftree[1 + links.agent2.unique_id][teams.issue][1] = 0
 										check_none = 1
 									aim_grade = abs((agents_in_team.belieftree[0][teams.issue][1] - \
-									  agents_in_team.belieftree[1 + links.agent2.unique_id][teams.issue][1]) * teams.resources[0] * 0.1 * links.trust * links.conflict_level[1] * actionWeight)
+									  agents_in_team.belieftree[1 + links.agent2.unique_id][teams.issue][1]) * teams.resources[0] * 0.1 * links.aware * links.conflict_level[1] * actionWeight)
 									total_agent_grades.append(aim_grade)
 									# None reset
 									if check_none == 1:
@@ -892,7 +892,7 @@ class Team():
 							# Make sure to only select the links related to this team
 							if teams == links.agent1:
 								# Make sure to select an existing link
-								if links.trust != -1:
+								if links.aware != -1:
 									list_links_teams.append(links)
 
 					# Implement framing action
@@ -905,7 +905,7 @@ class Team():
 						list_links_teams[acted_upon_agent].agent2.belieftree_policy[0][teams.issue][best_action] += \
 						  (teams.members[acting_agent].belieftree_policy[0][teams.issue][best_action] - \
 						  list_links_teams[acted_upon_agent].agent2.belieftree_policy[0][teams.issue][best_action]) * \
-						  teams.resources[0] * 0.1 * list_links_teams[acted_upon_agent].trust
+						  teams.resources[0] * 0.1 * list_links_teams[acted_upon_agent].aware
 						# print('After: ' + str(list_links_teams[acted_upon_agent].agent2.belieftree[0][len(deep_core) + len(policy_core) + len(secondary) + best_action][0]))
 						# 1-1 check
 						list_links_teams[acted_upon_agent].agent2.belieftree_policy[0][teams.issue][best_action] = \
@@ -931,7 +931,7 @@ class Team():
 
 						list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][0] += (teams.members[acting_agent].belieftree[0][teams.issue][0] - \
 						  list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][0]) * teams.resources[0] * 0.1 * \
-						  list_links_teams[acted_upon_agent].trust
+						  list_links_teams[acted_upon_agent].aware
 						# 1-1 check
 						list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][0] = \
 							self.one_minus_one_check2(list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][0])
@@ -956,7 +956,7 @@ class Team():
 
 						list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][1] += (teams.members[acting_agent].belieftree[0][teams.issue][1] - \
 						  list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][1]) * teams.resources[0] * 0.1 * \
-						  list_links_teams[acted_upon_agent].trust
+						  list_links_teams[acted_upon_agent].aware
 						# 1-1 check
 						list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][1] = \
 							self.one_minus_one_check2(list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][1])
@@ -1478,7 +1478,7 @@ class Team():
 						# print('Added 1 - ' + str(agent_network))
 						self.new_link_threeS_pf(link_list, agent_network, teams, threeS_link_list_pf, threeS_link_list_pf_total, threeS_link_id_pf, len_DC, len_PC, conflict_level_coef)
 
-			# If the shadow network exists then update the trust, conflict level, trust_decay
+			# If the shadow network exists then update the aware, conflict level, aware_decay
 			if network_existence_check == True:
 				# Checking that no new members where added - in which case new links would have to be created
 				list_agent2 = []
@@ -1531,16 +1531,16 @@ class Team():
 					# Select the links related to this team only
 					if links.agent1 == teams:
 						# Make sure to select an existing link
-						if links.trust != -1:
-							# Update of the trust level
-							for agent_check_trust in teams.members:
+						if links.aware != -1:
+							# Update of the aware level
+							for agent_check_aware in teams.members:
 								for links_check in link_list:
-									if links.agent2 == links_check.agent1 and agent_check_trust == links_check.agent2:
-										if links_check.trust > links.trust:
-											links.trust = links_check.trust
-									if links.agent2 == links_check.agent2 and agent_check_trust == links_check.agent1:
-										if links_check.trust > links.trust:
-											links.trust = links_check.trust
+									if links.agent2 == links_check.agent1 and agent_check_aware == links_check.agent2:
+										if links_check.aware > links.aware:
+											links.aware = links_check.aware
+									if links.agent2 == links_check.agent2 and agent_check_aware == links_check.agent1:
+										if links_check.aware > links.aware:
+											links.aware = links_check.aware
 
 							# Update of the conflict level
 							conflict_level = [conflict_level_coef[1], conflict_level_coef[1]]
@@ -1595,7 +1595,7 @@ class Team():
 						link_count = 0
 						for links in threeS_link_list_pf:
 							# Make sure to select an existing link
-							if links.trust != -1:
+							if links.aware != -1:
 								# Make sure to only select the links related to this team
 								if teams == links.agent1:
 									link_count += 1
@@ -1614,7 +1614,7 @@ class Team():
 											check_none = 1
 										cw_grade = abs((agents_in_team.belieftree[0][cw_of_interest[cw]][0] - \
 										  agents_in_team.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0]) * \
-										  teams.resources[0] * 0.1 * links.trust * actionWeight)
+										  teams.resources[0] * 0.1 * links.aware * actionWeight)
 										total_agent_grades.append(cw_grade)
 										# None reset
 										if check_none == 1:
@@ -1626,7 +1626,7 @@ class Team():
 										agents_in_team.belieftree[1 + links.agent2.unique_id][teams.issue][0] = 0
 										check_none = 1
 									state_grade = abs((agents_in_team.belieftree[0][teams.issue][0] - \
-									  agents_in_team.belieftree[1 + links.agent2.unique_id][teams.issue][0]) * teams.resources[0] * 0.1 * links.trust * links.conflict_level[0] * actionWeight)
+									  agents_in_team.belieftree[1 + links.agent2.unique_id][teams.issue][0]) * teams.resources[0] * 0.1 * links.aware * links.conflict_level[0] * actionWeight)
 									total_agent_grades.append(state_grade)
 									# None reset
 									if check_none == 1:
@@ -1638,7 +1638,7 @@ class Team():
 										agents_in_team.belieftree[1 + links.agent2.unique_id][teams.issue][1] = 0
 										check_none = 1
 									aim_grade = abs((agents_in_team.belieftree[0][teams.issue][1] - \
-									  agents_in_team.belieftree[1 + links.agent2.unique_id][teams.issue][1]) * teams.resources[0] * 0.1 * links.trust * links.conflict_level[1] * actionWeight)
+									  agents_in_team.belieftree[1 + links.agent2.unique_id][teams.issue][1]) * teams.resources[0] * 0.1 * links.aware * links.conflict_level[1] * actionWeight)
 									total_agent_grades.append(aim_grade)
 									# None reset
 									if check_none == 1:
@@ -1672,7 +1672,7 @@ class Team():
 							# Make sure to only select the links related to this team
 							if teams == links.agent1:
 								# Make sure to select an existing link
-								if links.trust != -1:
+								if links.aware != -1:
 									list_links_teams.append(links)
 
 					# Implement framing action
@@ -1687,7 +1687,7 @@ class Team():
 						list_links_teams[acted_upon_agent].agent2.belieftree[0][cw_of_interest[best_action]][0] += \
 						  (teams.members[acting_agent].belieftree[0][cw_of_interest[best_action]][0] - \
 						  list_links_teams[acted_upon_agent].agent2.belieftree[0][cw_of_interest[best_action]][0]) * \
-						  teams.resources[0] * 0.1 * list_links_teams[acted_upon_agent].trust
+						  teams.resources[0] * 0.1 * list_links_teams[acted_upon_agent].aware
 						# print('After: ' + str(list_links_teams[acted_upon_agent].agent2.belieftree[0][len(deep_core) + len(policy_core) + len(secondary) + best_action - 1][0]))
 						# 1-1 check
 						list_links_teams[acted_upon_agent].agent2.belieftree[0][cw_of_interest[best_action]][0] = \
@@ -1713,7 +1713,7 @@ class Team():
 
 						list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][0] += (teams.members[acting_agent].belieftree[0][teams.issue][0] - \
 						  list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][0]) * teams.resources[0] * 0.1 * \
-						  list_links_teams[acted_upon_agent].trust
+						  list_links_teams[acted_upon_agent].aware
 						# 1-1 check
 						list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][0] = \
 							self.one_minus_one_check2(list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][0])
@@ -1738,7 +1738,7 @@ class Team():
 
 						list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][1] += (teams.members[acting_agent].belieftree[0][teams.issue][1] - \
 						  list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][1]) * teams.resources[0] * 0.1 * \
-						  list_links_teams[acted_upon_agent].trust
+						  list_links_teams[acted_upon_agent].aware
 						# 1-1 check
 						list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][1] = \
 							self.one_minus_one_check2(list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][1])
@@ -1780,7 +1780,7 @@ class Team():
 						link_count = 0
 						for links in threeS_link_list_pf:
 							# Make sure to select an existing link
-							if links.trust != -1:
+							if links.aware != -1:
 								# Make sure to only select the links related to this team
 								if teams == links.agent1:
 									link_count += 1
@@ -1799,7 +1799,7 @@ class Team():
 											check_none = 1
 										impact_grade = abs((agents_in_team.belieftree_instrument[0][teams.issue][impact]  - \
 										  agents_in_team.belieftree_instrument[1 + links.agent2.unique_id][teams.issue][impact] ) * \
-										  teams.resources[0] * 0.1 * links.trust * actionWeight)
+										  teams.resources[0] * 0.1 * links.aware * actionWeight)
 										total_agent_grades.append(impact_grade)
 										# None reset
 										if check_none == 1:
@@ -1811,7 +1811,7 @@ class Team():
 										agents_in_team.belieftree[1 + links.agent2.unique_id][teams.issue][0] = 0
 										check_none = 1
 									state_grade = abs((agents_in_team.belieftree[0][teams.issue][0] - \
-									  agents_in_team.belieftree[1 + links.agent2.unique_id][teams.issue][0]) * teams.resources[0] * 0.1 * links.trust * links.conflict_level[0] * actionWeight)
+									  agents_in_team.belieftree[1 + links.agent2.unique_id][teams.issue][0]) * teams.resources[0] * 0.1 * links.aware * links.conflict_level[0] * actionWeight)
 									total_agent_grades.append(state_grade)
 									# None reset
 									if check_none == 1:
@@ -1823,7 +1823,7 @@ class Team():
 										agents_in_team.belieftree[1 + links.agent2.unique_id][teams.issue][1] = 0
 										check_none = 1
 									aim_grade = abs((agents_in_team.belieftree[0][teams.issue][1] - \
-									  agents_in_team.belieftree[1 + links.agent2.unique_id][teams.issue][1]) * teams.resources[0] * 0.1 * links.trust * links.conflict_level[1] * actionWeight)
+									  agents_in_team.belieftree[1 + links.agent2.unique_id][teams.issue][1]) * teams.resources[0] * 0.1 * links.aware * links.conflict_level[1] * actionWeight)
 									total_agent_grades.append(aim_grade)
 									# None reset
 									if check_none == 1:
@@ -1858,7 +1858,7 @@ class Team():
 							# Make sure to only select the links related to this team
 							if teams == links.agent1:
 								# Make sure to select an existing link
-								if links.trust != -1:
+								if links.aware != -1:
 									list_links_teams.append(links)
 
 					# Implement framing action
@@ -1871,7 +1871,7 @@ class Team():
 						list_links_teams[acted_upon_agent].agent2.belieftree_instrument[0][teams.issue][best_action] += \
 						  (teams.members[acting_agent].belieftree_instrument[0][teams.issue][best_action] - \
 						  list_links_teams[acted_upon_agent].agent2.belieftree_instrument[0][teams.issue][best_action]) * \
-						  teams.resources[0] * 0.1 * list_links_teams[acted_upon_agent].trust
+						  teams.resources[0] * 0.1 * list_links_teams[acted_upon_agent].aware
 						# print('After: ' + str(list_links_teams[acted_upon_agent].agent2.belieftree[0][len(deep_core) + len(policy_core) + len(secondary) + best_action][0]))
 						# 1-1 check
 						list_links_teams[acted_upon_agent].agent2.belieftree_instrument[0][teams.issue][best_action] = \
@@ -1897,7 +1897,7 @@ class Team():
 
 						list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][0] += (teams.members[acting_agent].belieftree[0][teams.issue][0] - \
 						  list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][0]) * teams.resources[0] * 0.1 * \
-						  list_links_teams[acted_upon_agent].trust
+						  list_links_teams[acted_upon_agent].aware
 						# 1-1 check
 						list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][0] = \
 							self.one_minus_one_check2(list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][0])
@@ -1922,7 +1922,7 @@ class Team():
 						
 						list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][1] += (teams.members[acting_agent].belieftree[0][teams.issue][1] - \
 						  list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][1]) * teams.resources[0] * 0.1 * \
-						  list_links_teams[acted_upon_agent].trust
+						  list_links_teams[acted_upon_agent].aware
 						# 1-1 check
 						list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][1] = \
 							self.one_minus_one_check2(list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][1])
@@ -1948,17 +1948,17 @@ class Team():
 
 	def new_link_threeS_as(self, link_list, outsider_agent, teams, threeS_link_list_as, threeS_link_list_as_total, threeS_link_id_as, len_DC, len_PC, conflict_level_coef):
 
-		# First we look for the highest trust level
-		team_trust = 0
-		for agent_check_trust in teams.members:
+		# First we look for the highest aware level
+		team_aware = 0
+		for agent_check_aware in teams.members:
 			for links_check in link_list:
-				if outsider_agent == links_check.agent1 and agent_check_trust == links_check.agent2:
-					if links_check.trust > team_trust:
-						team_trust = links_check.trust
-				if outsider_agent == links_check.agent2 and agent_check_trust == links_check.agent1:
-					if links_check.trust > team_trust:
-						team_trust = links_check.trust
-						# print(team_trust)
+				if outsider_agent == links_check.agent1 and agent_check_aware == links_check.agent2:
+					if links_check.aware > team_aware:
+						team_aware = links_check.aware
+				if outsider_agent == links_check.agent2 and agent_check_aware == links_check.agent1:
+					if links_check.aware > team_aware:
+						team_aware = links_check.aware
+						# print(team_aware)
 
 		# Second we calculate the conflict level
 		# Note that the conflict level is only of interest for the issue advocated by the team (simplifying things)
@@ -1994,28 +1994,28 @@ class Team():
 		if aim_cf_difference > 1.75:
 			conflict_level[1] = conflict_level_coef[1]
 
-		# Third we set the trust decay
-		trust_decay = 0
+		# Third we set the aware decay
+		aware_decay = 0
 
 		# Fifth we create the link
-		team_link = PolicyNetworkLinks(threeS_link_id_as[0], teams, outsider_agent, team_trust, trust_decay, conflict_level)
+		team_link = PolicyNetworkLinks(threeS_link_id_as[0], teams, outsider_agent, team_aware, aware_decay, conflict_level)
 		threeS_link_list_as.append(team_link)
 		threeS_link_list_as_total.append(team_link)
 		threeS_link_id_as[0] += 1
 
 	def new_link_threeS_pf(self, link_list, outsider_agent, teams, threeS_link_list_pf, threeS_link_list_pf_total, threeS_link_id_pf, len_DC, len_PC, conflict_level_coef):
 
-		# First we look for the highest trust level
-		team_trust = 0
-		for agent_check_trust in teams.members:
+		# First we look for the highest aware level
+		team_aware = 0
+		for agent_check_aware in teams.members:
 			for links_check in link_list:
-				if outsider_agent == links_check.agent1 and agent_check_trust == links_check.agent2:
-					if links_check.trust > team_trust:
-						team_trust = links_check.trust
-				if outsider_agent == links_check.agent2 and agent_check_trust == links_check.agent1:
-					if links_check.trust > team_trust:
-						team_trust = links_check.trust
-						# print(team_trust)
+				if outsider_agent == links_check.agent1 and agent_check_aware == links_check.agent2:
+					if links_check.aware > team_aware:
+						team_aware = links_check.aware
+				if outsider_agent == links_check.agent2 and agent_check_aware == links_check.agent1:
+					if links_check.aware > team_aware:
+						team_aware = links_check.aware
+						# print(team_aware)
 
 		# Second we calculate the conflict level
 		# Note that the conflict level is only of interest for the issue advocated by the team (simplifying things)
@@ -2051,11 +2051,11 @@ class Team():
 		if aim_cf_difference > 1.75:
 			conflict_level[1] = conflict_level_coef[1]
 
-		# Third we set the trust decay
-		trust_decay = 0
+		# Third we set the aware decay
+		aware_decay = 0
 
 		# Fifth we create the link
-		team_link = PolicyNetworkLinks(threeS_link_id_pf[0], teams, outsider_agent, team_trust, trust_decay, conflict_level)
+		team_link = PolicyNetworkLinks(threeS_link_id_pf[0], teams, outsider_agent, team_aware, aware_decay, conflict_level)
 		threeS_link_list_pf.append(team_link)
 		threeS_link_list_pf_total.append(team_link)
 		threeS_link_id_pf[0] += 1

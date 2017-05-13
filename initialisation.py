@@ -5019,16 +5019,16 @@ def initial_values(inputs_dict, experiment_input, run_number, agent_inputs, AS_t
 	for i in range(len(agent_action_list)):
 		for j in range(len(agent_action_list) - nw_test):
 			# print('(' + str(i) + ',' + str(j + nw_test) + ')')
-			# Defining the trust level
-			trust_check = random.random()
-			if trust_check < 0.1 and (type(agent_action_list[i]) != Policymakers and type(agent_action_list[j + nw_test]) != Policymakers):
-				trust = -1
-			if trust_check < 0.5 and trust_check >= 0.1:
-				trust = 0
-			if trust_check >= 0.5:
-				trust = random.random()
+			# Defining the aware level
+			aware_check = random.random()
+			if aware_check < 0.1 and (type(agent_action_list[i]) != Policymakers and type(agent_action_list[j + nw_test]) != Policymakers):
+				aware = -1
+			if aware_check < 0.5 and aware_check >= 0.1:
+				aware = 0
+			if aware_check >= 0.5:
+				aware = random.random()
 
-			policynetworklink = PolicyNetworkLinks(link_id, agent_action_list[i], agent_action_list[j + nw_test], trust, inputs_dict["Trust_decay_coefficient"], conflict_level)
+			policynetworklink = PolicyNetworkLinks(link_id, agent_action_list[i], agent_action_list[j + nw_test], aware, inputs_dict["Trust_decay_coefficient"], conflict_level)
 			inputs_dict["Link_list"].append(policynetworklink)
 			# link_list.append(policynetworklink)
 			# print(policynetworklink)

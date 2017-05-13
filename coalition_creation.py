@@ -291,7 +291,7 @@ class Coalition():
 					link_count = 0
 					for links in ACF_link_list_as:
 						# Make sure to select an existing link
-						if links.trust != -1:
+						if links.aware != -1:
 							# Make sure to only select the links related to this team
 							if coalitions == links.agent1:
 								# print(links)
@@ -311,7 +311,7 @@ class Coalition():
 										check_none = 1
 									cw_grade = abs((coalitions.lead.belieftree[0][cw_of_interest[cw]][0] - \
 									  coalitions.lead.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0]) * \
-									  coalitions.resources[0] * 0.1 * links.trust * actionWeight)
+									  coalitions.resources[0] * 0.1 * links.aware * actionWeight)
 									total_agent_grades.append(cw_grade)
 									# None reset
 									if check_none == 1:
@@ -323,7 +323,7 @@ class Coalition():
 									coalitions.lead.belieftree[1 + links.agent2.unique_id][coalitions.issue][0] = 0
 									check_none = 1
 								state_grade = abs((coalitions.lead.belieftree[0][coalitions.issue][0] - \
-								  coalitions.lead.belieftree[1 + links.agent2.unique_id][coalitions.issue][0]) * coalitions.resources[0] * 0.1 * links.trust * links.conflict_level[0] * actionWeight)
+								  coalitions.lead.belieftree[1 + links.agent2.unique_id][coalitions.issue][0]) * coalitions.resources[0] * 0.1 * links.aware * links.conflict_level[0] * actionWeight)
 								total_agent_grades.append(state_grade)
 								# None reset
 								if check_none == 1:
@@ -335,7 +335,7 @@ class Coalition():
 									coalitions.lead.belieftree[1 + links.agent2.unique_id][coalitions.issue][1] = 0
 									check_none = 1
 								aim_grade = abs((coalitions.lead.belieftree[0][coalitions.issue][1] - \
-								  coalitions.lead.belieftree[1 + links.agent2.unique_id][coalitions.issue][1]) * coalitions.resources[0] * 0.1 * links.trust * links.conflict_level[1] * actionWeight)
+								  coalitions.lead.belieftree[1 + links.agent2.unique_id][coalitions.issue][1]) * coalitions.resources[0] * 0.1 * links.aware * links.conflict_level[1] * actionWeight)
 								total_agent_grades.append(aim_grade)
 								# None reset
 								if check_none == 1:
@@ -360,7 +360,7 @@ class Coalition():
 							# Make sure to only select the links related to this team
 							if coalitions == links.agent1:
 								# Make sure to select an existing link
-								if links.trust != -1:
+								if links.aware != -1:
 									list_links_coalitions.append(links)
 
 					# Implement framing action
@@ -374,7 +374,7 @@ class Coalition():
 						# print('Before: ' + str(list_links_coalitions[acted_upon_agent].agent2.belieftree[0][len(deep_core) + len(policy_core) + len(secondary) + best_action - 1][0]))
 						list_links_coalitions[acted_upon_agent].agent2.belieftree[0][cw_of_interest[best_action]][0] += \
 							(coalitions.lead.belieftree[0][cw_of_interest[best_action]][0] - list_links_coalitions[acted_upon_agent].agent2.belieftree[0][cw_of_interest[best_action]][0]) * \
-							coalitions.resources[0] * 0.1 * list_links_coalitions[acted_upon_agent].trust
+							coalitions.resources[0] * 0.1 * list_links_coalitions[acted_upon_agent].aware
 						# print('After: ' + str(list_links_coalitions[acted_upon_agent].agent2.belieftree[0][len(deep_core) + len(policy_core) + len(secondary) + best_action - 1][0]))
 						# 1-1 check
 						list_links_coalitions[acted_upon_agent].agent2.belieftree[0][cw_of_interest[best_action]][0] = \
@@ -400,7 +400,7 @@ class Coalition():
 
 						list_links_coalitions[acted_upon_agent].agent2.belieftree[0][coalitions.issue][0] += \
 							(coalitions.lead.belieftree[0][coalitions.issue][0] - list_links_coalitions[acted_upon_agent].agent2.belieftree[0][coalitions.issue][0]) * \
-							coalitions.resources[0] * 0.1 * list_links_coalitions[acted_upon_agent].trust
+							coalitions.resources[0] * 0.1 * list_links_coalitions[acted_upon_agent].aware
 						# 1-1 check
 						list_links_coalitions[acted_upon_agent].agent2.belieftree[0][coalitions.issue][0] = \
 							self.one_minus_one_check2(list_links_coalitions[acted_upon_agent].agent2.belieftree[0][coalitions.issue][0])
@@ -425,7 +425,7 @@ class Coalition():
 
 						list_links_coalitions[acted_upon_agent].agent2.belieftree[0][coalitions.issue][1] += \
 							(coalitions.lead.belieftree[0][coalitions.issue][1] - list_links_coalitions[acted_upon_agent].agent2.belieftree[0][coalitions.issue][1]) * \
-							coalitions.resources[0] * 0.1 * list_links_coalitions[acted_upon_agent].trust
+							coalitions.resources[0] * 0.1 * list_links_coalitions[acted_upon_agent].aware
 						# 1-1 check
 						list_links_coalitions[acted_upon_agent].agent2.belieftree[0][coalitions.issue][1] = \
 							self.one_minus_one_check2(list_links_coalitions[acted_upon_agent].agent2.belieftree[0][coalitions.issue][1])
@@ -752,7 +752,7 @@ class Coalition():
 					link_count = 0
 					for links in ACF_link_list_pf:
 						# Make sure to select an existing link
-						if links.trust != -1:
+						if links.aware != -1:
 							# Make sure to only select the links related to this team
 							if coalitions == links.agent1:
 								link_count += 1
@@ -771,7 +771,7 @@ class Coalition():
 										check_none = 1
 									cw_grade = abs((coalitions.lead.belieftree[0][cw_of_interest[cw]][0] - \
 									  coalitions.lead.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0]) * \
-									  coalitions.resources[0] * 0.1 * links.trust * actionWeight)
+									  coalitions.resources[0] * 0.1 * links.aware * actionWeight)
 									total_agent_grades.append(cw_grade)
 									# None reset
 									if check_none == 1:
@@ -784,7 +784,7 @@ class Coalition():
 										coalitions.lead.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0] = 0
 										check_none = 1
 									state_grade = abs((coalitions.lead.belieftree[0][issue_of_interest[issue_num]][0] - \
-									  coalitions.lead.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0]) * coalitions.resources[0] * 0.1 * links.trust * links.conflict_level[issue_num - (len_DC + len_PC)][0] * actionWeight)
+									  coalitions.lead.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0]) * coalitions.resources[0] * 0.1 * links.aware * links.conflict_level[issue_num - (len_DC + len_PC)][0] * actionWeight)
 									total_agent_grades.append(state_grade)
 									# None reset
 									if check_none == 1:
@@ -797,7 +797,7 @@ class Coalition():
 										coalitions.lead.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1] = 0
 										check_none = 1
 									aim_grade = abs((coalitions.lead.belieftree[0][issue_of_interest[issue_num]][1] - \
-									  coalitions.lead.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1]) * coalitions.resources[0] * 0.1 * links.trust * links.conflict_level[issue_num - (len_DC + len_PC)][1] * actionWeight)
+									  coalitions.lead.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1]) * coalitions.resources[0] * 0.1 * links.aware * links.conflict_level[issue_num - (len_DC + len_PC)][1] * actionWeight)
 									total_agent_grades.append(aim_grade)
 									# None reset
 									if check_none == 1:
@@ -822,7 +822,7 @@ class Coalition():
 							# Make sure to only select the links related to this team
 							if coalitions == links.agent1:
 								# Make sure to select an existing link
-								if links.trust != -1:
+								if links.aware != -1:
 									list_links_coalitions.append(links)
 
 					# Implement framing action
@@ -836,7 +836,7 @@ class Coalition():
 						# print('Before: ' + str(list_links_coalitions[acted_upon_agent].agent2.belieftree[0][len(deep_core) + len(policy_core) + len(secondary) + best_action - 1][0]))
 						list_links_coalitions[acted_upon_agent].agent2.belieftree[0][of_interest[0][best_action]][0] += \
 							(coalitions.lead.belieftree[0][of_interest[0][best_action]][0] - list_links_coalitions[acted_upon_agent].agent2.belieftree[0][of_interest[0][best_action]][0]) * \
-							coalitions.resources[0] * 0.1 * list_links_coalitions[acted_upon_agent].trust
+							coalitions.resources[0] * 0.1 * list_links_coalitions[acted_upon_agent].aware
 						# print('After: ' + str(list_links_coalitions[acted_upon_agent].agent2.belieftree[0][len(deep_core) + len(policy_core) + len(secondary) + best_action - 1][0]))
 						# 1-1 check
 						list_links_coalitions[acted_upon_agent].agent2.belieftree[0][of_interest[0][best_action]][0] = \
@@ -865,7 +865,7 @@ class Coalition():
 						list_links_coalitions[acted_upon_agent].agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest)]][0] += \
 							(coalitions.lead.belieftree[0][of_interest[1][best_action - len(cw_of_interest)]][0] - \
 							list_links_coalitions[acted_upon_agent].agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest)]][0]) * \
-							coalitions.resources[0] * 0.1 * list_links_coalitions[acted_upon_agent].trust
+							coalitions.resources[0] * 0.1 * list_links_coalitions[acted_upon_agent].aware
 						# 1-1 check
 						list_links_coalitions[acted_upon_agent].agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest)]][0] = \
 							self.one_minus_one_check2(list_links_coalitions[acted_upon_agent].agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest)]][0])
@@ -893,7 +893,7 @@ class Coalition():
 						list_links_coalitions[acted_upon_agent].agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(cw_of_interest)]][1] += \
 							(coalitions.lead.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(cw_of_interest)]][1] - \
 							list_links_coalitions[acted_upon_agent].agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(cw_of_interest)]][1]) * \
-							coalitions.resources[0] * 0.1 * list_links_coalitions[acted_upon_agent].trust
+							coalitions.resources[0] * 0.1 * list_links_coalitions[acted_upon_agent].aware
 						# 1-1 check
 						list_links_coalitions[acted_upon_agent].agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(cw_of_interest)]][1] = \
 							self.one_minus_one_check2(list_links_coalitions[acted_upon_agent].agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(cw_of_interest)]][1])
@@ -920,17 +920,17 @@ class Coalition():
 	
 	def new_link_ACF_as(self, link_list, outsider_agent, coalitions, ACF_link_list_as, ACF_link_list_as_total, ACF_link_id_as, len_DC, len_PC, conflict_level_coef):
 
-		# First we look for the highest trust level
-		team_trust = 0
-		for agent_check_trust in coalitions.members:
+		# First we look for the highest aware level
+		team_aware = 0
+		for agent_check_aware in coalitions.members:
 			for links_check in link_list:
-				if outsider_agent == links_check.agent1 and agent_check_trust == links_check.agent2:
-					if links_check.trust > team_trust:
-						team_trust = links_check.trust
-				if outsider_agent == links_check.agent2 and agent_check_trust == links_check.agent1:
-					if links_check.trust > team_trust:
-						team_trust = links_check.trust
-						# print(team_trust)
+				if outsider_agent == links_check.agent1 and agent_check_aware == links_check.agent2:
+					if links_check.aware > team_aware:
+						team_aware = links_check.aware
+				if outsider_agent == links_check.agent2 and agent_check_aware == links_check.agent1:
+					if links_check.aware > team_aware:
+						team_aware = links_check.aware
+						# print(team_aware)
 
 		# Second we calculate the conflict level
 		# Note that the conflict level is only of interest for the issue advocated by the coalition leader (simplifying things)
@@ -969,28 +969,28 @@ class Coalition():
 		if aim_cf_difference > 1.75:
 			conflict_level[1] = conflict_level_coef[1]
 
-		# Third we set the trust decay
-		trust_decay = 0
+		# Third we set the aware decay
+		aware_decay = 0
 
 		# Fifth we create the link
-		coalition_link = PolicyNetworkLinks(ACF_link_id_as[0], coalitions, outsider_agent, team_trust, trust_decay, conflict_level)
+		coalition_link = PolicyNetworkLinks(ACF_link_id_as[0], coalitions, outsider_agent, team_aware, aware_decay, conflict_level)
 		ACF_link_list_as.append(coalition_link)
 		ACF_link_list_as_total.append(coalition_link)
 		ACF_link_id_as[0] += 1
 
 	def new_link_ACF_pf(self, link_list, outsider_agent, coalitions, ACF_link_list_pf, ACF_link_list_pf_total, ACF_link_id_pf, len_DC, len_PC, len_S, conflict_level_coef):
 
-		# First we look for the highest trust level
-		team_trust = 0
-		for agent_check_trust in coalitions.members:
+		# First we look for the highest aware level
+		team_aware = 0
+		for agent_check_aware in coalitions.members:
 			for links_check in link_list:
-				if outsider_agent == links_check.agent1 and agent_check_trust == links_check.agent2:
-					if links_check.trust > team_trust:
-						team_trust = links_check.trust
-				if outsider_agent == links_check.agent2 and agent_check_trust == links_check.agent1:
-					if links_check.trust > team_trust:
-						team_trust = links_check.trust
-						# print(team_trust)
+				if outsider_agent == links_check.agent1 and agent_check_aware == links_check.agent2:
+					if links_check.aware > team_aware:
+						team_aware = links_check.aware
+				if outsider_agent == links_check.agent2 and agent_check_aware == links_check.agent1:
+					if links_check.aware > team_aware:
+						team_aware = links_check.aware
+						# print(team_aware)
 
 		# Second we calculate the conflict level
 		# Note that the conflict level is only of interest for the issue advocated by the coalition leader (simplifying things)
@@ -1033,11 +1033,11 @@ class Coalition():
 			if aim_cf_difference > 1.75:
 				conflict_level[p][1] = conflict_level_coef[1]
 
-		# Third we set the trust decay
-		trust_decay = 0
+		# Third we set the aware decay
+		aware_decay = 0
 
 		# Fifth we create the link
-		coalition_link = PolicyNetworkLinks(ACF_link_id_pf[0], coalitions, outsider_agent, team_trust, trust_decay, conflict_level)
+		coalition_link = PolicyNetworkLinks(ACF_link_id_pf[0], coalitions, outsider_agent, team_aware, aware_decay, conflict_level)
 		ACF_link_list_pf.append(coalition_link)
 		ACF_link_list_pf_total.append(coalition_link)
 		ACF_link_id_pf[0] += 1
