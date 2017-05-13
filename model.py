@@ -589,7 +589,7 @@ class PolicyEmergence(Model):
 					if type(agents) == Policymakers or type(agents) == Policyentres:
 					# if type(agents) == Policymakers:
 						agents.pm_pe_actions_as(agents, link_list_shuffle, self.deep_core, self.policy_core, self.secondary, \
-							self.resources_weight_action, self.resources_potency)
+							self.resources_weight_action, self.resources_potency, self.affiliation_weights)
 
 			# Three streams
 			if AS_theory == 2:
@@ -879,7 +879,7 @@ class PolicyEmergence(Model):
 						# print(' ')
 						# print(agents.belieftree)
 						agents.pm_pe_actions_pf(agents, self.link_list, self.deep_core, self.policy_core, self.secondary, self.causalrelation_number, \
-							self.agenda_as_issue, self.instruments, self.resources_weight_action, self.resources_potency, AS_theory)
+							self.agenda_as_issue, self.instruments, self.resources_weight_action, self.resources_potency, AS_theory, self.affiliation_weights)
 				
 			if PF_theory == 2:
 				random.shuffle(shuffled_list_agent)

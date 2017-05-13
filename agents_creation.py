@@ -1406,11 +1406,12 @@ class Policymakers(Agent):
 	def __str__(self):
 		return 'Policy maker: ' + str(self.unique_id)
 
-	def pm_pe_actions_as(self, agents, link_list, deep_core, policy_core, secondary, resources_weight_action, resources_potency):
+	def pm_pe_actions_as(self, agents, link_list, deep_core, policy_core, secondary, resources_weight_action, resources_potency, affiliation_weights):
 
 		len_DC = len(deep_core)
 		len_PC = len(policy_core)
 		len_S = len(secondary)
+		total_issue_number = len_DC + len_PC + len_S
 
 		# Selection of the cw of interest
 		cw_of_interest = []
@@ -1447,205 +1448,343 @@ class Policymakers(Agent):
 						# Checking which agent in the link is the original agent
 						if links.agent1 == agents:
 
-							# NEW LIKELIHOOD CALCULATION
+							# Grade calculation using the likelihood method
+							# Same affiliation
+							if links.agent1.affiliation == links.agent2.affiliation:
+								cw_grade = links.conflict_level[0][total_issue_number + cw][0] * links.aware * actionWeight
+								total_grade_list.append(cw_grade)
 
+							# Affiliation 1-2
+							if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
+								(links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
+								cw_grade = links.conflict_level[0][total_issue_number + cw][0] * links.aware * actionWeight * affiliation_weights[0]
+								total_grade_list.append(cw_grade)
 
+							# Affiliation 1-3
+							if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
+								(links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
+								cw_grade = links.conflict_level[0][total_issue_number + cw][0] * links.aware * actionWeight * affiliation_weights[1]
+								total_grade_list.append(cw_grade)
 
+							# Affiliation 2-3
+							if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
+								(links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
+								cw_grade = links.conflict_level[0][total_issue_number + cw][0] * links.aware * actionWeight * affiliation_weights[2]
+								total_grade_list.append(cw_grade)					
 
-
-
-
-
-
-
-
+							# OLD OLD OLD OLD OLD OLD OLD OLD
 							# Check if no partial knowledge (initial value)
-							check_none = 0
-							if agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] == None:
-								agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = 0
-								check_none = 1
-							# Memorising the original belief values
-							original_belief = [0]
-							original_belief[0] = copy.copy(agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0])
-							# Performing the action
-							agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] += \
-								(agents.belieftree[0][cw_of_interest[cw]][0] - agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0]) * \
-								agents.resources[0] * resources_weight_action * links.aware * resources_potency
-							# 1-1 check
-							agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = \
-								self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0])
-							# Update of the preferences for that partial knowledge agent
-							self.preference_udapte_as_PC(agents, 1 + links.agent2.unique_id, len_DC, len_PC, len_S)
-							# Calculation of the new grade - we check selected issue using partial knowledge updates
-							cw_grade = abs(agents.belieftree[0][agents.select_as_issue][2] - agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][2])
-							# print('cw_grade: ' + str(cw_grade))
-							# Restoring the initial values
-							agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = original_belief[0]
-							# Re-updating the preference levels
-							self.preference_udapte_as_PC(agents, 1 + links.agent2.unique_id, len_DC, len_PC, len_S)
-							# Adding the grade to the grade list
-							total_grade_list.append(cw_grade)
-							#  Reset to None after finding the grade
-							if check_none == 1:
-								agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = None
+							# check_none = 0
+							# if agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] == None:
+							# 	agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = 0
+							# 	check_none = 1
+							# # Memorising the original belief values
+							# original_belief = [0]
+							# original_belief[0] = copy.copy(agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0])
+							# # Performing the action
+							# agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] += \
+							# 	(agents.belieftree[0][cw_of_interest[cw]][0] - agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0]) * \
+							# 	agents.resources[0] * resources_weight_action * links.aware * resources_potency
+							# # 1-1 check
+							# agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = \
+							# 	self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0])
+							# # Update of the preferences for that partial knowledge agent
+							# self.preference_udapte_as_PC(agents, 1 + links.agent2.unique_id, len_DC, len_PC, len_S)
+							# # Calculation of the new grade - we check selected issue using partial knowledge updates
+							# cw_grade = abs(agents.belieftree[0][agents.select_as_issue][2] - agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][2])
+							# # print('cw_grade: ' + str(cw_grade))
+							# # Restoring the initial values
+							# agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = original_belief[0]
+							# # Re-updating the preference levels
+							# self.preference_udapte_as_PC(agents, 1 + links.agent2.unique_id, len_DC, len_PC, len_S)
+							# # Adding the grade to the grade list
+							# total_grade_list.append(cw_grade)
+							# #  Reset to None after finding the grade
+							# if check_none == 1:
+							# 	agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = None
 
 						# Checking which agent in the link is the original agent
 						if links.agent2 == agents:
+
+							# Grade calculation using the likelihood method
+							# Same affiliation
+							if links.agent1.affiliation == links.agent2.affiliation:
+								cw_grade = links.conflict_level[1][total_issue_number + cw][0] * links.aware * actionWeight
+								total_grade_list.append(cw_grade)
+
+							# Affiliation 1-2
+							if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
+								(links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
+								cw_grade = links.conflict_level[1][total_issue_number + cw][0] * links.aware * actionWeight * affiliation_weights[0]
+								total_grade_list.append(cw_grade)
+
+							# Affiliation 1-3
+							if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
+								(links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
+								cw_grade = links.conflict_level[1][total_issue_number + cw][0] * links.aware * actionWeight * affiliation_weights[1]
+								total_grade_list.append(cw_grade)
+
+							# Affiliation 2-3
+							if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
+								(links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
+								cw_grade = links.conflict_level[1][total_issue_number + cw][0] * links.aware * actionWeight * affiliation_weights[2]
+								total_grade_list.append(cw_grade)	
+
+							# OLD OLD OLD OLD OLD OLD OLD OLD
 							#  Check if no partial knowledge (initial value)
-							check_none = 0
-							if agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] == None:
-								agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] = 0
-								check_none = 1
-							# Memorising the original belief values
-							original_belief = [0]
-							original_belief[0] = copy.copy(agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0])
-							# Performing the action
-							agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] += \
-								(agents.belieftree[0][cw_of_interest[cw]][0] - agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0]) * \
-								agents.resources[0] * resources_weight_action * links.aware * resources_potency
-							# 1-1 check
-							agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] = \
-								self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0])
-							# Update of the preferences for that partial knowledge agent
-							self.preference_udapte_as_PC(agents, 1 + links.agent1.unique_id, len_DC, len_PC, len_S)
-							# Calculation of the new grade - we check selected issue using partial knowledge updates
-							cw_grade = abs(agents.belieftree[0][agents.select_as_issue][2] - agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][2])
-							# print('cw_grade: ' + str(cw_grade))
-							# Restoring the initial values
-							agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] = original_belief[0]
-							# Re-updating the preference levels
-							self.preference_udapte_as_PC(agents, 1 + links.agent1.unique_id, len_DC, len_PC, len_S)
-							# Adding the grade to the grade list
-							total_grade_list.append(cw_grade)
-							# Reset to None after finding the grade
-							if check_none == 1:
-								agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] = None
+							# check_none = 0
+							# if agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] == None:
+							# 	agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] = 0
+							# 	check_none = 1
+							# # Memorising the original belief values
+							# original_belief = [0]
+							# original_belief[0] = copy.copy(agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0])
+							# # Performing the action
+							# agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] += \
+							# 	(agents.belieftree[0][cw_of_interest[cw]][0] - agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0]) * \
+							# 	agents.resources[0] * resources_weight_action * links.aware * resources_potency
+							# # 1-1 check
+							# agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] = \
+							# 	self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0])
+							# # Update of the preferences for that partial knowledge agent
+							# self.preference_udapte_as_PC(agents, 1 + links.agent1.unique_id, len_DC, len_PC, len_S)
+							# # Calculation of the new grade - we check selected issue using partial knowledge updates
+							# cw_grade = abs(agents.belieftree[0][agents.select_as_issue][2] - agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][2])
+							# # print('cw_grade: ' + str(cw_grade))
+							# # Restoring the initial values
+							# agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] = original_belief[0]
+							# # Re-updating the preference levels
+							# self.preference_udapte_as_PC(agents, 1 + links.agent1.unique_id, len_DC, len_PC, len_S)
+							# # Adding the grade to the grade list
+							# total_grade_list.append(cw_grade)
+							# # Reset to None after finding the grade
+							# if check_none == 1:
+							# 	agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] = None
 
 					# 2. Grading all individual actions - Aim change
 					if links.agent1 == agents:
+
+						# Grade calculation using the likelihood method
+						# Same affiliation
+						if links.agent1.affiliation == links.agent2.affiliation:
+							aim_grade_issue = links.conflict_level[0][agents.select_as_issue][1] * links.aware * actionWeight
+							total_grade_list.append(aim_grade_issue)
+
+						# Affiliation 1-2
+						if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
+							(links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
+							aim_grade_issue = links.conflict_level[0][agents.select_as_issue][1] * links.aware * actionWeight * affiliation_weights[0]
+							total_grade_list.append(aim_grade_issue)
+
+						# Affiliation 1-3
+						if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
+							(links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
+							aim_grade_issue = links.conflict_level[0][agents.select_as_issue][1] * links.aware * actionWeight * affiliation_weights[1]
+							total_grade_list.append(aim_grade_issue)
+
+						# Affiliation 2-3
+						if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
+							(links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
+							aim_grade_issue = links.conflict_level[0][agents.select_as_issue][1] * links.aware * actionWeight * affiliation_weights[2]
+							total_grade_list.append(aim_grade_issue)
+
+						# OLD OLD OLD OLD OLD OLD OLD OLD
 						# Check if no partial knowledge (initial value)
-						check_none = 0
-						if agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1] == None:
-							agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1] = 0
-							check_none = 1
-						# Memorising is no partial knoweldge
-						original_belief = [0]
-						original_belief[0] = copy.copy(agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1])
-						# Performing the action
-						agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1] += \
-							(agents.belieftree[0][agents.select_as_issue][1] - agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1]) * \
-							agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][agents.select_as_issue][1] * actionWeight * resources_potency
-						# 1-1 check
-						agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1] = \
-							self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1])
-						# Update of the preferences for that partial knowledge agent
-						self.preference_udapte_as_PC(agents, 1 + links.agent2.unique_id, len_DC, len_PC, len_S)
-						# Calculation of the new grade - we check selected issue using partial knowledge updates
-						aim_grade_issue = abs(agents.belieftree[0][agents.select_as_issue][2] - agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][2])
-						# print('aim_grade_issue: ' + str(aim_grade_issue))
-						# Restoring the initial values
-						agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1] = original_belief[0]
-						# Re-updating the preference levels
-						self.preference_udapte_as_PC(agents, 1 + links.agent2.unique_id, len_DC, len_PC, len_S)
-						#  Reset to None after finding the grade
-						if check_none == 1:
-							agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1] = None
-						# Adding the grade to the grade list
-						total_grade_list.append(aim_grade_issue)
+						# check_none = 0
+						# if agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1] == None:
+						# 	agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1] = 0
+						# 	check_none = 1
+						# # Memorising is no partial knoweldge
+						# original_belief = [0]
+						# original_belief[0] = copy.copy(agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1])
+						# # Performing the action
+						# agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1] += \
+						# 	(agents.belieftree[0][agents.select_as_issue][1] - agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1]) * \
+						# 	agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][agents.select_as_issue][1] * actionWeight * resources_potency
+						# # 1-1 check
+						# agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1] = \
+						# 	self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1])
+						# # Update of the preferences for that partial knowledge agent
+						# self.preference_udapte_as_PC(agents, 1 + links.agent2.unique_id, len_DC, len_PC, len_S)
+						# # Calculation of the new grade - we check selected issue using partial knowledge updates
+						# aim_grade_issue = abs(agents.belieftree[0][agents.select_as_issue][2] - agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][2])
+						# # print('aim_grade_issue: ' + str(aim_grade_issue))
+						# # Restoring the initial values
+						# agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1] = original_belief[0]
+						# # Re-updating the preference levels
+						# self.preference_udapte_as_PC(agents, 1 + links.agent2.unique_id, len_DC, len_PC, len_S)
+						# #  Reset to None after finding the grade
+						# if check_none == 1:
+						# 	agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1] = None
+						# # Adding the grade to the grade list
+						# total_grade_list.append(aim_grade_issue)
 
 					if links.agent2 == agents:
+
+						# Grade calculation using the likelihood method
+						# Same affiliation
+						if links.agent1.affiliation == links.agent2.affiliation:
+							aim_grade_issue = links.conflict_level[1][agents.select_as_issue][1] * links.aware * actionWeight
+							total_grade_list.append(aim_grade_issue)
+
+						# Affiliation 1-2
+						if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
+							(links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
+							aim_grade_issue = links.conflict_level[1][agents.select_as_issue][1] * links.aware * actionWeight * affiliation_weights[0]
+							total_grade_list.append(aim_grade_issue)
+
+						# Affiliation 1-3
+						if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
+							(links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
+							aim_grade_issue = links.conflict_level[1][agents.select_as_issue][1] * links.aware * actionWeight * affiliation_weights[1]
+							total_grade_list.append(aim_grade_issue)
+
+						# Affiliation 2-3
+						if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
+							(links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
+							aim_grade_issue = links.conflict_level[1][agents.select_as_issue][1] * links.aware * actionWeight * affiliation_weights[2]
+							total_grade_list.append(aim_grade_issue)
+
+						# OLD OLD OLD OLD OLD OLD OLD OLD
 						# Check if no partial knowledge (initial value)
-						check_none = 0
-						if agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1] == None:
-							agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1] = 0
-							check_none = 1
-						# Memorising is no partial knoweldge
-						original_belief = [0]
-						original_belief[0] = copy.copy(agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1])
-						# Performing the action
-						agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1] += \
-							(agents.belieftree[0][agents.select_as_issue][1] - agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1]) * \
-							agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[1][agents.select_as_issue][1] * actionWeight * resources_potency
-						# 1-1 check
-						agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1] = \
-							self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1])
-						# Update of the preferences for that partial knowledge agent
-						self.preference_udapte_as_PC(agents, 1 + links.agent1.unique_id, len_DC, len_PC, len_S)
-						# Calculation of the new grade - we check selected issue using partial knowledge updates
-						aim_grade_issue = abs(agents.belieftree[0][agents.select_as_issue][2] - agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][2])
-						# print('aim_grade_issue: ' + str(aim_grade_issue))
-						# Restoring the initial values
-						agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1] = original_belief[0]
-						# Re-updating the preference levels
-						self.preference_udapte_as_PC(agents, 1 + links.agent1.unique_id, len_DC, len_PC, len_S)
-						#  Reset to None after finding the grade
-						if check_none == 1:
-							agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1] = None
-						# Adding the grade to the grade list
-						total_grade_list.append(aim_grade_issue)
+						# check_none = 0
+						# if agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1] == None:
+						# 	agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1] = 0
+						# 	check_none = 1
+						# # Memorising is no partial knoweldge
+						# original_belief = [0]
+						# original_belief[0] = copy.copy(agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1])
+						# # Performing the action
+						# agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1] += \
+						# 	(agents.belieftree[0][agents.select_as_issue][1] - agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1]) * \
+						# 	agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[1][agents.select_as_issue][1] * actionWeight * resources_potency
+						# # 1-1 check
+						# agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1] = \
+						# 	self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1])
+						# # Update of the preferences for that partial knowledge agent
+						# self.preference_udapte_as_PC(agents, 1 + links.agent1.unique_id, len_DC, len_PC, len_S)
+						# # Calculation of the new grade - we check selected issue using partial knowledge updates
+						# aim_grade_issue = abs(agents.belieftree[0][agents.select_as_issue][2] - agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][2])
+						# # print('aim_grade_issue: ' + str(aim_grade_issue))
+						# # Restoring the initial values
+						# agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1] = original_belief[0]
+						# # Re-updating the preference levels
+						# self.preference_udapte_as_PC(agents, 1 + links.agent1.unique_id, len_DC, len_PC, len_S)
+						# #  Reset to None after finding the grade
+						# if check_none == 1:
+						# 	agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1] = None
+						# # Adding the grade to the grade list
+						# total_grade_list.append(aim_grade_issue)
+					# print(aim_grade_issue)
 
 					# 3. Grading all individual actions - State change
 					if links.agent1 == agents:
+
+						# Grade calculation using the likelihood method
+						# Same affiliation
+						if links.agent1.affiliation == links.agent2.affiliation:
+							state_grade_issue = links.conflict_level[0][agents.select_as_issue][0] * links.aware * actionWeight
+
+						# Affiliation 1-2
+						if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
+							(links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
+							state_grade_issue = links.conflict_level[0][agents.select_as_issue][0] * links.aware * actionWeight * affiliation_weights[0]
+
+						# Affiliation 1-3
+						if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
+							(links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
+							state_grade_issue = links.conflict_level[0][agents.select_as_issue][0] * links.aware * actionWeight * affiliation_weights[1]
+
+						# Affiliation 2-3
+						if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
+							(links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
+							state_grade_issue = links.conflict_level[0][agents.select_as_issue][0] * links.aware * actionWeight * affiliation_weights[2]
+							total_grade_list.append(state_grade_issue)
+
+						# OLD OLD OLD OLD OLD OLD OLD OLD
 						# Check if no partial knowledge (initial value)
-						check_none = 0
-						if agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0] == None:
-							agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0] = 0
-							check_none = 1
-						# Memorising is no partial knoweldge
-						original_belief = [0]
-						original_belief[0] = copy.copy(agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0])
-						# Performing the action
-						agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0] += \
-							(agents.belieftree[0][agents.select_as_issue][0] - agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0]) * \
-							agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][agents.select_as_issue][0] * actionWeight * resources_potency
-						# 1-1 check
-						agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0] = \
-							self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0])
-						# Update of the preferences for that partial knowledge agent
-						self.preference_udapte_as_PC(agents, 1 + links.agent2.unique_id, len_DC, len_PC, len_S)
-						# Calculation of the new grade - we check selected issue using partial knowledge updates
-						state_grade_issue = abs(agents.belieftree[0][agents.select_as_issue][2] - agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][2])
-						# print('state_grade_issue: ' + str(state_grade_issue))
-						# Restoring the initial values
-						agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0] = original_belief[0]
-						# Re-updating the preference levels
-						self.preference_udapte_as_PC(agents, 1 + links.agent2.unique_id, len_DC, len_PC, len_S)
-						#  Reset to None after finding the grade
-						if check_none == 1:
-							agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0] = None
-						# Adding the grade to the grade list
+						# check_none = 0
+						# if agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0] == None:
+						# 	agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0] = 0
+						# 	check_none = 1
+						# # Memorising is no partial knoweldge
+						# original_belief = [0]
+						# original_belief[0] = copy.copy(agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0])
+						# # Performing the action
+						# agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0] += \
+						# 	(agents.belieftree[0][agents.select_as_issue][0] - agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0]) * \
+						# 	agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][agents.select_as_issue][0] * actionWeight * resources_potency
+						# # 1-1 check
+						# agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0] = \
+						# 	self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0])
+						# # Update of the preferences for that partial knowledge agent
+						# self.preference_udapte_as_PC(agents, 1 + links.agent2.unique_id, len_DC, len_PC, len_S)
+						# # Calculation of the new grade - we check selected issue using partial knowledge updates
+						# state_grade_issue = abs(agents.belieftree[0][agents.select_as_issue][2] - agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][2])
+						# # print('state_grade_issue: ' + str(state_grade_issue))
+						# # Restoring the initial values
+						# agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0] = original_belief[0]
+						# # Re-updating the preference levels
+						# self.preference_udapte_as_PC(agents, 1 + links.agent2.unique_id, len_DC, len_PC, len_S)
+						# #  Reset to None after finding the grade
+						# if check_none == 1:
+						# 	agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0] = None
+						# # Adding the grade to the grade list
 						total_grade_list.append(state_grade_issue)
 
 					if links.agent2 == agents:
+
+						# Grade calculation using the likelihood method
+						# Same affiliation
+						if links.agent1.affiliation == links.agent2.affiliation:
+							state_grade_issue = links.conflict_level[1][agents.select_as_issue][0] * links.aware * actionWeight
+
+						# Affiliation 1-2
+						if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
+							(links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
+							state_grade_issue = links.conflict_level[1][agents.select_as_issue][0] * links.aware * actionWeight * affiliation_weights[0]
+
+						# Affiliation 1-3
+						if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
+							(links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
+							state_grade_issue = links.conflict_level[1][agents.select_as_issue][0] * links.aware * actionWeight * affiliation_weights[1]
+
+						# Affiliation 2-3
+						if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
+							(links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
+							state_grade_issue = links.conflict_level[1][agents.select_as_issue][0] * links.aware * actionWeight * affiliation_weights[2]
+							total_grade_list.append(state_grade_issue)
+
+						# OLD OLD OLD OLD OLD OLD OLD OLD
 						# Check if no partial knowledge (initial value)
-						check_none = 0
-						if agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0] == None:
-							agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0] = 0
-							check_none = 1
-						# Memorising is no partial knoweldge
-						original_belief = [0]
-						original_belief[0] = copy.copy(agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0])
-						# Performing the action
-						agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0] += \
-							(agents.belieftree[0][agents.select_as_issue][0] - agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0]) * \
-							agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[1][agents.select_as_issue][0] * actionWeight * resources_potency
-						# 1-1 check
-						agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0] = \
-							self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0])
-						# Update of the preferences for that partial knowledge agent
-						self.preference_udapte_as_PC(agents, 1 + links.agent1.unique_id, len_DC, len_PC, len_S)
-						# Calculation of the new grade - we check selected issue using partial knowledge updates
-						state_grade_issue = abs(agents.belieftree[0][agents.select_as_issue][2] - agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][2])
-						# print('state_grade_issue: ' + str(state_grade_issue))
-						# Restoring the initial values
-						agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0] = original_belief[0]
-						# Re-updating the preference levels
-						self.preference_udapte_as_PC(agents, 1 + links.agent1.unique_id, len_DC, len_PC, len_S)
-						#  Reset to None after finding the grade
-						if check_none == 1:
-							agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0] = None
-						# Adding the grade to the grade list
-						total_grade_list.append(state_grade_issue)
+						# check_none = 0
+						# if agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0] == None:
+						# 	agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0] = 0
+						# 	check_none = 1
+						# # Memorising is no partial knoweldge
+						# original_belief = [0]
+						# original_belief[0] = copy.copy(agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0])
+						# # Performing the action
+						# agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0] += \
+						# 	(agents.belieftree[0][agents.select_as_issue][0] - agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0]) * \
+						# 	agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[1][agents.select_as_issue][0] * actionWeight * resources_potency
+						# # 1-1 check
+						# agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0] = \
+						# 	self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0])
+						# # Update of the preferences for that partial knowledge agent
+						# self.preference_udapte_as_PC(agents, 1 + links.agent1.unique_id, len_DC, len_PC, len_S)
+						# # Calculation of the new grade - we check selected issue using partial knowledge updates
+						# state_grade_issue = abs(agents.belieftree[0][agents.select_as_issue][2] - agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][2])
+						# # print('state_grade_issue: ' + str(state_grade_issue))
+						# # Restoring the initial values
+						# agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0] = original_belief[0]
+						# # Re-updating the preference levels
+						# self.preference_udapte_as_PC(agents, 1 + links.agent1.unique_id, len_DC, len_PC, len_S)
+						# #  Reset to None after finding the grade
+						# if check_none == 1:
+						# 	agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0] = None
+						# # Adding the grade to the grade list
+						# total_grade_list.append(state_grade_issue)
 					# print(' ')
 
 			# print(' ')
@@ -1864,12 +2003,14 @@ class Policymakers(Agent):
 			# agents.resources_actions -= agents.resources
 			agents.resources_actions -= agents.resources[0] * resources_weight_action
 
-	def pm_pe_actions_pf(self, agents, link_list, deep_core, policy_core, secondary, causalrelation_number, agenda_as_issue, instruments, resources_weight_action, resources_potency, AS_theory):
+	def pm_pe_actions_pf(self, agents, link_list, deep_core, policy_core, secondary, causalrelation_number, agenda_as_issue, instruments, resources_weight_action, resources_potency, AS_theory, affiliation_weights):
 
 
 		len_DC = len(deep_core)
 		len_PC = len(policy_core)
 		len_S = len(secondary)
+
+		total_issue_number = len_DC + len_PC + len_S
 
 		# Here are the modifications related to the policy formulation
 		# Looking for the relevant causal relations for the policy formulation
@@ -1911,73 +2052,123 @@ class Policymakers(Agent):
 					for cw in range(len(cw_of_interest)):
 						# Checking which agent in the link is the original agent
 						if links.agent1 == agents:
+							# Grade calculation using the likelihood method
+							# Same affiliation
+							if links.agent1.affiliation == links.agent2.affiliation:
+								cw_grade = links.conflict_level[0][total_issue_number + cw][0] * links.aware * actionWeight
+								total_grade_list.append(cw_grade)
+
+							# Affiliation 1-2
+							if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
+								(links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
+								cw_grade = links.conflict_level[0][total_issue_number + cw][0] * links.aware * actionWeight * affiliation_weights[0]
+								total_grade_list.append(cw_grade)
+
+							# Affiliation 1-3
+							if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
+								(links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
+								cw_grade = links.conflict_level[0][total_issue_number + cw][0] * links.aware * actionWeight * affiliation_weights[1]
+								total_grade_list.append(cw_grade)
+
+							# Affiliation 2-3
+							if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
+								(links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
+								cw_grade = links.conflict_level[0][total_issue_number + cw][0] * links.aware * actionWeight * affiliation_weights[2]
+								total_grade_list.append(cw_grade)	
+
+							# OLD OLD OLD OLD OLD OLD OLD OLD OLD
 							# Check if no partial knowledge (initial value)
-							check_none = 0
-							if agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] == None:
-								agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = 0
-								check_none = 1
-							# Memorising the original belief values
-							original_belief = [0]
-							original_belief[0] = copy.copy(agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0])
-							# Performing the action
-							# print(' ')
-							# print('Old value of the CR: ' + str(agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0]))
-							agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] += \
-								(agents.belieftree[0][cw_of_interest[cw]][0] - agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0]) * \
-								agents.resources[0] * resources_weight_action * links.aware * resources_potency
-							# print('New value of the CR: ' + str(agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0]))
-							# 1-1 check
-							agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = \
-								self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0])
-							# Update the preferences for that partial knowledge agent
-							self.instrument_preference_update(agents, 1 + links.agent2.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
-							# Calculation of the new grade - Based on the preference for the instrument
-							cw_grade = abs(agents.instrument_preferences[0][agents.select_pinstrument] - agents.instrument_preferences[1 + links.agent2.unique_id][agents.select_pinstrument])
-							# print('cw_grade: ' + str(cw_grade))
-							# Restoring the initial values
-							agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = original_belief[0]
-							# Re-updating the preference levels
-							self.instrument_preference_update(agents, 1 + links.agent2.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
-							# Adding the grade to the grade list
-							total_grade_list.append(cw_grade)
-							# Reset to None after finding the grade
-							if check_none == 1:
-								agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = None
+							# check_none = 0
+							# if agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] == None:
+							# 	agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = 0
+							# 	check_none = 1
+							# # Memorising the original belief values
+							# original_belief = [0]
+							# original_belief[0] = copy.copy(agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0])
+							# # Performing the action
+							# # print(' ')
+							# # print('Old value of the CR: ' + str(agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0]))
+							# agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] += \
+							# 	(agents.belieftree[0][cw_of_interest[cw]][0] - agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0]) * \
+							# 	agents.resources[0] * resources_weight_action * links.aware * resources_potency
+							# # print('New value of the CR: ' + str(agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0]))
+							# # 1-1 check
+							# agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = \
+							# 	self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0])
+							# # Update the preferences for that partial knowledge agent
+							# self.instrument_preference_update(agents, 1 + links.agent2.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
+							# # Calculation of the new grade - Based on the preference for the instrument
+							# cw_grade = abs(agents.instrument_preferences[0][agents.select_pinstrument] - agents.instrument_preferences[1 + links.agent2.unique_id][agents.select_pinstrument])
+							# # print('cw_grade: ' + str(cw_grade))
+							# # Restoring the initial values
+							# agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = original_belief[0]
+							# # Re-updating the preference levels
+							# self.instrument_preference_update(agents, 1 + links.agent2.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
+							# # Adding the grade to the grade list
+							# total_grade_list.append(cw_grade)
+							# # Reset to None after finding the grade
+							# if check_none == 1:
+							# 	agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = None
 
 						# Checking which agent in the link is the original agent
 						if links.agent2 == agents:
-							# Check if no partial knowledge (initial value)
-							check_none = 0
-							if agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] == None:
-								agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] = 0
-								check_none = 1
-							# Memorising the original belief values
-							original_belief = [0]
-							original_belief[0] = copy.copy(agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0])
-							# Performing the action
-							# print(' ')
-							# print('Old value of the CR: ' + str(agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0]))
-							agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] += \
-								(agents.belieftree[0][cw_of_interest[cw]][0] - agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0]) * \
-								agents.resources[0] * resources_weight_action * links.aware * resources_potency
-							# print('New value of the CR: ' + str(agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0]))
-							# 1-1 check
-							agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] = \
-								self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0])
-							# Update the preferences for that partial knowledge agent
-							self.instrument_preference_update(agents, 1 + links.agent1.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
-							# Calculation of the new grade - Based on the preference for the instrument
-							cw_grade = abs(agents.instrument_preferences[0][agents.select_pinstrument] - agents.instrument_preferences[1 + links.agent1.unique_id][agents.select_pinstrument])
-							# print('cw_grade: ' + str(cw_grade))
-							# Restoring the initial values
-							agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] = original_belief[0]
-							# Re-updating the preference levels
-							self.instrument_preference_update(agents, 1 + links.agent1.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
-							# Adding the grade to the grade list
-							total_grade_list.append(cw_grade)
-							# Reset to None after finding the grade
-							if check_none == 1:
-								agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] = None
+							# Grade calculation using the likelihood method
+							# Same affiliation
+							if links.agent1.affiliation == links.agent2.affiliation:
+								cw_grade = links.conflict_level[1][total_issue_number + cw][0] * links.aware * actionWeight
+								total_grade_list.append(cw_grade)
+
+							# Affiliation 1-2
+							if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
+								(links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
+								cw_grade = links.conflict_level[1][total_issue_number + cw][0] * links.aware * actionWeight * affiliation_weights[0]
+								total_grade_list.append(cw_grade)
+
+							# Affiliation 1-3
+							if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
+								(links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
+								cw_grade = links.conflict_level[1][total_issue_number + cw][0] * links.aware * actionWeight * affiliation_weights[1]
+								total_grade_list.append(cw_grade)
+
+							# Affiliation 2-3
+							if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
+								(links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
+								cw_grade = links.conflict_level[1][total_issue_number + cw][0] * links.aware * actionWeight * affiliation_weights[2]
+								total_grade_list.append(cw_grade)	
+
+							# OLD OLD OLD OLD OLD OLD OLD OLD OLD
+							# # Check if no partial knowledge (initial value)
+							# check_none = 0
+							# if agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] == None:
+							# 	agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] = 0
+							# 	check_none = 1
+							# # Memorising the original belief values
+							# original_belief = [0]
+							# original_belief[0] = copy.copy(agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0])
+							# # Performing the action
+							# # print(' ')
+							# # print('Old value of the CR: ' + str(agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0]))
+							# agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] += \
+							# 	(agents.belieftree[0][cw_of_interest[cw]][0] - agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0]) * \
+							# 	agents.resources[0] * resources_weight_action * links.aware * resources_potency
+							# # print('New value of the CR: ' + str(agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0]))
+							# # 1-1 check
+							# agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] = \
+							# 	self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0])
+							# # Update the preferences for that partial knowledge agent
+							# self.instrument_preference_update(agents, 1 + links.agent1.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
+							# # Calculation of the new grade - Based on the preference for the instrument
+							# cw_grade = abs(agents.instrument_preferences[0][agents.select_pinstrument] - agents.instrument_preferences[1 + links.agent1.unique_id][agents.select_pinstrument])
+							# # print('cw_grade: ' + str(cw_grade))
+							# # Restoring the initial values
+							# agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] = original_belief[0]
+							# # Re-updating the preference levels
+							# self.instrument_preference_update(agents, 1 + links.agent1.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
+							# # Adding the grade to the grade list
+							# total_grade_list.append(cw_grade)
+							# # Reset to None after finding the grade
+							# if check_none == 1:
+							# 	agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] = None
 
 					# print(total_grade_list)
 
@@ -1987,85 +2178,135 @@ class Policymakers(Agent):
 					for issue_num in range(len(issue_of_interest)):
 					
 						if links.agent1 == agents:
+							# Grade calculation using the likelihood method
+							# Same affiliation
+							if links.agent1.affiliation == links.agent2.affiliation:
+								aim_grade = links.conflict_level[0][issue_num][1] * links.aware * actionWeight
+								total_grade_list.append(aim_grade)
+
+							# Affiliation 1-2
+							if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
+								(links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
+								aim_grade = links.conflict_level[0][issue_num][1] * links.aware * actionWeight * affiliation_weights[0]
+								total_grade_list.append(aim_grade)
+
+							# Affiliation 1-3
+							if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
+								(links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
+								aim_grade = links.conflict_level[0][issue_num][1] * links.aware * actionWeight * affiliation_weights[1]
+								total_grade_list.append(aim_grade)
+
+							# Affiliation 2-3
+							if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
+								(links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
+								aim_grade = links.conflict_level[0][issue_num][1] * links.aware * actionWeight * affiliation_weights[2]
+								total_grade_list.append(aim_grade)	
+
+							# OLD OLD OLD OLD OLD OLD OLD OLD OLD
 							# Looking at the policy chosen by the agent.
 							# Check if no partial knowledge (initial value)
-							check_none = 0
-							if agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1] == None:
-								agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1] = 0
-								check_none = 1
-							# Memorising the original belief values
-							original_belief = [0]
-							original_belief[0] = copy.copy(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1])
-							# If it knows that the agent has no interest in this issue, then set the grade to 0
-							if agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0] == 'No' or \
-							  agents.belieftree[0][issue_of_interest[issue_num]][0] == 'No':
-								aim_grade = 0
-							else:	
-								# Performing the action
-								# print(' ')
-								# print('Old value of the aim: ' + str(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1]))
-								agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1] += \
-									(agents.belieftree[0][issue_of_interest[issue_num]][1] - agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1]) * \
-									agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][issue_of_interest[issue_num]][1] * actionWeight * resources_potency
-								# 1-1 check
-								agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1])
-								# Re-updating the preference levels
-								self.instrument_preference_update(agents, 1 + links.agent2.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
-								# Calculation of the new grade
-								aim_grade = abs(agents.instrument_preferences[0][agents.select_pinstrument] - agents.instrument_preferences[1 + links.agent2.unique_id][agents.select_pinstrument])
-							# print('New value of the aim: ' + str(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1]))
-							# print('aim_grade: ' + str(aim_grade))
-							# Restoring the initial values
-							agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1] = original_belief[0]
-							# Re-updating the preference levels
-							self.instrument_preference_update(agents, 1 + links.agent2.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
-							# Adding the grade to the grade list
-							total_grade_list.append(aim_grade)
-							# Reset to None after finding the grade
-							if check_none == 1:
-								agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1] = None
+							# check_none = 0
+							# if agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1] == None:
+							# 	agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1] = 0
+							# 	check_none = 1
+							# # Memorising the original belief values
+							# original_belief = [0]
+							# original_belief[0] = copy.copy(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1])
+							# # If it knows that the agent has no interest in this issue, then set the grade to 0
+							# if agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0] == 'No' or \
+							#   agents.belieftree[0][issue_of_interest[issue_num]][0] == 'No':
+							# 	aim_grade = 0
+							# else:	
+							# 	# Performing the action
+							# 	# print(' ')
+							# 	# print('Old value of the aim: ' + str(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1]))
+							# 	agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1] += \
+							# 		(agents.belieftree[0][issue_of_interest[issue_num]][1] - agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1]) * \
+							# 		agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][issue_of_interest[issue_num]][1] * actionWeight * resources_potency
+							# 	# 1-1 check
+							# 	agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1] = \
+							# 		self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1])
+							# 	# Re-updating the preference levels
+							# 	self.instrument_preference_update(agents, 1 + links.agent2.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
+							# 	# Calculation of the new grade
+							# 	aim_grade = abs(agents.instrument_preferences[0][agents.select_pinstrument] - agents.instrument_preferences[1 + links.agent2.unique_id][agents.select_pinstrument])
+							# # print('New value of the aim: ' + str(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1]))
+							# # print('aim_grade: ' + str(aim_grade))
+							# # Restoring the initial values
+							# agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1] = original_belief[0]
+							# # Re-updating the preference levels
+							# self.instrument_preference_update(agents, 1 + links.agent2.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
+							# # Adding the grade to the grade list
+							# total_grade_list.append(aim_grade)
+							# # Reset to None after finding the grade
+							# if check_none == 1:
+							# 	agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1] = None
 							
 						if links.agent2 == agents:
+							# Grade calculation using the likelihood method
+							# Same affiliation
+							if links.agent1.affiliation == links.agent2.affiliation:
+								aim_grade = links.conflict_level[1][issue_num][1] * links.aware * actionWeight
+								total_grade_list.append(aim_grade)
+
+							# Affiliation 1-2
+							if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
+								(links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
+								aim_grade = links.conflict_level[1][issue_num][1] * links.aware * actionWeight * affiliation_weights[0]
+								total_grade_list.append(aim_grade)
+
+							# Affiliation 1-3
+							if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
+								(links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
+								aim_grade = links.conflict_level[1][issue_num][1] * links.aware * actionWeight * affiliation_weights[1]
+								total_grade_list.append(aim_grade)
+
+							# Affiliation 2-3
+							if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
+								(links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
+								aim_grade = links.conflict_level[1][issue_num][1] * links.aware * actionWeight * affiliation_weights[2]
+								total_grade_list.append(aim_grade)	
+
+							# OLD OLD OLD OLD OLD OLD OLD OLD OLD
 
 							# Looking at the policy chosen by the agent.
 							# Check if no partial knowledge (initial value)
-							check_none = 0
-							if agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1] == None:
-								agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1] = 0
-								check_none = 1
-							# Memorising the original belief values
-							original_belief = [0]
-							original_belief[0] = copy.copy(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1])
-							# If it knows that the agent has no interest in this issue, then set the grade to 0
-							if agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0] == 'No' or \
-							  agents.belieftree[0][issue_of_interest[issue_num]][0] == 'No':
-								aim_grade = 0
-							else:	
-								# Performing the action
-								# print(' ')
-								# print('Old value of the aim: ' + str(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1]))
-								agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1] += \
-									(agents.belieftree[0][issue_of_interest[issue_num]][1] - agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1]) * \
-									agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[1][issue_of_interest[issue_num]][1] * actionWeight * resources_potency
-								# 1-1 check
-								agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1])
-								# Re-updating the preference levels
-								self.instrument_preference_update(agents, 1 + links.agent1.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
-								# Calculation of the new grade
-								aim_grade = abs(agents.instrument_preferences[0][agents.select_pinstrument] - agents.instrument_preferences[1 + links.agent1.unique_id][agents.select_pinstrument])
-							# print('New value of the aim: ' + str(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1]))
-							# print('aim_grade: ' + str(aim_grade))
-							# Restoring the initial values
-							agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1] = original_belief[0]
-							# Re-updating the preference levels
-							self.instrument_preference_update(agents, 1 + links.agent1.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
-							# Adding the grade to the grade list
-							total_grade_list.append(aim_grade)
-							# Reset to None after finding the grade
-							if check_none == 1:
-								agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1] = None
+							# check_none = 0
+							# if agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1] == None:
+							# 	agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1] = 0
+							# 	check_none = 1
+							# # Memorising the original belief values
+							# original_belief = [0]
+							# original_belief[0] = copy.copy(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1])
+							# # If it knows that the agent has no interest in this issue, then set the grade to 0
+							# if agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0] == 'No' or \
+							#   agents.belieftree[0][issue_of_interest[issue_num]][0] == 'No':
+							# 	aim_grade = 0
+							# else:	
+							# 	# Performing the action
+							# 	# print(' ')
+							# 	# print('Old value of the aim: ' + str(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1]))
+							# 	agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1] += \
+							# 		(agents.belieftree[0][issue_of_interest[issue_num]][1] - agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1]) * \
+							# 		agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[1][issue_of_interest[issue_num]][1] * actionWeight * resources_potency
+							# 	# 1-1 check
+							# 	agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1] = \
+							# 		self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1])
+							# 	# Re-updating the preference levels
+							# 	self.instrument_preference_update(agents, 1 + links.agent1.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
+							# 	# Calculation of the new grade
+							# 	aim_grade = abs(agents.instrument_preferences[0][agents.select_pinstrument] - agents.instrument_preferences[1 + links.agent1.unique_id][agents.select_pinstrument])
+							# # print('New value of the aim: ' + str(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1]))
+							# # print('aim_grade: ' + str(aim_grade))
+							# # Restoring the initial values
+							# agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1] = original_belief[0]
+							# # Re-updating the preference levels
+							# self.instrument_preference_update(agents, 1 + links.agent1.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
+							# # Adding the grade to the grade list
+							# total_grade_list.append(aim_grade)
+							# # Reset to None after finding the grade
+							# if check_none == 1:
+							# 	agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1] = None
 
 						# print(total_grade_list)
 
@@ -2075,86 +2316,136 @@ class Policymakers(Agent):
 					for issue_num in range(len(issue_of_interest)):
 
 						if links.agent1 == agents:
+							# Grade calculation using the likelihood method
+							# Same affiliation
+							if links.agent1.affiliation == links.agent2.affiliation:
+								state_grade = links.conflict_level[0][issue_num][0] * links.aware * actionWeight
+								total_grade_list.append(state_grade)
+
+							# Affiliation 1-2
+							if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
+								(links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
+								state_grade = links.conflict_level[0][issue_num][0] * links.aware * actionWeight * affiliation_weights[0]
+								total_grade_list.append(state_grade)
+
+							# Affiliation 1-3
+							if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
+								(links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
+								state_grade = links.conflict_level[0][issue_num][0] * links.aware * actionWeight * affiliation_weights[1]
+								total_grade_list.append(state_grade)
+
+							# Affiliation 2-3
+							if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
+								(links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
+								state_grade = links.conflict_level[0][issue_num][0] * links.aware * actionWeight * affiliation_weights[2]
+								total_grade_list.append(state_grade)	
+
+							# OLD OLD OLD OLD OLD OLD OLD OLD OLD
 								
-							# Looking at the policy chosen by the agent.
-							# Check if no partial knowledge (initial value)
-							check_none = 0
-							if agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0] == None:
-								agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0] = 0
-								check_none = 1
-							# Memorising the original belief values
-							original_belief = [0]
-							original_belief[0] = copy.copy(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0])
-							# If it knows that the agent has no interest in this issue, then set the grade to 0
-							if agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0] == 'No' or \
-							  agents.belieftree[0][issue_of_interest[issue_num]][0] == 'No':
-								state_grade = 0
-							else:	
-								# Performing the action
-								# print(' ')
-								# print('Old value of the aim: ' + str(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0]))
-								agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0] += \
-									(agents.belieftree[0][issue_of_interest[issue_num]][0] - agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0]) * \
-									agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][issue_of_interest[issue_num]][0] * actionWeight * resources_potency
-								# 1-1 check
-								agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0])
-								# Re-updating the preference levels
-								self.instrument_preference_update(agents, 1 + links.agent2.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
-								# Calculation of the new grade
-								state_grade = abs(agents.instrument_preferences[0][agents.select_pinstrument] - agents.instrument_preferences[1 + links.agent2.unique_id][agents.select_pinstrument])
-							# print('New value of the aim: ' + str(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0]))
-							# print('state_grade: ' + str(state_grade))
-							# Restoring the initial values
-							agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0] = original_belief[0]
-							# Re-updating the preference levels
-							self.instrument_preference_update(agents, 1 + links.agent2.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
-							# Adding the grade to the grade list
-							total_grade_list.append(state_grade)
-							# Reset to None after finding the grade
-							if check_none == 1:
-								agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0] = None
+							# # Looking at the policy chosen by the agent.
+							# # Check if no partial knowledge (initial value)
+							# check_none = 0
+							# if agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0] == None:
+							# 	agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0] = 0
+							# 	check_none = 1
+							# # Memorising the original belief values
+							# original_belief = [0]
+							# original_belief[0] = copy.copy(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0])
+							# # If it knows that the agent has no interest in this issue, then set the grade to 0
+							# if agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0] == 'No' or \
+							#   agents.belieftree[0][issue_of_interest[issue_num]][0] == 'No':
+							# 	state_grade = 0
+							# else:	
+							# 	# Performing the action
+							# 	# print(' ')
+							# 	# print('Old value of the aim: ' + str(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0]))
+							# 	agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0] += \
+							# 		(agents.belieftree[0][issue_of_interest[issue_num]][0] - agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0]) * \
+							# 		agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][issue_of_interest[issue_num]][0] * actionWeight * resources_potency
+							# 	# 1-1 check
+							# 	agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0] = \
+							# 		self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0])
+							# 	# Re-updating the preference levels
+							# 	self.instrument_preference_update(agents, 1 + links.agent2.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
+							# 	# Calculation of the new grade
+							# 	state_grade = abs(agents.instrument_preferences[0][agents.select_pinstrument] - agents.instrument_preferences[1 + links.agent2.unique_id][agents.select_pinstrument])
+							# # print('New value of the aim: ' + str(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0]))
+							# # print('state_grade: ' + str(state_grade))
+							# # Restoring the initial values
+							# agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0] = original_belief[0]
+							# # Re-updating the preference levels
+							# self.instrument_preference_update(agents, 1 + links.agent2.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
+							# # Adding the grade to the grade list
+							# total_grade_list.append(state_grade)
+							# # Reset to None after finding the grade
+							# if check_none == 1:
+							# 	agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0] = None
 
 						if links.agent2 == agents:
+							# Grade calculation using the likelihood method
+							# Same affiliation
+							if links.agent1.affiliation == links.agent2.affiliation:
+								state_grade = links.conflict_level[1][issue_num][0] * links.aware * actionWeight
+								total_grade_list.append(state_grade)
+
+							# Affiliation 1-2
+							if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
+								(links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
+								state_grade = links.conflict_level[1][issue_num][0] * links.aware * actionWeight * affiliation_weights[0]
+								total_grade_list.append(state_grade)
+
+							# Affiliation 1-3
+							if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
+								(links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
+								state_grade = links.conflict_level[1][issue_num][0] * links.aware * actionWeight * affiliation_weights[1]
+								total_grade_list.append(state_grade)
+
+							# Affiliation 2-3
+							if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
+								(links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
+								state_grade = links.conflict_level[1][issue_num][0] * links.aware * actionWeight * affiliation_weights[2]
+								total_grade_list.append(state_grade)	
+
+							# OLD OLD OLD OLD OLD OLD OLD OLD OLD
 
 							# Looking at the policy chosen by the agent.
 							# Check if no partial knowledge (initial value)
-							check_none = 0
-							if agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0] == None:
-								agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0] = 0
-								check_none = 1
-							# Memorising the original belief values
-							original_belief = [0]
-							original_belief[0] = copy.copy(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0])
-							# If it knows that the agent has no interest in this issue, then set the grade to 0
-							if agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0] == 'No' or \
-							  agents.belieftree[0][issue_of_interest[issue_num]][0] == 'No':
-								state_grade = 0
-							else:	
-								# Performing the action
-								# print(' ')
-								# print('Old value of the aim: ' + str(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0]))
-								agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0] += \
-									(agents.belieftree[0][issue_of_interest[issue_num]][0] - agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0]) * \
-									agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][issue_of_interest[issue_num]][0] * actionWeight * resources_potency
-								# 1-1 check
-								agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0])
-								# Re-updating the preference levels
-								self.instrument_preference_update(agents, 1 + links.agent1.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
-								# Calculation of the new grade
-								state_grade = abs(agents.instrument_preferences[0][agents.select_pinstrument] - agents.instrument_preferences[1 + links.agent1.unique_id][agents.select_pinstrument])
-							# print('New value of the aim: ' + str(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0]))
-							# print('state_grade: ' + str(state_grade))
-							# Restoring the initial values
-							agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0] = original_belief[0]
-							# Re-updating the preference levels
-							self.instrument_preference_update(agents, 1 + links.agent1.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
-							# Adding the grade to the grade list
-							total_grade_list.append(state_grade)
-							# Reset to None after finding the grade
-							if check_none == 1:
-								agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0] = None
+							# check_none = 0
+							# if agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0] == None:
+							# 	agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0] = 0
+							# 	check_none = 1
+							# # Memorising the original belief values
+							# original_belief = [0]
+							# original_belief[0] = copy.copy(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0])
+							# # If it knows that the agent has no interest in this issue, then set the grade to 0
+							# if agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0] == 'No' or \
+							#   agents.belieftree[0][issue_of_interest[issue_num]][0] == 'No':
+							# 	state_grade = 0
+							# else:	
+							# 	# Performing the action
+							# 	# print(' ')
+							# 	# print('Old value of the aim: ' + str(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0]))
+							# 	agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0] += \
+							# 		(agents.belieftree[0][issue_of_interest[issue_num]][0] - agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0]) * \
+							# 		agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][issue_of_interest[issue_num]][0] * actionWeight * resources_potency
+							# 	# 1-1 check
+							# 	agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0] = \
+							# 		self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0])
+							# 	# Re-updating the preference levels
+							# 	self.instrument_preference_update(agents, 1 + links.agent1.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
+							# 	# Calculation of the new grade
+							# 	state_grade = abs(agents.instrument_preferences[0][agents.select_pinstrument] - agents.instrument_preferences[1 + links.agent1.unique_id][agents.select_pinstrument])
+							# # print('New value of the aim: ' + str(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0]))
+							# # print('state_grade: ' + str(state_grade))
+							# # Restoring the initial values
+							# agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0] = original_belief[0]
+							# # Re-updating the preference levels
+							# self.instrument_preference_update(agents, 1 + links.agent1.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
+							# # Adding the grade to the grade list
+							# total_grade_list.append(state_grade)
+							# # Reset to None after finding the grade
+							# if check_none == 1:
+							# 	agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0] = None
 
 			# print(' ')
 			# print(total_grade_list)
@@ -3831,11 +4122,12 @@ class Policyentres(Agent):
 			# print('This is issue: ' + str(i+1) + ' and its new value is: ' + str(agent.belieftree[0][i][0]))
 		# print(agent)
 
-	def pm_pe_actions_as(self, agents, link_list, deep_core, policy_core, secondary, resources_weight_action, resources_potency):
+	def pm_pe_actions_as(self, agents, link_list, deep_core, policy_core, secondary, resources_weight_action, resources_potency, affiliation_weights):
 
 		len_DC = len(deep_core)
 		len_PC = len(policy_core)
 		len_S = len(secondary)
+		total_issue_number = len_DC + len_PC + len_S
 
 		# Selection of the cw of interest
 		cw_of_interest = []
@@ -3871,193 +4163,344 @@ class Policyentres(Agent):
 
 						# Checking which agent in the link is the original agent
 						if links.agent1 == agents:
+
+							# Grade calculation using the likelihood method
+							# Same affiliation
+							if links.agent1.affiliation == links.agent2.affiliation:
+								cw_grade = links.conflict_level[0][total_issue_number + cw][0] * links.aware * actionWeight
+								total_grade_list.append(cw_grade)
+
+							# Affiliation 1-2
+							if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
+								(links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
+								cw_grade = links.conflict_level[0][total_issue_number + cw][0] * links.aware * actionWeight * affiliation_weights[0]
+								total_grade_list.append(cw_grade)
+
+							# Affiliation 1-3
+							if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
+								(links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
+								cw_grade = links.conflict_level[0][total_issue_number + cw][0] * links.aware * actionWeight * affiliation_weights[1]
+								total_grade_list.append(cw_grade)
+
+							# Affiliation 2-3
+							if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
+								(links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
+								cw_grade = links.conflict_level[0][total_issue_number + cw][0] * links.aware * actionWeight * affiliation_weights[2]
+								total_grade_list.append(cw_grade)					
+
+							# OLD OLD OLD OLD OLD OLD OLD OLD
 							# Check if no partial knowledge (initial value)
-							check_none = 0
-							if agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] == None:
-								agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = 0
-								check_none = 1
-							# Memorising the original belief values
-							original_belief = [0]
-							original_belief[0] = copy.copy(agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0])
-							# Performing the action
-							agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] += \
-								(agents.belieftree[0][cw_of_interest[cw]][0] - agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0]) * \
-								agents.resources[0] * resources_weight_action * links.aware * resources_potency
-							# 1-1 check
-							agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = \
-								self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0])
-							# Update of the preferences for that partial knowledge agent
-							self.preference_udapte_as_PC(agents, 1 + links.agent2.unique_id, len_DC, len_PC, len_S)
-							# Calculation of the new grade - we check selected issue using partial knowledge updates
-							cw_grade = abs(agents.belieftree[0][agents.select_as_issue][2] - agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][2])
-							# print('cw_grade: ' + str(cw_grade))
-							# Restoring the initial values
-							agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = original_belief[0]
-							# Re-updating the preference levels
-							self.preference_udapte_as_PC(agents, 1 + links.agent2.unique_id, len_DC, len_PC, len_S)
-							# Adding the grade to the grade list
-							total_grade_list.append(cw_grade)
-							#  Reset to None after finding the grade
-							if check_none == 1:
-								agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = None
+							# check_none = 0
+							# if agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] == None:
+							# 	agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = 0
+							# 	check_none = 1
+							# # Memorising the original belief values
+							# original_belief = [0]
+							# original_belief[0] = copy.copy(agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0])
+							# # Performing the action
+							# agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] += \
+							# 	(agents.belieftree[0][cw_of_interest[cw]][0] - agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0]) * \
+							# 	agents.resources[0] * resources_weight_action * links.aware * resources_potency
+							# # 1-1 check
+							# agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = \
+							# 	self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0])
+							# # Update of the preferences for that partial knowledge agent
+							# self.preference_udapte_as_PC(agents, 1 + links.agent2.unique_id, len_DC, len_PC, len_S)
+							# # Calculation of the new grade - we check selected issue using partial knowledge updates
+							# cw_grade = abs(agents.belieftree[0][agents.select_as_issue][2] - agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][2])
+							# # print('cw_grade: ' + str(cw_grade))
+							# # Restoring the initial values
+							# agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = original_belief[0]
+							# # Re-updating the preference levels
+							# self.preference_udapte_as_PC(agents, 1 + links.agent2.unique_id, len_DC, len_PC, len_S)
+							# # Adding the grade to the grade list
+							# total_grade_list.append(cw_grade)
+							# #  Reset to None after finding the grade
+							# if check_none == 1:
+							# 	agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = None
 
 						# Checking which agent in the link is the original agent
 						if links.agent2 == agents:
+
+							# Grade calculation using the likelihood method
+							# Same affiliation
+							if links.agent1.affiliation == links.agent2.affiliation:
+								cw_grade = links.conflict_level[1][total_issue_number + cw][0] * links.aware * actionWeight
+								total_grade_list.append(cw_grade)
+
+							# Affiliation 1-2
+							if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
+								(links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
+								cw_grade = links.conflict_level[1][total_issue_number + cw][0] * links.aware * actionWeight * affiliation_weights[0]
+								total_grade_list.append(cw_grade)
+
+							# Affiliation 1-3
+							if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
+								(links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
+								cw_grade = links.conflict_level[1][total_issue_number + cw][0] * links.aware * actionWeight * affiliation_weights[1]
+								total_grade_list.append(cw_grade)
+
+							# Affiliation 2-3
+							if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
+								(links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
+								cw_grade = links.conflict_level[1][total_issue_number + cw][0] * links.aware * actionWeight * affiliation_weights[2]
+								total_grade_list.append(cw_grade)	
+
+							# OLD OLD OLD OLD OLD OLD OLD OLD
 							#  Check if no partial knowledge (initial value)
-							check_none = 0
-							if agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] == None:
-								agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] = 0
-								check_none = 1
-							# Memorising the original belief values
-							original_belief = [0]
-							original_belief[0] = copy.copy(agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0])
-							# Performing the action
-							agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] += \
-								(agents.belieftree[0][cw_of_interest[cw]][0] - agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0]) * \
-								agents.resources[0] * resources_weight_action * links.aware * resources_potency
-							# 1-1 check
-							agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] = \
-								self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0])
-							# Update of the preferences for that partial knowledge agent
-							self.preference_udapte_as_PC(agents, 1 + links.agent1.unique_id, len_DC, len_PC, len_S)
-							# Calculation of the new grade - we check selected issue using partial knowledge updates
-							cw_grade = abs(agents.belieftree[0][agents.select_as_issue][2] - agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][2])
-							# print('cw_grade: ' + str(cw_grade))
-							# Restoring the initial values
-							agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] = original_belief[0]
-							# Re-updating the preference levels
-							self.preference_udapte_as_PC(agents, 1 + links.agent1.unique_id, len_DC, len_PC, len_S)
-							# Adding the grade to the grade list
-							total_grade_list.append(cw_grade)
-							# Reset to None after finding the grade
-							if check_none == 1:
-								agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] = None
+							# check_none = 0
+							# if agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] == None:
+							# 	agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] = 0
+							# 	check_none = 1
+							# # Memorising the original belief values
+							# original_belief = [0]
+							# original_belief[0] = copy.copy(agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0])
+							# # Performing the action
+							# agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] += \
+							# 	(agents.belieftree[0][cw_of_interest[cw]][0] - agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0]) * \
+							# 	agents.resources[0] * resources_weight_action * links.aware * resources_potency
+							# # 1-1 check
+							# agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] = \
+							# 	self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0])
+							# # Update of the preferences for that partial knowledge agent
+							# self.preference_udapte_as_PC(agents, 1 + links.agent1.unique_id, len_DC, len_PC, len_S)
+							# # Calculation of the new grade - we check selected issue using partial knowledge updates
+							# cw_grade = abs(agents.belieftree[0][agents.select_as_issue][2] - agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][2])
+							# # print('cw_grade: ' + str(cw_grade))
+							# # Restoring the initial values
+							# agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] = original_belief[0]
+							# # Re-updating the preference levels
+							# self.preference_udapte_as_PC(agents, 1 + links.agent1.unique_id, len_DC, len_PC, len_S)
+							# # Adding the grade to the grade list
+							# total_grade_list.append(cw_grade)
+							# # Reset to None after finding the grade
+							# if check_none == 1:
+							# 	agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] = None
 
 					# 2. Grading all individual actions - Aim change
 					if links.agent1 == agents:
+
+						# Grade calculation using the likelihood method
+						# Same affiliation
+						if links.agent1.affiliation == links.agent2.affiliation:
+							aim_grade_issue = links.conflict_level[0][agents.select_as_issue][1] * links.aware * actionWeight
+							total_grade_list.append(aim_grade_issue)
+
+						# Affiliation 1-2
+						if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
+							(links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
+							aim_grade_issue = links.conflict_level[0][agents.select_as_issue][1] * links.aware * actionWeight * affiliation_weights[0]
+							total_grade_list.append(aim_grade_issue)
+
+						# Affiliation 1-3
+						if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
+							(links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
+							aim_grade_issue = links.conflict_level[0][agents.select_as_issue][1] * links.aware * actionWeight * affiliation_weights[1]
+							total_grade_list.append(aim_grade_issue)
+
+						# Affiliation 2-3
+						if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
+							(links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
+							aim_grade_issue = links.conflict_level[0][agents.select_as_issue][1] * links.aware * actionWeight * affiliation_weights[2]
+							total_grade_list.append(aim_grade_issue)
+
+						# OLD OLD OLD OLD OLD OLD OLD OLD
 						# Check if no partial knowledge (initial value)
-						check_none = 0
-						if agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1] == None:
-							agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1] = 0
-							check_none = 1
-						# Memorising is no partial knoweldge
-						original_belief = [0]
-						original_belief[0] = copy.copy(agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1])
-						# Performing the action
-						agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1] += \
-							(agents.belieftree[0][agents.select_as_issue][1] - agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1]) * \
-							agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][agents.select_as_issue][1] * actionWeight * resources_potency
-						# 1-1 check
-						agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1] = \
-							self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1])
-						# Update of the preferences for that partial knowledge agent
-						self.preference_udapte_as_PC(agents, 1 + links.agent2.unique_id, len_DC, len_PC, len_S)
-						# Calculation of the new grade - we check selected issue using partial knowledge updates
-						aim_grade_issue = abs(agents.belieftree[0][agents.select_as_issue][2] - agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][2])
-						# print('aim_grade_issue: ' + str(aim_grade_issue))
-						# Restoring the initial values
-						agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1] = original_belief[0]
-						# Re-updating the preference levels
-						self.preference_udapte_as_PC(agents, 1 + links.agent2.unique_id, len_DC, len_PC, len_S)
-						#  Reset to None after finding the grade
-						if check_none == 1:
-							agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1] = None
-						# Adding the grade to the grade list
-						total_grade_list.append(aim_grade_issue)
+						# check_none = 0
+						# if agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1] == None:
+						# 	agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1] = 0
+						# 	check_none = 1
+						# # Memorising is no partial knoweldge
+						# original_belief = [0]
+						# original_belief[0] = copy.copy(agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1])
+						# # Performing the action
+						# agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1] += \
+						# 	(agents.belieftree[0][agents.select_as_issue][1] - agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1]) * \
+						# 	agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][agents.select_as_issue][1] * actionWeight * resources_potency
+						# # 1-1 check
+						# agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1] = \
+						# 	self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1])
+						# # Update of the preferences for that partial knowledge agent
+						# self.preference_udapte_as_PC(agents, 1 + links.agent2.unique_id, len_DC, len_PC, len_S)
+						# # Calculation of the new grade - we check selected issue using partial knowledge updates
+						# aim_grade_issue = abs(agents.belieftree[0][agents.select_as_issue][2] - agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][2])
+						# # print('aim_grade_issue: ' + str(aim_grade_issue))
+						# # Restoring the initial values
+						# agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1] = original_belief[0]
+						# # Re-updating the preference levels
+						# self.preference_udapte_as_PC(agents, 1 + links.agent2.unique_id, len_DC, len_PC, len_S)
+						# #  Reset to None after finding the grade
+						# if check_none == 1:
+						# 	agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1] = None
+						# # Adding the grade to the grade list
+						# total_grade_list.append(aim_grade_issue)
 
 					if links.agent2 == agents:
+
+						# Grade calculation using the likelihood method
+						# Same affiliation
+						if links.agent1.affiliation == links.agent2.affiliation:
+							aim_grade_issue = links.conflict_level[1][agents.select_as_issue][1] * links.aware * actionWeight
+							total_grade_list.append(aim_grade_issue)
+
+						# Affiliation 1-2
+						if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
+							(links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
+							aim_grade_issue = links.conflict_level[1][agents.select_as_issue][1] * links.aware * actionWeight * affiliation_weights[0]
+							total_grade_list.append(aim_grade_issue)
+
+						# Affiliation 1-3
+						if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
+							(links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
+							aim_grade_issue = links.conflict_level[1][agents.select_as_issue][1] * links.aware * actionWeight * affiliation_weights[1]
+							total_grade_list.append(aim_grade_issue)
+
+						# Affiliation 2-3
+						if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
+							(links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
+							aim_grade_issue = links.conflict_level[1][agents.select_as_issue][1] * links.aware * actionWeight * affiliation_weights[2]
+							total_grade_list.append(aim_grade_issue)
+
+						# OLD OLD OLD OLD OLD OLD OLD OLD
 						# Check if no partial knowledge (initial value)
-						check_none = 0
-						if agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1] == None:
-							agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1] = 0
-							check_none = 1
-						# Memorising is no partial knoweldge
-						original_belief = [0]
-						original_belief[0] = copy.copy(agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1])
-						# Performing the action
-						agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1] += \
-							(agents.belieftree[0][agents.select_as_issue][1] - agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1]) * \
-							agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[1][agents.select_as_issue][1] * actionWeight * resources_potency
-						# 1-1 check
-						agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1] = \
-							self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1])
-						# Update of the preferences for that partial knowledge agent
-						self.preference_udapte_as_PC(agents, 1 + links.agent1.unique_id, len_DC, len_PC, len_S)
-						# Calculation of the new grade - we check selected issue using partial knowledge updates
-						aim_grade_issue = abs(agents.belieftree[0][agents.select_as_issue][2] - agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][2])
-						# print('aim_grade_issue: ' + str(aim_grade_issue))
-						# Restoring the initial values
-						agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1] = original_belief[0]
-						# Re-updating the preference levels
-						self.preference_udapte_as_PC(agents, 1 + links.agent1.unique_id, len_DC, len_PC, len_S)
-						#  Reset to None after finding the grade
-						if check_none == 1:
-							agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1] = None
-						# Adding the grade to the grade list
-						total_grade_list.append(aim_grade_issue)
+						# check_none = 0
+						# if agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1] == None:
+						# 	agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1] = 0
+						# 	check_none = 1
+						# # Memorising is no partial knoweldge
+						# original_belief = [0]
+						# original_belief[0] = copy.copy(agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1])
+						# # Performing the action
+						# agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1] += \
+						# 	(agents.belieftree[0][agents.select_as_issue][1] - agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1]) * \
+						# 	agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[1][agents.select_as_issue][1] * actionWeight * resources_potency
+						# # 1-1 check
+						# agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1] = \
+						# 	self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1])
+						# # Update of the preferences for that partial knowledge agent
+						# self.preference_udapte_as_PC(agents, 1 + links.agent1.unique_id, len_DC, len_PC, len_S)
+						# # Calculation of the new grade - we check selected issue using partial knowledge updates
+						# aim_grade_issue = abs(agents.belieftree[0][agents.select_as_issue][2] - agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][2])
+						# # print('aim_grade_issue: ' + str(aim_grade_issue))
+						# # Restoring the initial values
+						# agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1] = original_belief[0]
+						# # Re-updating the preference levels
+						# self.preference_udapte_as_PC(agents, 1 + links.agent1.unique_id, len_DC, len_PC, len_S)
+						# #  Reset to None after finding the grade
+						# if check_none == 1:
+						# 	agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1] = None
+						# # Adding the grade to the grade list
+						# total_grade_list.append(aim_grade_issue)
+					# print(aim_grade_issue)
 
 					# 3. Grading all individual actions - State change
 					if links.agent1 == agents:
+
+						# Grade calculation using the likelihood method
+						# Same affiliation
+						if links.agent1.affiliation == links.agent2.affiliation:
+							state_grade_issue = links.conflict_level[0][agents.select_as_issue][0] * links.aware * actionWeight
+
+						# Affiliation 1-2
+						if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
+							(links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
+							state_grade_issue = links.conflict_level[0][agents.select_as_issue][0] * links.aware * actionWeight * affiliation_weights[0]
+
+						# Affiliation 1-3
+						if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
+							(links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
+							state_grade_issue = links.conflict_level[0][agents.select_as_issue][0] * links.aware * actionWeight * affiliation_weights[1]
+
+						# Affiliation 2-3
+						if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
+							(links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
+							state_grade_issue = links.conflict_level[0][agents.select_as_issue][0] * links.aware * actionWeight * affiliation_weights[2]
+							total_grade_list.append(state_grade_issue)
+
+						# OLD OLD OLD OLD OLD OLD OLD OLD
 						# Check if no partial knowledge (initial value)
-						check_none = 0
-						if agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0] == None:
-							agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0] = 0
-							check_none = 1
-						# Memorising is no partial knoweldge
-						original_belief = [0]
-						original_belief[0] = copy.copy(agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0])
-						# Performing the action
-						agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0] += \
-							(agents.belieftree[0][agents.select_as_issue][0] - agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0]) * \
-							agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][agents.select_as_issue][0] * actionWeight * resources_potency
-						# 1-1 check
-						agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0] = \
-							self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0])
-						# Update of the preferences for that partial knowledge agent
-						self.preference_udapte_as_PC(agents, 1 + links.agent2.unique_id, len_DC, len_PC, len_S)
-						# Calculation of the new grade - we check selected issue using partial knowledge updates
-						state_grade_issue = abs(agents.belieftree[0][agents.select_as_issue][2] - agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][2])
-						# print('state_grade_issue: ' + str(state_grade_issue))
-						# Restoring the initial values
-						agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0] = original_belief[0]
-						# Re-updating the preference levels
-						self.preference_udapte_as_PC(agents, 1 + links.agent2.unique_id, len_DC, len_PC, len_S)
-						#  Reset to None after finding the grade
-						if check_none == 1:
-							agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0] = None
-						# Adding the grade to the grade list
+						# check_none = 0
+						# if agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0] == None:
+						# 	agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0] = 0
+						# 	check_none = 1
+						# # Memorising is no partial knoweldge
+						# original_belief = [0]
+						# original_belief[0] = copy.copy(agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0])
+						# # Performing the action
+						# agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0] += \
+						# 	(agents.belieftree[0][agents.select_as_issue][0] - agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0]) * \
+						# 	agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][agents.select_as_issue][0] * actionWeight * resources_potency
+						# # 1-1 check
+						# agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0] = \
+						# 	self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0])
+						# # Update of the preferences for that partial knowledge agent
+						# self.preference_udapte_as_PC(agents, 1 + links.agent2.unique_id, len_DC, len_PC, len_S)
+						# # Calculation of the new grade - we check selected issue using partial knowledge updates
+						# state_grade_issue = abs(agents.belieftree[0][agents.select_as_issue][2] - agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][2])
+						# # print('state_grade_issue: ' + str(state_grade_issue))
+						# # Restoring the initial values
+						# agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0] = original_belief[0]
+						# # Re-updating the preference levels
+						# self.preference_udapte_as_PC(agents, 1 + links.agent2.unique_id, len_DC, len_PC, len_S)
+						# #  Reset to None after finding the grade
+						# if check_none == 1:
+						# 	agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0] = None
+						# # Adding the grade to the grade list
 						total_grade_list.append(state_grade_issue)
 
 					if links.agent2 == agents:
+
+						# Grade calculation using the likelihood method
+						# Same affiliation
+						if links.agent1.affiliation == links.agent2.affiliation:
+							state_grade_issue = links.conflict_level[1][agents.select_as_issue][0] * links.aware * actionWeight
+
+						# Affiliation 1-2
+						if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
+							(links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
+							state_grade_issue = links.conflict_level[1][agents.select_as_issue][0] * links.aware * actionWeight * affiliation_weights[0]
+
+						# Affiliation 1-3
+						if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
+							(links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
+							state_grade_issue = links.conflict_level[1][agents.select_as_issue][0] * links.aware * actionWeight * affiliation_weights[1]
+
+						# Affiliation 2-3
+						if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
+							(links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
+							state_grade_issue = links.conflict_level[1][agents.select_as_issue][0] * links.aware * actionWeight * affiliation_weights[2]
+							total_grade_list.append(state_grade_issue)
+
+						# OLD OLD OLD OLD OLD OLD OLD OLD
 						# Check if no partial knowledge (initial value)
-						check_none = 0
-						if agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0] == None:
-							agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0] = 0
-							check_none = 1
-						# Memorising is no partial knoweldge
-						original_belief = [0]
-						original_belief[0] = copy.copy(agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0])
-						# Performing the action
-						agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0] += \
-							(agents.belieftree[0][agents.select_as_issue][0] - agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0]) * \
-							agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[1][agents.select_as_issue][0] * actionWeight * resources_potency
-						# 1-1 check
-						agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0] = \
-							self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0])
-						# Update of the preferences for that partial knowledge agent
-						self.preference_udapte_as_PC(agents, 1 + links.agent1.unique_id, len_DC, len_PC, len_S)
-						# Calculation of the new grade - we check selected issue using partial knowledge updates
-						state_grade_issue = abs(agents.belieftree[0][agents.select_as_issue][2] - agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][2])
-						# print('state_grade_issue: ' + str(state_grade_issue))
-						# Restoring the initial values
-						agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0] = original_belief[0]
-						# Re-updating the preference levels
-						self.preference_udapte_as_PC(agents, 1 + links.agent1.unique_id, len_DC, len_PC, len_S)
-						#  Reset to None after finding the grade
-						if check_none == 1:
-							agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0] = None
-						# Adding the grade to the grade list
-						total_grade_list.append(state_grade_issue)
+						# check_none = 0
+						# if agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0] == None:
+						# 	agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0] = 0
+						# 	check_none = 1
+						# # Memorising is no partial knoweldge
+						# original_belief = [0]
+						# original_belief[0] = copy.copy(agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0])
+						# # Performing the action
+						# agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0] += \
+						# 	(agents.belieftree[0][agents.select_as_issue][0] - agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0]) * \
+						# 	agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[1][agents.select_as_issue][0] * actionWeight * resources_potency
+						# # 1-1 check
+						# agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0] = \
+						# 	self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0])
+						# # Update of the preferences for that partial knowledge agent
+						# self.preference_udapte_as_PC(agents, 1 + links.agent1.unique_id, len_DC, len_PC, len_S)
+						# # Calculation of the new grade - we check selected issue using partial knowledge updates
+						# state_grade_issue = abs(agents.belieftree[0][agents.select_as_issue][2] - agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][2])
+						# # print('state_grade_issue: ' + str(state_grade_issue))
+						# # Restoring the initial values
+						# agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0] = original_belief[0]
+						# # Re-updating the preference levels
+						# self.preference_udapte_as_PC(agents, 1 + links.agent1.unique_id, len_DC, len_PC, len_S)
+						# #  Reset to None after finding the grade
+						# if check_none == 1:
+						# 	agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0] = None
+						# # Adding the grade to the grade list
+						# total_grade_list.append(state_grade_issue)
 					# print(' ')
 
 			# print(' ')
@@ -4276,12 +4719,14 @@ class Policyentres(Agent):
 			# agents.resources_actions -= agents.resources
 			agents.resources_actions -= agents.resources[0] * resources_weight_action
 
-	def pm_pe_actions_pf(self, agents, link_list, deep_core, policy_core, secondary, causalrelation_number, agenda_as_issue, instruments, resources_weight_action, resources_potency, AS_theory):
+	def pm_pe_actions_pf(self, agents, link_list, deep_core, policy_core, secondary, causalrelation_number, agenda_as_issue, instruments, resources_weight_action, resources_potency, AS_theory, affiliation_weights):
 
 
 		len_DC = len(deep_core)
 		len_PC = len(policy_core)
 		len_S = len(secondary)
+
+		total_issue_number = len_DC + len_PC + len_S
 
 		# Here are the modifications related to the policy formulation
 		# Looking for the relevant causal relations for the policy formulation
@@ -4323,73 +4768,123 @@ class Policyentres(Agent):
 					for cw in range(len(cw_of_interest)):
 						# Checking which agent in the link is the original agent
 						if links.agent1 == agents:
+							# Grade calculation using the likelihood method
+							# Same affiliation
+							if links.agent1.affiliation == links.agent2.affiliation:
+								cw_grade = links.conflict_level[0][total_issue_number + cw][0] * links.aware * actionWeight
+								total_grade_list.append(cw_grade)
+
+							# Affiliation 1-2
+							if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
+								(links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
+								cw_grade = links.conflict_level[0][total_issue_number + cw][0] * links.aware * actionWeight * affiliation_weights[0]
+								total_grade_list.append(cw_grade)
+
+							# Affiliation 1-3
+							if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
+								(links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
+								cw_grade = links.conflict_level[0][total_issue_number + cw][0] * links.aware * actionWeight * affiliation_weights[1]
+								total_grade_list.append(cw_grade)
+
+							# Affiliation 2-3
+							if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
+								(links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
+								cw_grade = links.conflict_level[0][total_issue_number + cw][0] * links.aware * actionWeight * affiliation_weights[2]
+								total_grade_list.append(cw_grade)	
+
+							# OLD OLD OLD OLD OLD OLD OLD OLD OLD
 							# Check if no partial knowledge (initial value)
-							check_none = 0
-							if agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] == None:
-								agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = 0
-								check_none = 1
-							# Memorising the original belief values
-							original_belief = [0]
-							original_belief[0] = copy.copy(agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0])
-							# Performing the action
-							# print(' ')
-							# print('Old value of the CR: ' + str(agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0]))
-							agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] += \
-								(agents.belieftree[0][cw_of_interest[cw]][0] - agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0]) * \
-								agents.resources[0] * resources_weight_action * links.aware * resources_potency
-							# print('New value of the CR: ' + str(agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0]))
-							# 1-1 check
-							agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = \
-								self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0])
-							# Update the preferences for that partial knowledge agent
-							self.instrument_preference_update(agents, 1 + links.agent2.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
-							# Calculation of the new grade - Based on the preference for the instrument
-							cw_grade = abs(agents.instrument_preferences[0][agents.select_pinstrument] - agents.instrument_preferences[1 + links.agent2.unique_id][agents.select_pinstrument])
-							# print('cw_grade: ' + str(cw_grade))
-							# Restoring the initial values
-							agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = original_belief[0]
-							# Re-updating the preference levels
-							self.instrument_preference_update(agents, 1 + links.agent2.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
-							# Adding the grade to the grade list
-							total_grade_list.append(cw_grade)
-							# Reset to None after finding the grade
-							if check_none == 1:
-								agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = None
+							# check_none = 0
+							# if agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] == None:
+							# 	agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = 0
+							# 	check_none = 1
+							# # Memorising the original belief values
+							# original_belief = [0]
+							# original_belief[0] = copy.copy(agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0])
+							# # Performing the action
+							# # print(' ')
+							# # print('Old value of the CR: ' + str(agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0]))
+							# agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] += \
+							# 	(agents.belieftree[0][cw_of_interest[cw]][0] - agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0]) * \
+							# 	agents.resources[0] * resources_weight_action * links.aware * resources_potency
+							# # print('New value of the CR: ' + str(agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0]))
+							# # 1-1 check
+							# agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = \
+							# 	self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0])
+							# # Update the preferences for that partial knowledge agent
+							# self.instrument_preference_update(agents, 1 + links.agent2.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
+							# # Calculation of the new grade - Based on the preference for the instrument
+							# cw_grade = abs(agents.instrument_preferences[0][agents.select_pinstrument] - agents.instrument_preferences[1 + links.agent2.unique_id][agents.select_pinstrument])
+							# # print('cw_grade: ' + str(cw_grade))
+							# # Restoring the initial values
+							# agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = original_belief[0]
+							# # Re-updating the preference levels
+							# self.instrument_preference_update(agents, 1 + links.agent2.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
+							# # Adding the grade to the grade list
+							# total_grade_list.append(cw_grade)
+							# # Reset to None after finding the grade
+							# if check_none == 1:
+							# 	agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = None
 
 						# Checking which agent in the link is the original agent
 						if links.agent2 == agents:
-							# Check if no partial knowledge (initial value)
-							check_none = 0
-							if agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] == None:
-								agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] = 0
-								check_none = 1
-							# Memorising the original belief values
-							original_belief = [0]
-							original_belief[0] = copy.copy(agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0])
-							# Performing the action
-							# print(' ')
-							# print('Old value of the CR: ' + str(agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0]))
-							agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] += \
-								(agents.belieftree[0][cw_of_interest[cw]][0] - agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0]) * \
-								agents.resources[0] * resources_weight_action * links.aware * resources_potency
-							# print('New value of the CR: ' + str(agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0]))
-							# 1-1 check
-							agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] = \
-								self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0])
-							# Update the preferences for that partial knowledge agent
-							self.instrument_preference_update(agents, 1 + links.agent1.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
-							# Calculation of the new grade - Based on the preference for the instrument
-							cw_grade = abs(agents.instrument_preferences[0][agents.select_pinstrument] - agents.instrument_preferences[1 + links.agent1.unique_id][agents.select_pinstrument])
-							# print('cw_grade: ' + str(cw_grade))
-							# Restoring the initial values
-							agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] = original_belief[0]
-							# Re-updating the preference levels
-							self.instrument_preference_update(agents, 1 + links.agent1.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
-							# Adding the grade to the grade list
-							total_grade_list.append(cw_grade)
-							# Reset to None after finding the grade
-							if check_none == 1:
-								agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] = None
+							# Grade calculation using the likelihood method
+							# Same affiliation
+							if links.agent1.affiliation == links.agent2.affiliation:
+								cw_grade = links.conflict_level[1][total_issue_number + cw][0] * links.aware * actionWeight
+								total_grade_list.append(cw_grade)
+
+							# Affiliation 1-2
+							if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
+								(links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
+								cw_grade = links.conflict_level[1][total_issue_number + cw][0] * links.aware * actionWeight * affiliation_weights[0]
+								total_grade_list.append(cw_grade)
+
+							# Affiliation 1-3
+							if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
+								(links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
+								cw_grade = links.conflict_level[1][total_issue_number + cw][0] * links.aware * actionWeight * affiliation_weights[1]
+								total_grade_list.append(cw_grade)
+
+							# Affiliation 2-3
+							if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
+								(links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
+								cw_grade = links.conflict_level[1][total_issue_number + cw][0] * links.aware * actionWeight * affiliation_weights[2]
+								total_grade_list.append(cw_grade)	
+
+							# OLD OLD OLD OLD OLD OLD OLD OLD OLD
+							# # Check if no partial knowledge (initial value)
+							# check_none = 0
+							# if agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] == None:
+							# 	agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] = 0
+							# 	check_none = 1
+							# # Memorising the original belief values
+							# original_belief = [0]
+							# original_belief[0] = copy.copy(agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0])
+							# # Performing the action
+							# # print(' ')
+							# # print('Old value of the CR: ' + str(agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0]))
+							# agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] += \
+							# 	(agents.belieftree[0][cw_of_interest[cw]][0] - agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0]) * \
+							# 	agents.resources[0] * resources_weight_action * links.aware * resources_potency
+							# # print('New value of the CR: ' + str(agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0]))
+							# # 1-1 check
+							# agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] = \
+							# 	self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0])
+							# # Update the preferences for that partial knowledge agent
+							# self.instrument_preference_update(agents, 1 + links.agent1.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
+							# # Calculation of the new grade - Based on the preference for the instrument
+							# cw_grade = abs(agents.instrument_preferences[0][agents.select_pinstrument] - agents.instrument_preferences[1 + links.agent1.unique_id][agents.select_pinstrument])
+							# # print('cw_grade: ' + str(cw_grade))
+							# # Restoring the initial values
+							# agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] = original_belief[0]
+							# # Re-updating the preference levels
+							# self.instrument_preference_update(agents, 1 + links.agent1.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
+							# # Adding the grade to the grade list
+							# total_grade_list.append(cw_grade)
+							# # Reset to None after finding the grade
+							# if check_none == 1:
+							# 	agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] = None
 
 					# print(total_grade_list)
 
@@ -4399,85 +4894,135 @@ class Policyentres(Agent):
 					for issue_num in range(len(issue_of_interest)):
 					
 						if links.agent1 == agents:
+							# Grade calculation using the likelihood method
+							# Same affiliation
+							if links.agent1.affiliation == links.agent2.affiliation:
+								aim_grade = links.conflict_level[0][issue_num][1] * links.aware * actionWeight
+								total_grade_list.append(aim_grade)
+
+							# Affiliation 1-2
+							if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
+								(links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
+								aim_grade = links.conflict_level[0][issue_num][1] * links.aware * actionWeight * affiliation_weights[0]
+								total_grade_list.append(aim_grade)
+
+							# Affiliation 1-3
+							if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
+								(links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
+								aim_grade = links.conflict_level[0][issue_num][1] * links.aware * actionWeight * affiliation_weights[1]
+								total_grade_list.append(aim_grade)
+
+							# Affiliation 2-3
+							if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
+								(links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
+								aim_grade = links.conflict_level[0][issue_num][1] * links.aware * actionWeight * affiliation_weights[2]
+								total_grade_list.append(aim_grade)	
+
+							# OLD OLD OLD OLD OLD OLD OLD OLD OLD
 							# Looking at the policy chosen by the agent.
 							# Check if no partial knowledge (initial value)
-							check_none = 0
-							if agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1] == None:
-								agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1] = 0
-								check_none = 1
-							# Memorising the original belief values
-							original_belief = [0]
-							original_belief[0] = copy.copy(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1])
-							# If it knows that the agent has no interest in this issue, then set the grade to 0
-							if agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0] == 'No' or \
-							  agents.belieftree[0][issue_of_interest[issue_num]][0] == 'No':
-								aim_grade = 0
-							else:	
-								# Performing the action
-								# print(' ')
-								# print('Old value of the aim: ' + str(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1]))
-								agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1] += \
-									(agents.belieftree[0][issue_of_interest[issue_num]][1] - agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1]) * \
-									agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][issue_of_interest[issue_num]][1] * actionWeight * resources_potency
-								# 1-1 check
-								agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1])
-								# Re-updating the preference levels
-								self.instrument_preference_update(agents, 1 + links.agent2.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
-								# Calculation of the new grade
-								aim_grade = abs(agents.instrument_preferences[0][agents.select_pinstrument] - agents.instrument_preferences[1 + links.agent2.unique_id][agents.select_pinstrument])
-							# print('New value of the aim: ' + str(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1]))
-							# print('aim_grade: ' + str(aim_grade))
-							# Restoring the initial values
-							agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1] = original_belief[0]
-							# Re-updating the preference levels
-							self.instrument_preference_update(agents, 1 + links.agent2.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
-							# Adding the grade to the grade list
-							total_grade_list.append(aim_grade)
-							# Reset to None after finding the grade
-							if check_none == 1:
-								agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1] = None
+							# check_none = 0
+							# if agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1] == None:
+							# 	agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1] = 0
+							# 	check_none = 1
+							# # Memorising the original belief values
+							# original_belief = [0]
+							# original_belief[0] = copy.copy(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1])
+							# # If it knows that the agent has no interest in this issue, then set the grade to 0
+							# if agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0] == 'No' or \
+							#   agents.belieftree[0][issue_of_interest[issue_num]][0] == 'No':
+							# 	aim_grade = 0
+							# else:	
+							# 	# Performing the action
+							# 	# print(' ')
+							# 	# print('Old value of the aim: ' + str(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1]))
+							# 	agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1] += \
+							# 		(agents.belieftree[0][issue_of_interest[issue_num]][1] - agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1]) * \
+							# 		agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][issue_of_interest[issue_num]][1] * actionWeight * resources_potency
+							# 	# 1-1 check
+							# 	agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1] = \
+							# 		self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1])
+							# 	# Re-updating the preference levels
+							# 	self.instrument_preference_update(agents, 1 + links.agent2.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
+							# 	# Calculation of the new grade
+							# 	aim_grade = abs(agents.instrument_preferences[0][agents.select_pinstrument] - agents.instrument_preferences[1 + links.agent2.unique_id][agents.select_pinstrument])
+							# # print('New value of the aim: ' + str(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1]))
+							# # print('aim_grade: ' + str(aim_grade))
+							# # Restoring the initial values
+							# agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1] = original_belief[0]
+							# # Re-updating the preference levels
+							# self.instrument_preference_update(agents, 1 + links.agent2.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
+							# # Adding the grade to the grade list
+							# total_grade_list.append(aim_grade)
+							# # Reset to None after finding the grade
+							# if check_none == 1:
+							# 	agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1] = None
 							
 						if links.agent2 == agents:
+							# Grade calculation using the likelihood method
+							# Same affiliation
+							if links.agent1.affiliation == links.agent2.affiliation:
+								aim_grade = links.conflict_level[1][issue_num][1] * links.aware * actionWeight
+								total_grade_list.append(aim_grade)
+
+							# Affiliation 1-2
+							if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
+								(links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
+								aim_grade = links.conflict_level[1][issue_num][1] * links.aware * actionWeight * affiliation_weights[0]
+								total_grade_list.append(aim_grade)
+
+							# Affiliation 1-3
+							if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
+								(links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
+								aim_grade = links.conflict_level[1][issue_num][1] * links.aware * actionWeight * affiliation_weights[1]
+								total_grade_list.append(aim_grade)
+
+							# Affiliation 2-3
+							if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
+								(links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
+								aim_grade = links.conflict_level[1][issue_num][1] * links.aware * actionWeight * affiliation_weights[2]
+								total_grade_list.append(aim_grade)	
+
+							# OLD OLD OLD OLD OLD OLD OLD OLD OLD
 
 							# Looking at the policy chosen by the agent.
 							# Check if no partial knowledge (initial value)
-							check_none = 0
-							if agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1] == None:
-								agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1] = 0
-								check_none = 1
-							# Memorising the original belief values
-							original_belief = [0]
-							original_belief[0] = copy.copy(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1])
-							# If it knows that the agent has no interest in this issue, then set the grade to 0
-							if agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0] == 'No' or \
-							  agents.belieftree[0][issue_of_interest[issue_num]][0] == 'No':
-								aim_grade = 0
-							else:	
-								# Performing the action
-								# print(' ')
-								# print('Old value of the aim: ' + str(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1]))
-								agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1] += \
-									(agents.belieftree[0][issue_of_interest[issue_num]][1] - agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1]) * \
-									agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[1][issue_of_interest[issue_num]][1] * actionWeight * resources_potency
-								# 1-1 check
-								agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1])
-								# Re-updating the preference levels
-								self.instrument_preference_update(agents, 1 + links.agent1.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
-								# Calculation of the new grade
-								aim_grade = abs(agents.instrument_preferences[0][agents.select_pinstrument] - agents.instrument_preferences[1 + links.agent1.unique_id][agents.select_pinstrument])
-							# print('New value of the aim: ' + str(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1]))
-							# print('aim_grade: ' + str(aim_grade))
-							# Restoring the initial values
-							agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1] = original_belief[0]
-							# Re-updating the preference levels
-							self.instrument_preference_update(agents, 1 + links.agent1.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
-							# Adding the grade to the grade list
-							total_grade_list.append(aim_grade)
-							# Reset to None after finding the grade
-							if check_none == 1:
-								agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1] = None
+							# check_none = 0
+							# if agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1] == None:
+							# 	agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1] = 0
+							# 	check_none = 1
+							# # Memorising the original belief values
+							# original_belief = [0]
+							# original_belief[0] = copy.copy(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1])
+							# # If it knows that the agent has no interest in this issue, then set the grade to 0
+							# if agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0] == 'No' or \
+							#   agents.belieftree[0][issue_of_interest[issue_num]][0] == 'No':
+							# 	aim_grade = 0
+							# else:	
+							# 	# Performing the action
+							# 	# print(' ')
+							# 	# print('Old value of the aim: ' + str(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1]))
+							# 	agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1] += \
+							# 		(agents.belieftree[0][issue_of_interest[issue_num]][1] - agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1]) * \
+							# 		agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[1][issue_of_interest[issue_num]][1] * actionWeight * resources_potency
+							# 	# 1-1 check
+							# 	agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1] = \
+							# 		self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1])
+							# 	# Re-updating the preference levels
+							# 	self.instrument_preference_update(agents, 1 + links.agent1.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
+							# 	# Calculation of the new grade
+							# 	aim_grade = abs(agents.instrument_preferences[0][agents.select_pinstrument] - agents.instrument_preferences[1 + links.agent1.unique_id][agents.select_pinstrument])
+							# # print('New value of the aim: ' + str(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1]))
+							# # print('aim_grade: ' + str(aim_grade))
+							# # Restoring the initial values
+							# agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1] = original_belief[0]
+							# # Re-updating the preference levels
+							# self.instrument_preference_update(agents, 1 + links.agent1.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
+							# # Adding the grade to the grade list
+							# total_grade_list.append(aim_grade)
+							# # Reset to None after finding the grade
+							# if check_none == 1:
+							# 	agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1] = None
 
 						# print(total_grade_list)
 
@@ -4487,86 +5032,136 @@ class Policyentres(Agent):
 					for issue_num in range(len(issue_of_interest)):
 
 						if links.agent1 == agents:
+							# Grade calculation using the likelihood method
+							# Same affiliation
+							if links.agent1.affiliation == links.agent2.affiliation:
+								state_grade = links.conflict_level[0][issue_num][0] * links.aware * actionWeight
+								total_grade_list.append(state_grade)
+
+							# Affiliation 1-2
+							if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
+								(links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
+								state_grade = links.conflict_level[0][issue_num][0] * links.aware * actionWeight * affiliation_weights[0]
+								total_grade_list.append(state_grade)
+
+							# Affiliation 1-3
+							if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
+								(links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
+								state_grade = links.conflict_level[0][issue_num][0] * links.aware * actionWeight * affiliation_weights[1]
+								total_grade_list.append(state_grade)
+
+							# Affiliation 2-3
+							if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
+								(links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
+								state_grade = links.conflict_level[0][issue_num][0] * links.aware * actionWeight * affiliation_weights[2]
+								total_grade_list.append(state_grade)	
+
+							# OLD OLD OLD OLD OLD OLD OLD OLD OLD
 								
-							# Looking at the policy chosen by the agent.
-							# Check if no partial knowledge (initial value)
-							check_none = 0
-							if agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0] == None:
-								agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0] = 0
-								check_none = 1
-							# Memorising the original belief values
-							original_belief = [0]
-							original_belief[0] = copy.copy(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0])
-							# If it knows that the agent has no interest in this issue, then set the grade to 0
-							if agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0] == 'No' or \
-							  agents.belieftree[0][issue_of_interest[issue_num]][0] == 'No':
-								state_grade = 0
-							else:	
-								# Performing the action
-								# print(' ')
-								# print('Old value of the aim: ' + str(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0]))
-								agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0] += \
-									(agents.belieftree[0][issue_of_interest[issue_num]][0] - agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0]) * \
-									agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][issue_of_interest[issue_num]][0] * actionWeight * resources_potency
-								# 1-1 check
-								agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0])
-								# Re-updating the preference levels
-								self.instrument_preference_update(agents, 1 + links.agent2.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
-								# Calculation of the new grade
-								state_grade = abs(agents.instrument_preferences[0][agents.select_pinstrument] - agents.instrument_preferences[1 + links.agent2.unique_id][agents.select_pinstrument])
-							# print('New value of the aim: ' + str(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0]))
-							# print('state_grade: ' + str(state_grade))
-							# Restoring the initial values
-							agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0] = original_belief[0]
-							# Re-updating the preference levels
-							self.instrument_preference_update(agents, 1 + links.agent2.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
-							# Adding the grade to the grade list
-							total_grade_list.append(state_grade)
-							# Reset to None after finding the grade
-							if check_none == 1:
-								agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0] = None
+							# # Looking at the policy chosen by the agent.
+							# # Check if no partial knowledge (initial value)
+							# check_none = 0
+							# if agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0] == None:
+							# 	agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0] = 0
+							# 	check_none = 1
+							# # Memorising the original belief values
+							# original_belief = [0]
+							# original_belief[0] = copy.copy(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0])
+							# # If it knows that the agent has no interest in this issue, then set the grade to 0
+							# if agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0] == 'No' or \
+							#   agents.belieftree[0][issue_of_interest[issue_num]][0] == 'No':
+							# 	state_grade = 0
+							# else:	
+							# 	# Performing the action
+							# 	# print(' ')
+							# 	# print('Old value of the aim: ' + str(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0]))
+							# 	agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0] += \
+							# 		(agents.belieftree[0][issue_of_interest[issue_num]][0] - agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0]) * \
+							# 		agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][issue_of_interest[issue_num]][0] * actionWeight * resources_potency
+							# 	# 1-1 check
+							# 	agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0] = \
+							# 		self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0])
+							# 	# Re-updating the preference levels
+							# 	self.instrument_preference_update(agents, 1 + links.agent2.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
+							# 	# Calculation of the new grade
+							# 	state_grade = abs(agents.instrument_preferences[0][agents.select_pinstrument] - agents.instrument_preferences[1 + links.agent2.unique_id][agents.select_pinstrument])
+							# # print('New value of the aim: ' + str(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0]))
+							# # print('state_grade: ' + str(state_grade))
+							# # Restoring the initial values
+							# agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0] = original_belief[0]
+							# # Re-updating the preference levels
+							# self.instrument_preference_update(agents, 1 + links.agent2.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
+							# # Adding the grade to the grade list
+							# total_grade_list.append(state_grade)
+							# # Reset to None after finding the grade
+							# if check_none == 1:
+							# 	agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0] = None
 
 						if links.agent2 == agents:
+							# Grade calculation using the likelihood method
+							# Same affiliation
+							if links.agent1.affiliation == links.agent2.affiliation:
+								state_grade = links.conflict_level[1][issue_num][0] * links.aware * actionWeight
+								total_grade_list.append(state_grade)
+
+							# Affiliation 1-2
+							if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
+								(links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
+								state_grade = links.conflict_level[1][issue_num][0] * links.aware * actionWeight * affiliation_weights[0]
+								total_grade_list.append(state_grade)
+
+							# Affiliation 1-3
+							if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
+								(links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
+								state_grade = links.conflict_level[1][issue_num][0] * links.aware * actionWeight * affiliation_weights[1]
+								total_grade_list.append(state_grade)
+
+							# Affiliation 2-3
+							if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
+								(links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
+								state_grade = links.conflict_level[1][issue_num][0] * links.aware * actionWeight * affiliation_weights[2]
+								total_grade_list.append(state_grade)	
+
+							# OLD OLD OLD OLD OLD OLD OLD OLD OLD
 
 							# Looking at the policy chosen by the agent.
 							# Check if no partial knowledge (initial value)
-							check_none = 0
-							if agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0] == None:
-								agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0] = 0
-								check_none = 1
-							# Memorising the original belief values
-							original_belief = [0]
-							original_belief[0] = copy.copy(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0])
-							# If it knows that the agent has no interest in this issue, then set the grade to 0
-							if agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0] == 'No' or \
-							  agents.belieftree[0][issue_of_interest[issue_num]][0] == 'No':
-								state_grade = 0
-							else:	
-								# Performing the action
-								# print(' ')
-								# print('Old value of the aim: ' + str(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0]))
-								agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0] += \
-									(agents.belieftree[0][issue_of_interest[issue_num]][0] - agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0]) * \
-									agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][issue_of_interest[issue_num]][0] * actionWeight * resources_potency
-								# 1-1 check
-								agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0])
-								# Re-updating the preference levels
-								self.instrument_preference_update(agents, 1 + links.agent1.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
-								# Calculation of the new grade
-								state_grade = abs(agents.instrument_preferences[0][agents.select_pinstrument] - agents.instrument_preferences[1 + links.agent1.unique_id][agents.select_pinstrument])
-							# print('New value of the aim: ' + str(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0]))
-							# print('state_grade: ' + str(state_grade))
-							# Restoring the initial values
-							agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0] = original_belief[0]
-							# Re-updating the preference levels
-							self.instrument_preference_update(agents, 1 + links.agent1.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
-							# Adding the grade to the grade list
-							total_grade_list.append(state_grade)
-							# Reset to None after finding the grade
-							if check_none == 1:
-								agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0] = None
+							# check_none = 0
+							# if agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0] == None:
+							# 	agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0] = 0
+							# 	check_none = 1
+							# # Memorising the original belief values
+							# original_belief = [0]
+							# original_belief[0] = copy.copy(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0])
+							# # If it knows that the agent has no interest in this issue, then set the grade to 0
+							# if agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0] == 'No' or \
+							#   agents.belieftree[0][issue_of_interest[issue_num]][0] == 'No':
+							# 	state_grade = 0
+							# else:	
+							# 	# Performing the action
+							# 	# print(' ')
+							# 	# print('Old value of the aim: ' + str(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0]))
+							# 	agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0] += \
+							# 		(agents.belieftree[0][issue_of_interest[issue_num]][0] - agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0]) * \
+							# 		agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][issue_of_interest[issue_num]][0] * actionWeight * resources_potency
+							# 	# 1-1 check
+							# 	agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0] = \
+							# 		self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0])
+							# 	# Re-updating the preference levels
+							# 	self.instrument_preference_update(agents, 1 + links.agent1.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
+							# 	# Calculation of the new grade
+							# 	state_grade = abs(agents.instrument_preferences[0][agents.select_pinstrument] - agents.instrument_preferences[1 + links.agent1.unique_id][agents.select_pinstrument])
+							# # print('New value of the aim: ' + str(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0]))
+							# # print('state_grade: ' + str(state_grade))
+							# # Restoring the initial values
+							# agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0] = original_belief[0]
+							# # Re-updating the preference levels
+							# self.instrument_preference_update(agents, 1 + links.agent1.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
+							# # Adding the grade to the grade list
+							# total_grade_list.append(state_grade)
+							# # Reset to None after finding the grade
+							# if check_none == 1:
+							# 	agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0] = None
 
 			# print(' ')
 			# print(total_grade_list)
