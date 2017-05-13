@@ -1446,6 +1446,19 @@ class Policymakers(Agent):
 
 						# Checking which agent in the link is the original agent
 						if links.agent1 == agents:
+
+							# NEW LIKELIHOOD CALCULATION
+
+
+
+
+
+
+
+
+
+
+
 							# Check if no partial knowledge (initial value)
 							check_none = 0
 							if agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] == None:

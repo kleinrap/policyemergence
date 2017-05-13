@@ -1795,6 +1795,42 @@ class PolicyEmergence(Model):
 						links.conflict_level[1][issues][1] = conflict_level_coef[2]
 					if conflict_level_temp[1][issues][1] > 1.75:
 						links.conflict_level[1][issues][1] = conflict_level_coef[1]
+
+			# Addition of the causal relations conflict level:
+			for issues in range(self.causalrelation_number):
+
+				# AGENT 1
+				# If one of the beliefs is known to be 'No' then assign 'No' to the conflict level
+				if links.agent1.belieftree[1 + links.agent2.unique_id][self.issues_number + issues][0] == 'No' or links.agent1.belieftree[0][self.issues_number + issues][0] == 'No':
+					links.conflict_level[0][self.issues_number + issues][0] = 'No'
+				# If there is no knowledge of the other agent's beliefs, the conflict level is set to 0.85 by default
+				elif links.agent1.belieftree[1 + links.agent2.unique_id][self.issues_number + issues][0] == None:
+					links.conflict_level[0][self.issues_number + issues][0] = conflict_level_coef[1]
+				# If all beliefs are known, calculate the conflict level
+				else:
+					conflict_level_temp[0][self.issues_number + issues][0] = abs(links.agent1.belieftree[0][self.issues_number + issues][0] - links.agent1.belieftree[1 + links.agent2.unique_id][self.issues_number + issues][0])
+					if conflict_level_temp[0][self.issues_number + issues][0] <= 0.25:
+						links.conflict_level[0][self.issues_number + issues][0] = conflict_level_coef[0]
+					if conflict_level_temp[0][self.issues_number + issues][0] > 0.25 and conflict_level_temp[0][self.issues_number + issues][0] <= 1.75:
+						links.conflict_level[0][self.issues_number + issues][0] = conflict_level_coef[2]
+					if conflict_level_temp[0][self.issues_number + issues][0] > 1.75:
+						links.conflict_level[0][self.issues_number + issues][0] = conflict_level_coef[1]
+				
+				# AGENT 2
+				# For the calculation of the state conflict level:
+				if links.agent2.belieftree[1 + links.agent1.unique_id][self.issues_number + issues][0] == 'No' or links.agent2.belieftree[0][self.issues_number + issues][0] == 'No':
+					links.conflict_level[1][self.issues_number + issues][0] = 'No'
+				elif links.agent2.belieftree[1 + links.agent1.unique_id][self.issues_number + issues][0] == None:
+					links.conflict_level[1][self.issues_number + issues][0] = conflict_level_coef[1]
+				else:
+					conflict_level_temp[1][self.issues_number + issues][0] = abs(links.agent2.belieftree[0][self.issues_number + issues][0] - links.agent2.belieftree[1 + links.agent1.unique_id][self.issues_number + issues][0])
+					if conflict_level_temp[1][self.issues_number + issues][0] <= 0.25:
+						links.conflict_level[1][self.issues_number + issues][0] = conflict_level_coef[0]
+					if conflict_level_temp[1][self.issues_number + issues][0] > 0.25 and conflict_level_temp[1][self.issues_number + issues][0] <= 1.75:
+						links.conflict_level[1][self.issues_number + issues][0] = conflict_level_coef[2]
+					if conflict_level_temp[1][self.issues_number + issues][0] > 1.75:
+						links.conflict_level[1][self.issues_number + issues][0] = conflict_level_coef[1]
+
 			# print(links.conflict_level)
 
 	def one_minus_one_check(self, to_be_checked_parameter):

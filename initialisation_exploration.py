@@ -2577,8 +2577,8 @@ def initial_values_exploration(inputs_dict, experiment_input, run_number, agent_
 		inputs_dict["Trust_decay_coefficient"] = 0.05
 
 
-	conflict_level_1 = [[inputs_dict["conflict_level_coef"][1], inputs_dict["conflict_level_coef"][1]] for i in range(len_DC + len_PC + len_S)]
-	conflict_level_2 = [[inputs_dict["conflict_level_coef"][1], inputs_dict["conflict_level_coef"][1]] for i in range(len_DC + len_PC + len_S)]
+	conflict_level_1 = [[inputs_dict["conflict_level_coef"][1], inputs_dict["conflict_level_coef"][1]] for i in range(len_DC + len_PC + len_S + len_DC*len_PC + len_PC*len_S)]
+	conflict_level_2 = [[inputs_dict["conflict_level_coef"][1], inputs_dict["conflict_level_coef"][1]] for i in range(len_DC + len_PC + len_S + len_DC*len_PC + len_PC*len_S)]
 	conflict_level = [conflict_level_1, conflict_level_2]
 	# print('*************')
 	# print('This is the conflict level')

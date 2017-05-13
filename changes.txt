@@ -1,0 +1,7 @@
+Changes to the code:
+
+13 May:
+- Change trust parameters to aware (awareness) to coincide with the formalisation
+- Change action likelihood calculations:
+	- Addition of the conflict level for the causal relations
+	- For the policy entrepreneurs - agenda setting
