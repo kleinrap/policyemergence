@@ -72,24 +72,20 @@ class Coalition():
 						for agent_inspected in coalitions.members:
 
 							if coalitions.lead.affiliation == agent_inspected.affiliation:
-								cw_grade = abs((coalitions.lead.belieftree[0][cw_of_interest[cw]][0] - \
-								  coalitions.lead.belieftree[1 + agent_inspected.unique_id][cw_of_interest[cw]][0]) * \
-								  coalitions.resources[0] * 0.1 / (len(coalitions.members)))
+								cw_grade = abs((coalitions.lead.belieftree[0][cw_of_interest[cw]][0] - coalitions.lead.belieftree[1 + agent_inspected.unique_id][cw_of_interest[cw]][0]) * \
+									coalitions.resources[0] * 0.1 / (len(coalitions.members)))
 
 							if (coalitions.lead.affiliation == 0 and agent_inspected.affiliation == 1) or (coalitions.lead.affiliation == 1 and agent_inspected.affiliation == 0):
-								cw_grade = abs((coalitions.lead.belieftree[0][cw_of_interest[cw]][0] - \
-								  coalitions.lead.belieftree[1 + agent_inspected.unique_id][cw_of_interest[cw]][0]) * \
-								  coalitions.resources[0] * 0.1 * affiliation_weights[0] / (len(coalitions.members)))
+								cw_grade = abs((coalitions.lead.belieftree[0][cw_of_interest[cw]][0] - coalitions.lead.belieftree[1 + agent_inspected.unique_id][cw_of_interest[cw]][0]) * \
+									coalitions.resources[0] * 0.1 * affiliation_weights[0] / (len(coalitions.members)))
 
 							if (coalitions.lead.affiliation == 0 and agent_inspected.affiliation == 2) or (coalitions.lead.affiliation == 2 and agent_inspected.affiliation == 0):
-								cw_grade = abs((coalitions.lead.belieftree[0][cw_of_interest[cw]][0] - \
-								  coalitions.lead.belieftree[1 + agent_inspected.unique_id][cw_of_interest[cw]][0]) * \
-								  coalitions.resources[0] * 0.1 * affiliation_weights[1] / (len(coalitions.members)))
+								cw_grade = abs((coalitions.lead.belieftree[0][cw_of_interest[cw]][0] - coalitions.lead.belieftree[1 + agent_inspected.unique_id][cw_of_interest[cw]][0]) * \
+									coalitions.resources[0] * 0.1 * affiliation_weights[1] / (len(coalitions.members)))
 
 							if (coalitions.lead.affiliation == 1 and agent_inspected.affiliation == 2) or (coalitions.lead.affiliation == 2 and agent_inspected.affiliation == 1):
-								cw_grade = abs((coalitions.lead.belieftree[0][cw_of_interest[cw]][0] - \
-								  coalitions.lead.belieftree[1 + agent_inspected.unique_id][cw_of_interest[cw]][0]) * \
-								  coalitions.resources[0] * 0.1 * affiliation_weights[2] / (len(coalitions.members)))
+								cw_grade = abs((coalitions.lead.belieftree[0][cw_of_interest[cw]][0] - coalitions.lead.belieftree[1 + agent_inspected.unique_id][cw_of_interest[cw]][0]) * \
+									coalitions.resources[0] * 0.1 * affiliation_weights[2] / (len(coalitions.members)))
 
 							cw_grade_list.append(cw_grade)
 							
@@ -305,6 +301,33 @@ class Coalition():
 								actionWeight = 1
 								# Framing actions:
 								for cw in range(len(cw_of_interest)):
+
+									# NEW NEW NEW NEW NEW NEW
+									# # Grade calculation using the likelihood method
+									# # Same affiliation
+									# if coalitions.lead.affiliation == links.agent2.affiliation:
+									# 	cw_grade = links.conflict_level[0][cw_of_interest[cw]][0] * links.aware * actionWeight
+									# 	total_agent_grades.append(cw_grade)
+
+									# # Affiliation 1-2
+									# if (coalitions.lead.affiliation == 0 and links.agent2.affiliation == 1) or \
+									# 	(coalitions.lead.affiliation == 1 and links.agent2.affiliation == 0):
+									# 	cw_grade = links.conflict_level[0][cw_of_interest[cw]][0] * links.aware * actionWeight * affiliation_weights[0]
+									# 	total_agent_grades.append(cw_grade)
+
+									# # Affiliation 1-3
+									# if (coalitions.lead.affiliation == 0 and links.agent2.affiliation == 2) or \
+									# 	(coalitions.lead.affiliation == 2 and links.agent2.affiliation == 0):
+									# 	cw_grade = links.conflict_level[0][cw_of_interest[cw]][0] * links.aware * actionWeight * affiliation_weights[1]
+									# 	total_agent_grades.append(cw_grade)
+
+									# # Affiliation 2-3
+									# if (coalitions.lead.affiliation == 1 and links.agent2.affiliation == 2) or \
+									# 	(coalitions.lead.affiliation == 2 and links.agent2.affiliation == 1):
+									# 	cw_grade = links.conflict_level[0][cw_of_interest[cw]][0] * links.aware * actionWeight * affiliation_weights[2]
+									# 	total_agent_grades.append(cw_grade)
+
+									# OLD OLD OLD OLD OLD OLD 
 									check_none = 0
 									if coalitions.lead.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] == None:
 										coalitions.lead.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = 0
@@ -317,7 +340,33 @@ class Coalition():
 									if check_none == 1:
 										coalitions.lead.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = None
 									
-								# State influence actions
+								# NEW NEW NEW NEW NEW NEW
+								# # State influence actions
+								# # Grade calculation using the likelihood method
+								# # Same affiliation
+								# if coalitions.lead.affiliation == links.agent2.affiliation:
+								# 	cw_grade = links.conflict_level[0][coalitions.issue][0] * links.aware * actionWeight
+								# 	total_agent_grades.append(cw_grade)
+
+								# # Affiliation 1-2
+								# if (coalitions.lead.affiliation == 0 and links.agent2.affiliation == 1) or \
+								# 	(coalitions.lead.affiliation == 1 and links.agent2.affiliation == 0):
+								# 	cw_grade = links.conflict_level[0][coalitions.issue][0] * links.aware * actionWeight * affiliation_weights[0]
+								# 	total_agent_grades.append(cw_grade)
+
+								# # Affiliation 1-3
+								# if (coalitions.lead.affiliation == 0 and links.agent2.affiliation == 2) or \
+								# 	(coalitions.lead.affiliation == 2 and links.agent2.affiliation == 0):
+								# 	cw_grade = links.conflict_level[0][coalitions.issue][0] * links.aware * actionWeight * affiliation_weights[1]
+								# 	total_agent_grades.append(cw_grade)
+
+								# # Affiliation 2-3
+								# if (coalitions.lead.affiliation == 1 and links.agent2.affiliation == 2) or \
+								# 	(coalitions.lead.affiliation == 2 and links.agent2.affiliation == 1):
+								# 	cw_grade = links.conflict_level[0][coalitions.issue][0] * links.aware * actionWeight * affiliation_weights[2]
+								# 	total_agent_grades.append(cw_grade)
+
+
 								check_none = 0
 								if coalitions.lead.belieftree[1 + links.agent2.unique_id][coalitions.issue][0] == None:
 									coalitions.lead.belieftree[1 + links.agent2.unique_id][coalitions.issue][0] = 0

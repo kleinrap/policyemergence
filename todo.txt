@@ -1,0 +1,2 @@
+Small tasks that still need to be performed:
+- Parametrise the 10% resources spent on coalition intra-actions

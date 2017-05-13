@@ -1,0 +1,19 @@
+Code files and partial documentation:
+
+- agents.py
+- agents_creation.py
+- coalition_creation.py
+- data_analysis.py
+- data_collection.py
+- initialisation_exploration.py
+	This is the file where the main agents and network inputs are specified for the purposes of exploration
+- initialisation.py:
+	This is the file where the main agents and network inputs are specified by the modeller for all possible experiments 
+- model.py
+- network_creation.py
+- run.py:
+	This is the main file from which the model is run.
+- schedule.py
+- team_creation.py
+- technical_model.py
+- tree_cell.py
