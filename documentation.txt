@@ -23,7 +23,6 @@ Code files and partial documentation:
 		- electorate_states_update()
 	- Class Externalparties(Agent):
 		- external_parties_states_update()
-		- external_parties_preference_updte()
 		- external_parties_actions_as()
 		- external_parties_actions_pf()
 		- external_parties_actions_as_3S()

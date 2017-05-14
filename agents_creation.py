@@ -194,6 +194,18 @@ class Externalparties(Agent):
 
 	def external_parties_states_update(self, agent, master_list, no_interest_states):
 
+		"""
+		The external parties states update function
+		===========================
+
+		This function uses the truth agent to update the states of the external parties
+		belief tree.
+
+		Note: Ultimately, this would need to include the external parties lack of interests
+		for some of the states.
+
+		"""
+
 		for agents in master_list:
 			if type(agents) == Truth:
 				truthagent = agents
@@ -210,10 +222,6 @@ class Externalparties(Agent):
 
 		# print('After: '  + str(agent.belieftree[0]))
 		# print('State updated!')
-
-	def external_parties_preference_udapte(self, agent, master_list, len_DC, len_PC, len_S):
-		# This has been placed in the main Policyemergence part
-		pass	
 	
 	# def __str__(self):
 	# 	return 'EXTERNAL PARTIES - ' + 'Affiliation: ' + str(self.affiliation) + ', Resources: ' + str(self.resources) + \
@@ -227,6 +235,29 @@ class Externalparties(Agent):
 
 	def external_parties_actions_as(self, agents, agent_action_list, causalrelation_number, \
 		affiliation_weights, deep_core, policy_core, secondary, electorate_number, action_agent_number, master_list):
+
+		"""
+		The external parties actions function (agenda setting)
+		===========================
+
+		This function is used to perform the different active actions of the
+		external parties during the agenda setting.
+
+		It is split in two main parts:
+		1. Blanket framing - on the causal relations
+		2. Electorate influence - on the aims
+
+		Note: Ultimately, according to the new formalisation, the actions of
+		the external parties (1.) should not be only composed of the blanket
+		framing but also of the blanket aim and state influences. The resources
+		allocation for each of the actions should be adapted too. The current
+		hypothesis is to use 80% of the resources for the agent influence actions
+		and the rest for the electorate influence. This would put the external
+		parties at a disadvantage. Another approach that would solve this problem
+		would be to put 100\% of the resources for the influencing actions while
+		adding another 30-50\% of the resources for use for the electorate influence.
+
+		"""
 
 		len_DC = len(deep_core)
 		len_PC = len(policy_core)
@@ -489,10 +520,28 @@ class Externalparties(Agent):
 		affiliation_weights, deep_core, policy_core, secondary, electorate_number, action_agent_number, agenda_as_issue, instruments, master_list):
 
 		"""
-		External party actions function for the policy formulation
+		The external parties actions function (policy formulation)
 		===========================
 
-		The description here is currently missing.
+		This function is used to perform the different active actions of the
+		external parties during the policy formulation.
+
+		It is split in two main parts:
+		1. Blanket framing - on the causal relations
+		2. Electorate influence - on the aims
+
+		Note: This function is the same as the agenda setting function but adjusted
+		for the change of selected issues.
+
+		Note2: Ultimately, according to the new formalisation, the actions of
+		the external parties (1.) should not be only composed of the blanket
+		framing but also of the blanket aim and state influences. The resources
+		allocation for each of the actions should be adapted too. The current
+		hypothesis is to use 80% of the resources for the agent influence actions
+		and the rest for the electorate influence. This would put the external
+		parties at a disadvantage. Another approach that would solve this problem
+		would be to put 100\% of the resources for the influencing actions while
+		adding another 30-50\% of the resources for use for the electorate influence.
 
 		"""
 
@@ -727,6 +776,33 @@ class Externalparties(Agent):
 
 	def external_parties_actions_as_3S(self, agents, agent_action_list, causalrelation_number, \
 		affiliation_weights, deep_core, policy_core, secondary, electorate_number, action_agent_number, master_list):
+
+		"""
+		The external parties actions function - three streams (agenda setting)
+		===========================
+
+		This function is used to perform the different active actions of the
+		external parties during the agenda setting.
+
+		It is split in two main parts:
+		1. Blanket framing - on the causal relations
+		2. Electorate influence - on the aims
+
+		Note: This is the same function as the previous one, however it also 
+		considers that the external parties can choose policies and hence adds
+		code for the policy related actions.
+
+		Note: Ultimately, according to the new formalisation, the actions of
+		the external parties (1.) should not be only composed of the blanket
+		framing but also of the blanket aim and state influences. The resources
+		allocation for each of the actions should be adapted too. The current
+		hypothesis is to use 80% of the resources for the agent influence actions
+		and the rest for the electorate influence. This would put the external
+		parties at a disadvantage. Another approach that would solve this problem
+		would be to put 100\% of the resources for the influencing actions while
+		adding another 30-50\% of the resources for use for the electorate influence.
+
+		"""
 
 		len_DC = len(deep_core)
 		len_PC = len(policy_core)
@@ -991,6 +1067,36 @@ class Externalparties(Agent):
 
 	def external_parties_actions_pf_3S(self, agents, agent_action_list, causalrelation_number, \
 		affiliation_weights, deep_core, policy_core, secondary, electorate_number, action_agent_number, master_list, agenda_prob_3S_as):
+
+		"""
+		The external parties actions function - three streams (policy formulation)
+		===========================
+
+		This function is used to perform the different active actions of the
+		external parties during the policy formulation.
+
+		It is split in two main parts:
+		1. Blanket framing - on the causal relations
+		2. Electorate influence - on the aims
+
+		Note: This is the same function as the previous one, however it also 
+		considers that the external parties can choose policies and hence adds
+		code for the policy related actions.
+
+		Note2: This function is the same as the agenda setting function but adjusted
+		for the change of selected issues.
+
+		Note3: Ultimately, according to the new formalisation, the actions of
+		the external parties (1.) should not be only composed of the blanket
+		framing but also of the blanket aim and state influences. The resources
+		allocation for each of the actions should be adapted too. The current
+		hypothesis is to use 80% of the resources for the agent influence actions
+		and the rest for the electorate influence. This would put the external
+		parties at a disadvantage. Another approach that would solve this problem
+		would be to put 100\% of the resources for the influencing actions while
+		adding another 30-50\% of the resources for use for the electorate influence.
+
+		"""
 
 		len_DC = len(deep_core)
 		len_PC = len(policy_core)
@@ -1377,6 +1483,19 @@ class Policymakers(Agent):
 	# 	', Belief tree: ' + str(self.belieftree)
 
 	def policymakers_states_update(self, agent, master_list, affiliation_weights):
+
+		"""
+		The policy makers states update function
+		===========================
+
+		This function uses the data from the external parties to update the states of 
+		the policy makers.
+
+		Note: Ultimately, this would need to include the external parties lack of interests
+		for some of the states.
+
+		"""
+
 		#' Addition of more than 3 affiliation will lead to unreported errors!')
 		if len(affiliation_weights) != 3:
 			print('WARNING - THIS CODE DOESNT WORK FOR MORE OR LESS THAN 3 AFFILIATIONS')
@@ -1437,6 +1556,20 @@ class Policymakers(Agent):
 		return 'Policy maker: ' + str(self.unique_id)
 
 	def pm_pe_actions_as(self, agents, link_list, deep_core, policy_core, secondary, resources_weight_action, resources_potency, affiliation_weights):
+
+		"""
+		The PEs and PMs actions function (agenda setting)
+		===========================
+
+		This function is used to perform the different active actions of the
+		policy entrepreneurs and the policy makers during the agenda setting.
+
+		The actions that can be performed are framing, influence on states and 
+		influence on aims. All of the actions are first graded. Then the action
+		that has the highest grade is selected. Finally, the action selected 
+		is implemented.
+
+		"""
 
 		len_DC = len(deep_core)
 		len_PC = len(policy_core)
@@ -2159,11 +2292,23 @@ class Policymakers(Agent):
 
 	def pm_pe_actions_pf(self, agents, link_list, deep_core, policy_core, secondary, causalrelation_number, agenda_as_issue, instruments, resources_weight_action, resources_potency, AS_theory, affiliation_weights):
 
+		"""
+		The PEs and PMs actions function (policy formulation)
+		===========================
+
+		This function is used to perform the different active actions of the
+		policy entrepreneurs and the policy makers during the policy formulation.
+
+		The actions that can be performed are framing, influence on states and 
+		influence on aims. All of the actions are first graded. Then the action
+		that has the highest grade is selected. Finally, the action selected 
+		is implemented.
+
+		"""
 
 		len_DC = len(deep_core)
 		len_PC = len(policy_core)
 		len_S = len(secondary)
-
 		total_issue_number = len_DC + len_PC + len_S
 
 		# Here are the modifications related to the policy formulation
@@ -2962,6 +3107,24 @@ class Policymakers(Agent):
 			agents.resources_actions -= agents.resources[0] * resources_weight_action
 
 	def pm_pe_actions_as_3S(self, agents, link_list, deep_core, policy_core, secondary, resources_weight_action, resources_potency):
+
+		"""
+		The PEs and PMs actions function - three streams (agenda setting)
+		===========================
+
+		This function is used to perform the different active actions of the
+		policy entrepreneurs and the policy makers during the agenda setting.
+
+		The actions that can be performed are framing, influence on states and 
+		influence on aims. All of the actions are first graded. Then the action
+		that has the highest grade is selected. Finally, the action selected 
+		is implemented.
+
+		Note: This function is the same as the one presented before for the backbone
+		backbone+ and ACF. The main difference is the addition of actions related
+		to the choice of a policy by the agents.
+
+		"""
 
 		len_DC = len(deep_core)
 		len_PC = len(policy_core)
@@ -3528,6 +3691,24 @@ class Policymakers(Agent):
 
 	def pm_pe_actions_pf_3S(self, agents, link_list, deep_core, policy_core, secondary, resources_weight_action, resources_potency, agenda_prob_3S_as):
 
+		"""
+		The PEs and PMs actions function - three streams (policy formulation)
+		===========================
+
+		This function is used to perform the different active actions of the
+		policy entrepreneurs and the policy makers during the policy formulation.
+
+		The actions that can be performed are framing, influence on states and 
+		influence on aims. All of the actions are first graded. Then the action
+		that has the highest grade is selected. Finally, the action selected 
+		is implemented.
+
+		Note: This function is the same as the one presented before for the backbone
+		backbone+ and ACF. The main difference is the addition of actions related
+		to the choice of a policy by the agents.
+
+		"""
+
 		len_DC = len(deep_core)
 		len_PC = len(policy_core)
 		len_S = len(secondary)
@@ -4095,6 +4276,18 @@ class Policymakers(Agent):
 
 	def preference_udapte_as_PC(self, agent, who, len_DC, len_PC, len_S):
 
+		"""
+		The preference update for policy cores function (agenda setting)
+		===========================
+
+		This function is used to update the policy core preferences. It is only used for the
+		old way of calculating the grade actions.
+	
+		Note: This function will ultimately be removed once all grading actions have been
+		modified.
+
+		"""
+
 		# Preference calculation for the policy core issues
 		PC_denominator = 0
 		# Select one by one the DC
@@ -4150,6 +4343,18 @@ class Policymakers(Agent):
 				agent.belieftree[who][len_DC+j][2] = 0
 
 	def preference_udapte_pf_PC(self, agent, who, len_DC, len_PC, len_S, agenda_prob_3S_as):
+
+		"""
+		The preference update for policy cores function (policy formulation)
+		===========================
+
+		This function is used to update the policy core preferences. It is only used for the
+		old way of calculating the grade actions.
+	
+		Note: This function will ultimately be removed once all grading actions have been
+		modified.
+
+		"""
 
 		k = agenda_prob_3S_as
 
@@ -4216,10 +4421,6 @@ class Policymakers(Agent):
 
 	def instrument_preference_update(self, agent, who, AS_theory, len_DC, len_PC, len_S, instruments):
 
-		# print(' ')
-		# print('Triggered for who in: ' + str(who))
-		# print(' ')
-
 		"""
 		Instrument preference update function
 		===========================
@@ -4245,6 +4446,9 @@ class Policymakers(Agent):
 		1/ The secondary issues for which the agent is not interested (this applies to 
 		the external parties only) are not taken into account in the calculation. They
 		are marked as the 'No' values.
+
+		This function will ultimately be removed when all of the grading actions will be
+		modified.
 
 		"""
 
@@ -4389,6 +4593,18 @@ class Policyentres(Agent):
 
 	def policyentres_states_update(self, agent, master_list, affiliation_weights):
 
+		"""
+		The policy entrepreneurs states update function
+		===========================
+
+		This function uses the data from the external parties to update the states of 
+		the policy entrepreneurs.
+
+		Note: Ultimately, this would need to include the external parties lack of interests
+		for some of the states.
+
+		"""
+
 		#' Addition of more than 3 affiliation will lead to unreported errors!')
 		if len(affiliation_weights) != 3:
 			print('WARNING - THIS CODE DOESNT WORK FOR MORE OR LESS THAN 3 AFFILIATIONS')
@@ -4445,6 +4661,20 @@ class Policyentres(Agent):
 		# print(agent)
 
 	def pm_pe_actions_as(self, agents, link_list, deep_core, policy_core, secondary, resources_weight_action, resources_potency, affiliation_weights):
+
+		"""
+		The PEs and PMs actions function (agenda setting)
+		===========================
+
+		This function is used to perform the different active actions of the
+		policy entrepreneurs and the policy makers during the agenda setting.
+
+		The actions that can be performed are framing, influence on states and 
+		influence on aims. All of the actions are first graded. Then the action
+		that has the highest grade is selected. Finally, the action selected 
+		is implemented.
+
+		"""
 
 		len_DC = len(deep_core)
 		len_PC = len(policy_core)
@@ -5167,11 +5397,23 @@ class Policyentres(Agent):
 
 	def pm_pe_actions_pf(self, agents, link_list, deep_core, policy_core, secondary, causalrelation_number, agenda_as_issue, instruments, resources_weight_action, resources_potency, AS_theory, affiliation_weights):
 
+		"""
+		The PEs and PMs actions function (policy formulation)
+		===========================
+
+		This function is used to perform the different active actions of the
+		policy entrepreneurs and the policy makers during the policy formulation.
+
+		The actions that can be performed are framing, influence on states and 
+		influence on aims. All of the actions are first graded. Then the action
+		that has the highest grade is selected. Finally, the action selected 
+		is implemented.
+
+		"""
 
 		len_DC = len(deep_core)
 		len_PC = len(policy_core)
 		len_S = len(secondary)
-
 		total_issue_number = len_DC + len_PC + len_S
 
 		# Here are the modifications related to the policy formulation
@@ -5971,14 +6213,31 @@ class Policyentres(Agent):
 
 	def pm_pe_actions_as_3S(self, agents, link_list, deep_core, policy_core, secondary, resources_weight_action, resources_potency):
 
+		"""
+		The PEs and PMs actions function - three streams (agenda setting)
+		===========================
+
+		This function is used to perform the different active actions of the
+		policy entrepreneurs and the policy makers during the agenda setting.
+
+		The actions that can be performed are framing, influence on states and 
+		influence on aims. All of the actions are first graded. Then the action
+		that has the highest grade is selected. Finally, the action selected 
+		is implemented.
+
+		Note: This function is the same as the one presented before for the backbone
+		backbone+ and ACF. The main difference is the addition of actions related
+		to the choice of a policy by the agents.
+
+		"""
+
 		len_DC = len(deep_core)
 		len_PC = len(policy_core)
 		len_S = len(secondary)
 
 		# Selection of the cw of interest
 		cw_of_interest = []
-		# We only consider the causal relations related to the problem on the agenda
-
+		# We only consider the causal relations related to the problem selected by the agent
 		for cw_choice in range(len(deep_core)):
 				cw_of_interest.append(len_DC + len_PC + len_S + (agents.select_problem_3S_as - len_DC) + cw_choice * len(policy_core))
 
@@ -6536,6 +6795,24 @@ class Policyentres(Agent):
 			agents.resources_actions -= agents.resources[0] * resources_weight_action
 
 	def pm_pe_actions_pf_3S(self, agents, link_list, deep_core, policy_core, secondary, resources_weight_action, resources_potency, agenda_prob_3S_as):
+
+		"""
+		The PEs and PMs actions function - three streams (policy formulation)
+		===========================
+
+		This function is used to perform the different active actions of the
+		policy entrepreneurs and the policy makers during the policy formulation.
+
+		The actions that can be performed are framing, influence on states and 
+		influence on aims. All of the actions are first graded. Then the action
+		that has the highest grade is selected. Finally, the action selected 
+		is implemented.
+
+		Note: This function is the same as the one presented before for the backbone
+		backbone+ and ACF. The main difference is the addition of actions related
+		to the choice of a policy by the agents.
+
+		"""
 
 		len_DC = len(deep_core)
 		len_PC = len(policy_core)
@@ -7104,6 +7381,18 @@ class Policyentres(Agent):
 
 	def preference_udapte_as_PC(self, agent, who, len_DC, len_PC, len_S):
 
+		"""
+		The preference update for policy cores function (agenda setting)
+		===========================
+
+		This function is used to update the policy core preferences. It is only used for the
+		old way of calculating the grade actions.
+	
+		Note: This function will ultimately be removed once all grading actions have been
+		modified.
+
+		"""
+
 		# Preference calculation for the policy core issues
 		PC_denominator = 0
 		# Select one by one the DC
@@ -7137,7 +7426,7 @@ class Policyentres(Agent):
 			# Selecting the causal relations starting from DC
 			for k in range(len_DC):
 				# Contingency for partial knowledge issues
-				if agent.belieftree[who][k][1] == None or agent.belieftree[who][k][0] == None or agent.belieftree[who][len_DC+len_PC+len_S+j+(k*len_PC)][0] == None:
+				if agent.belieftree[who][k][1] == None or agent.belieftree[who][k][0] == None or agent.belieftree[who][len_DC+len_PC+len_S+j+(k*len_PC)][0] == None: 
 					PC_numerator = 0
 				else:
 					# Check if causal relation and gap are both positive of both negative
@@ -7159,6 +7448,18 @@ class Policyentres(Agent):
 				agent.belieftree[who][len_DC+j][2] = 0
 
 	def preference_udapte_pf_PC(self, agent, who, len_DC, len_PC, len_S, agenda_prob_3S_as):
+
+		"""
+		The preference update for policy cores function (policy formulation)
+		===========================
+
+		This function is used to update the policy core preferences. It is only used for the
+		old way of calculating the grade actions.
+	
+		Note: This function will ultimately be removed once all grading actions have been
+		modified.
+
+		"""
 
 		k = agenda_prob_3S_as
 
@@ -7225,10 +7526,6 @@ class Policyentres(Agent):
 
 	def instrument_preference_update(self, agent, who, AS_theory, len_DC, len_PC, len_S, instruments):
 
-		# print(' ')
-		# print('Triggered for who in: ' + str(who))
-		# print(' ')
-
 		"""
 		Instrument preference update function
 		===========================
@@ -7254,6 +7551,9 @@ class Policyentres(Agent):
 		1/ The secondary issues for which the agent is not interested (this applies to 
 		the external parties only) are not taken into account in the calculation. They
 		are marked as the 'No' values.
+
+		This function will ultimately be removed when all of the grading actions will be
+		modified.
 
 		"""
 
