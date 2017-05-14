@@ -24,8 +24,7 @@ class TreeCell(Agent):
         self.pos = pos
         self.condition = "Fine"
         self.timer = 0
-        self.regrow_time = 3
-        
+        self.regrow_time = 3  
 
     def step(self, thin_burning_probability, firefighter_force):
 
@@ -83,7 +82,6 @@ class TreeCell(Agent):
                     if neighbor.condition == "Camp site":
                         neighbor.condition = "Burning"
                 self.condition = "Burnt"
-
 
     def get_pos(self):
         return self.pos

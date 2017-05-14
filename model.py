@@ -986,10 +986,10 @@ class PolicyEmergence(Model):
 				# print(links.aware)
 				# print('-')
 
-	def run_model(self, step_count=1):
+	# def run_model(self, step_count=1):
 
-		for i in range(step_count):
-			self.step()
+	# 	for i in range(step_count):
+	# 		self.step()
 
 	def __str__(self):
 		return str(self.grid)
@@ -1707,19 +1707,6 @@ class PolicyEmergence(Model):
 
 	link_list = defaultdict(list)
 
-	def add_link(self, agent):
-
-		"""
-		The link addition function
-		===========================
-
-		The description here is currently missing.
-
-		"""
-
-		agent_class = type(agent)
-		self.link_list[agent_class].append(agent)
-
 	def conflict_level_update(self, link_list, deep_core, policy_core, secondary, conflict_level_coef):
 
 		"""
@@ -1832,13 +1819,6 @@ class PolicyEmergence(Model):
 						links.conflict_level[1][self.issues_number + issues][0] = conflict_level_coef[1]
 
 			# print(links.conflict_level)
-
-	def one_minus_one_check(self, to_be_checked_parameter):
-
-		if to_be_checked_parameter > 1:
-			to_be_checked_parameter = 1
-		if to_be_checked_parameter < -1:
-			to_be_checked_parameter = -1
 
 	def coalition_creation_as(self, agent_action_list, link_list, DC_ACF_interest, coalitions_number_as, tick_number, coalitions_list_as, coalitions_list_as_total, coalition_threshold, target):
 

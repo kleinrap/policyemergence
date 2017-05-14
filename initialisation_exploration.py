@@ -2625,8 +2625,7 @@ def one_minus_one_check2(to_be_checked_parameter):
 	else:
 		checked_parameter = to_be_checked_parameter
 	return checked_parameter
-
-
+	
 def add(self, agent):
 	agent_class = type(agent)
 	self.agent_action_dict[agent_class].append(agent)

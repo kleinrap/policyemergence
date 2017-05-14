@@ -327,8 +327,6 @@ class DataCollector:
                     coalition_pf_records.append((coalition_pf.unique_id, copied, type(reporter(coalition_pf))))
                 self.coalition_pf_vars[var].append(coalition_pf_records)
                 
-
-
     def add_table_row(self, table_name, row, ignore_missing=False):
         """ Add a row dictionary to a specific table.
 
