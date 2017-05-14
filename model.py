@@ -228,7 +228,21 @@ class PolicyEmergence(Model):
 		print('   ')
 
 
-	def step(self, AS_theory, PF_theory):		
+	def step(self, AS_theory, PF_theory):	
+
+		"""
+		The step function
+		===========================
+
+		This function is the function that runs the whole cycle. One run of this function
+		represents one tick in the agent based model. It is composed of four main parts:
+
+		1/ Tick initialisation
+		2/ Agenda setting
+		3/ Policy formulation
+		4/ End of tick procedures
+
+		"""	
 
 		####################################################################################################
 		# PHASE 1 - Tick initialisation
@@ -996,6 +1010,15 @@ class PolicyEmergence(Model):
 
 	def agenda_selection(self):
 
+		"""
+		The agenda selection function
+		===========================
+
+		This function is used to select what will go on the agenda
+		based on the issues selected by the policy makers.
+
+		"""	
+
 		agents_policymakers = []
 		for agents in self.agent_action_list:
 			if type(agents) == Policymakers:
@@ -1008,6 +1031,16 @@ class PolicyEmergence(Model):
 		self.agenda_as_issue = issue_counter.most_common(1)[0][0]
 
 	def agenda_selection_3S(self):
+
+		"""
+		The agenda selection function - three streams
+		===========================
+
+		This function is used to select what will go on the agenda
+		based on the issues selected by the policy makers. This is
+		the three streams version of the function.
+
+		"""	
 
 		master_list = self.master_list
 		agents_policymakers = []
@@ -1029,6 +1062,15 @@ class PolicyEmergence(Model):
 		self.agenda_poli_3S_as = policies_counter.most_common(1)[0][0]
 
 	def preference_udapte(self, agent, who):
+
+		"""
+		The preference update function
+		===========================
+
+		This function is used to update the preferences of the agents in their
+		respective belief trees.
+
+		"""	
 
 		len_DC = self.len_DC
 		len_PC = self.len_PC
@@ -1126,7 +1168,7 @@ class PolicyEmergence(Model):
 	def preference_udapte_electorate(self, agent):
 
 		"""
-		Electorate preference update function
+		The electorate preference update function
 		===========================
 
 		This function is used to calculate the preferences of the electorate
@@ -1136,8 +1178,8 @@ class PolicyEmergence(Model):
 		is therefore calculated based on the state and aim for each level
 		in the tree.
 
-		The calculation of the deep core, policy core and secondary issues 
-		preferences is performed.c
+		The calculation of the principle, policy core and secondary issues 
+		preferences is performed.
 
 		"""
 
@@ -1182,6 +1224,15 @@ class PolicyEmergence(Model):
 				agent.belieftree_electorate[len_DC + len_PC + i][2] = 0
 
 	def issue_selection(self, agent):
+
+		"""
+		The issue selection function
+		===========================
+
+		This function is used to select the best preferred issue for 
+		each of the agents.
+
+		"""	
 		
 		len_DC = self.len_DC
 		len_PC = self.len_PC
@@ -1647,7 +1698,10 @@ class PolicyEmergence(Model):
 		The instrument implementation check function
 		===========================
 
-		The description here is currently missing.
+		This function is used at the end of the policy formulation to 
+		check whether the instrument selected by the policy makers passes
+		the minimum threshold for implementation. If it does, it is implemented.
+		If not, nothing will happen and no instrument will be implemented.
 
 		"""
 
@@ -1676,7 +1730,11 @@ class PolicyEmergence(Model):
 		The instrument implementation check function - three streams
 		===========================
 
-		The description here is currently missing.
+		This function is used at the end of the policy formulation to 
+		check whether the instrument selected by the policy makers passes
+		the minimum threshold for implementation. If it does, it is implemented.
+		If not, nothing will happen and no instrument will be implemented.
+		This is the three streams version of the function.
 
 		"""
 
@@ -1713,7 +1771,9 @@ class PolicyEmergence(Model):
 		The conflict level update function
 		===========================
 
-		The description here is currently missing.
+		This function is used to calculate the conflict level in the links
+		between the agents. It is calculated for the aims and states of the
+		issues and for the causal relations.
 
 		"""
 
@@ -1822,6 +1882,18 @@ class PolicyEmergence(Model):
 
 	def coalition_creation_as(self, agent_action_list, link_list, DC_ACF_interest, coalitions_number_as, tick_number, coalitions_list_as, coalitions_list_as_total, coalition_threshold, target):
 
+		"""
+		The coalition creation function (agenda setting)
+		===========================
+
+		This function is used to create the coalitions in the agenda setting.
+		The first step is to choose an agent that will be the leader, then
+		the coalition is created around that agent based on the network of 
+		the leader agent and the belief of the different agents. The criteria
+		are detailed in the formalisation.
+
+		"""
+
 		coalition_agent_list = copy.copy(agent_action_list)
 		# Run this loop until less than 10\% of the actors are left coalition-less
 		while len(coalition_agent_list) > round(0.1 * len(agent_action_list), 0):
@@ -1902,6 +1974,18 @@ class PolicyEmergence(Model):
 				coalition.resources[1] = coalition.resources[0]
 
 	def coalition_creation_pf(self, agent_action_list, link_list, agenda_as_issue, tick_number, coalitions_number_pf, coalitions_list_pf, coalitions_list_pf_total, coalition_threshold, target):
+
+		"""
+		The coalition creation function (policy formulation)
+		===========================
+
+		This function is used to create the coalitions in the policy formulation.
+		The first step is to choose an agent that will be the leader, then
+		the coalition is created around that agent based on the network of 
+		the leader agent and the belief of the different agents. The criteria
+		are detailed in the formalisation.
+
+		"""
 
 		coalition_agent_list = copy.copy(agent_action_list)
 		# Run this loop until less than 10\% of the actors are left coalition-less
@@ -2007,6 +2091,15 @@ class PolicyEmergence(Model):
 				coalition.resources[1] = coalition.resources[0]
 
 	def one_minus_one_check2(self, to_be_checked_parameter):
+
+		"""
+		One minus one check function
+		===========================
+
+		This function checks that a certain values does not got over one
+		and does not go below one due to the randomisation.
+		
+		"""
 
 		checked_parameter = 0
 		if to_be_checked_parameter > 1:

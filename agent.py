@@ -1,9 +1,6 @@
 import random
 from team_creation import Team
 from coalition_creation import Coalition
-# from agents_creation import Policymakers, Electorate, Externalparties, Truth, Policyentres
-# from network_creation import PolicyNetworkLinks
-
 
 
 class Agent:
@@ -2772,7 +2769,6 @@ class Agent:
 		else:
 			checked_parameter = to_be_checked_parameter
 		return checked_parameter
-
 
 	##############################################################################
 	######################## TO BE MODIFIED AND INTEGRATED #######################

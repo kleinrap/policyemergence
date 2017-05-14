@@ -2,7 +2,6 @@ from agent import Agent
 import random
 import copy
 
-
 # Creation of the truth agents
 class Truth(Agent):
 
@@ -7654,11 +7653,4 @@ class Policyentres(Agent):
 		else:
 			checked_parameter = to_be_checked_parameter
 		return checked_parameter
-
-
-
-
-
-
-
 

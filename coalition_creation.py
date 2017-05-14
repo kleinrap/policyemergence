@@ -1,7 +1,6 @@
 import random
 from network_creation import PolicyNetworkLinks
 import copy
-# from agents_creation import Policymakers, Electorate, Externalparties, Truth, Policyentres
 
 class Coalition():
 
@@ -1196,8 +1195,3 @@ class Coalition():
 		else:
 			checked_parameter = to_be_checked_parameter
 		return checked_parameter
-
-
-
-
-
