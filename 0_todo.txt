@@ -10,21 +10,17 @@ Small tasks that still need to be performed:
 - In the file team_creation, knowledge_exchange_team() is used inappropriately for policy and problems. The policy and instrument functions should be used in the case that the team is using a policy.
 
 Regarding the likelihood and impact actions changes:
-- Coalitions:
+- Coalitions (these require large changes to algorithms):
 	- AS
 		- Intra-coalition actions likelihood
 		- Intra-coalition actions impact
 	- PF
-		- Inter-coalition actions likelihood
-		- Inter-coalition actions impact
 		- Intra-coalition actions likelihood
 		- Intra-coalition actions impact
 - 3S
 	- AS
 		- Individual likelihood (policy)
 		- Individual impact (policy)
-		- Individual likelihood (problem)
-		- Individual impact (problem)
 	- PF
 		- Individual likelihood (policy)
 		- Individual impact (policy)

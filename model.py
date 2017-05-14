@@ -622,7 +622,7 @@ class PolicyEmergence(Model):
 					if type(agents) == Policymakers or type(agents) == Policyentres:
 					# if type(agents) == Policymakers:
 						agents.pm_pe_actions_as_3S(agents, link_list_shuffle, self.deep_core, self.policy_core, self.secondary, \
-							self.resources_weight_action, self.resources_potency)
+							self.resources_weight_action, self.resources_potency, self.affiliation_weights)
 
 			print('... cleared.')
 			print('   ')

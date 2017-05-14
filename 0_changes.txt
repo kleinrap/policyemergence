@@ -18,3 +18,5 @@ Changes to the code:
 - Conflict level causal relations coalitions new links (PF)
 - Inter-coalition actions (PF) (ACF) - new likelihood for the calculation of the grades of the actions
 - Inter-coalition actions (PF) (ACF) - new impact calculation
+- For the pes/pms - (AS) (3S) Problem - new likelihood for the calculation of the grades of the actions
+- For the pes/pms - (AS) (3S) Problem - new impact calculation
