@@ -14,7 +14,7 @@ Code files and partial documentation:
 		- belonging_level_as()
 		- belonging_level_pf()
 		- knowledge_exchange_team
-		- one_minus_one_check2()
+		- one_minus_one_check()
 - agents_creation.py
 	- Class Truth(Agent):
 	- Class Electorate(Agent):
