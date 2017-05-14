@@ -1,5 +1,6 @@
 Small tasks that still need to be performed:
 - Parametrise the 10% resources spent on coalition intra-actions
+- Parametrise the 10% resources spent on coalition inter-actions
 - The belonging level function in the agents.py file is used for both policy and problem teams incorrectly. Two different functions should be used. This applies to both the agenda setting and the policy formulation functions.
 - The knowledge exchange function in the agents.py file is used for both policy and problem teams incorrectly. Two different functions be used.
 - Address the decrease in partial knowledge of all agents when participating in teams or coalitions are the partial knowledge is only transmitted between agents interacting leading to a small exchange of knowledge for all of the members.
@@ -7,3 +8,44 @@ Small tasks that still need to be performed:
 - Address the dynamics issue with the coalitions and teams shadow networks. How is the network of these groups evolving? Are they updated with the latest awareness of all of their members or are there all static throughout the simulation (answer is they are static). This should be addressed either by the re-creation of the shadow network for each tick or through the update of the shadow network.
 - Add the fact that the external parties have selective states interest - this has very very large ramification throughout the entire code and cannot be implemented in steps without robust safeguards.
 - In the file team_creation, knowledge_exchange_team() is used inappropriately for policy and problems. The policy and instrument functions should be used in the case that the team is using a policy.
+
+Regarding the likelihood and impact actions changes:
+- Coalitions:
+	- AS
+		- Intra-coalition actions likelihood
+		- Intra-coalition actions impact
+	- PF
+		- Inter-coalition actions likelihood
+		- Inter-coalition actions impact
+		- Intra-coalition actions likelihood
+		- Intra-coalition actions impact
+- 3S
+	- AS
+		- Individual likelihood (policy)
+		- Individual impact (policy)
+		- Individual likelihood (problem)
+		- Individual impact (problem)
+	- PF
+		- Individual likelihood (policy)
+		- Individual impact (policy)
+		- Individual likelihood (problem)
+		- Individual impact (problem)
+- Teams
+	- AS
+		- Inter-team likelihood (policy)
+		- Inter-team impact (policy)
+		- Inter-team likelihood (problem)
+		- Inter-team impact (problem)
+		- Intra-team likelihood (policy)
+		- Intra-team impact (policy)
+		- Intra-team likelihood (problem)
+		- Intra-team impact (problem)
+	- PF
+		- Inter-team likelihood (policy)
+		- Inter-team impact (policy)
+		- Inter-team likelihood (problem)
+		- Inter-team impact (problem)
+		- Intra-team likelihood (policy)
+		- Intra-team impact (policy)
+		- Intra-team likelihood (problem)
+		- Intra-team impact (problem)

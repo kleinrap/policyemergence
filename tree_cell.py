@@ -28,7 +28,7 @@ class TreeCell(Agent):
 
     def step(self, thin_burning_probability, firefighter_force):
 
-    	"""
+        """
 		Step function for the forest fire model
 		===========================
 
