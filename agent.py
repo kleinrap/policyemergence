@@ -2728,7 +2728,7 @@ class Agent:
 	def knowledge_exchange_team(self, team, issue, parameter):
 
 		"""
-		Knowledge exchange function
+		Knowledge exchange function - teams
 		===========================
 
 		This function is used for the exchange of partial knowledge between agents
@@ -2774,3 +2774,38 @@ class Agent:
 		return checked_parameter
 
 
+	##############################################################################
+	######################## TO BE MODIFIED AND INTEGRATED #######################
+	##############################################################################
+
+	def knowledge_exchange_coalition_policy(self, team, cw_knowledge, parameter):
+
+		# Exchange of partial knowledge between the agents in the team
+		for agent_exchange1 in team.members:
+			for agent_exchange2 in team.members:
+				# Actual knowledge exchange with a randomness of 0.2
+				# print('Before: ' + str(agent_exchange1.belieftree[1 + agent_exchange2.unique_id][team.issue][0]))
+				agent_exchange1.belieftree_policy[1 + agent_exchange2.unique_id][cw_knowledge][parameter] = \
+				  agent_exchange2.belieftree_policy[0][cw_knowledge][0] + (random.random()/5) - 0.1
+				# print('After: ' + str(agent_exchange1.belieftree[1 + agent_exchange2.unique_id][team.issue][0]))
+				# 1-1 check
+				if agent_exchange1.belieftree_policy[1 + agent_exchange2.unique_id][cw_knowledge][parameter] > 1:
+					agent_exchange1.belieftree_policy[1 + agent_exchange2.unique_id][cw_knowledge][parameter] = 1
+				if agent_exchange1.belieftree_policy[1 + agent_exchange2.unique_id][cw_knowledge][parameter] < -1:
+					agent_exchange1.belieftree_policy[1 + agent_exchange2.unique_id][cw_knowledge][parameter]  = -1
+
+	def knowledge_exchange_coalition_instrument(self, team, cw_knowledge, parameter):
+
+		# Exchange of partial knowledge between the agents in the team
+		for agent_exchange1 in team.members:
+			for agent_exchange2 in team.members:
+				# Actual knowledge exchange with a randomness of 0.2
+				# print('Before: ' + str(agent_exchange1.belieftree[1 + agent_exchange2.unique_id][team.issue][0]))
+				agent_exchange1.belieftree_instrument[1 + agent_exchange2.unique_id][cw_knowledge][parameter] = \
+				  agent_exchange2.belieftree_instrument[0][cw_knowledge][0] + (random.random()/5) - 0.1
+				# print('After: ' + str(agent_exchange1.belieftree[1 + agent_exchange2.unique_id][team.issue][0]))
+				# 1-1 check
+				if agent_exchange1.belieftree_instrument[1 + agent_exchange2.unique_id][cw_knowledge][parameter] > 1:
+					agent_exchange1.belieftree_instrument[1 + agent_exchange2.unique_id][cw_knowledge][parameter] = 1
+				if agent_exchange1.belieftree_instrument[1 + agent_exchange2.unique_id][cw_knowledge][parameter] < -1:
+					agent_exchange1.belieftree_instrument[1 + agent_exchange2.unique_id][cw_knowledge][parameter]  = -1

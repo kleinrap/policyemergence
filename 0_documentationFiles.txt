@@ -15,6 +15,8 @@ Code files and partial documentation:
 		- belonging_level_pf()
 		- knowledge_exchange_team
 		- one_minus_one_check()
+		- knowledge_exchange_coalition_policy()
+		- knowledge_exchange_coalition_instrument()
 - agents_creation.py
 	- Class Truth(Agent):
 	- Class Electorate(Agent):
@@ -56,8 +58,6 @@ Code files and partial documentation:
 		- new_link_ACF_as()
 		- new_link_ACF_pf()
 		- knowledge_exchange_coalition()
-		- knowledge_exchange_coalition_policy()
-		- knowledge_exchange_coalition_instrument()
 		- one_minus_one_check2()
 - data_collection.py
 	- Class DataCollector:

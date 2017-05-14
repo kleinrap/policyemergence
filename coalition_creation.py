@@ -22,7 +22,21 @@ class Coalition():
 	# def __str__(self):
 	# 	return 'Coalition - ' + str(self.unique_id)
 
-	def coalition_belief_actions_ACF_as(self, coalitions, causalrelation_number, deep_core, policy_core, secondary, agent_action_list, ACF_link_list_as, ACF_link_list_as_total, ACF_link_id_as, link_list, affiliation_weights, conflict_level_coef):
+	def coalition_belief_actions_ACF_as(self, coalitions, causalrelation_number, deep_core, policy_core, secondary, agent_action_list, ACF_link_list_as, ACF_link_list_as_total, \
+		ACF_link_id_as, link_list, affiliation_weights, conflict_level_coef):
+
+		"""
+		The coalition belief actions function (agenda setting)
+		===========================
+
+		This function is used to perform the actions of the coalitions
+		in the agenda setting. The actions of the coalitions are the 
+		same actions as the one of the individual agents. The main
+		differences here are the amount of resources used and the fact
+		that all actions are estimated and performed by the coalition
+		leader based on the coalition leader's partial knowledge.
+
+		"""
 
 		len_DC = len(deep_core)
 		len_PC = len(policy_core)
@@ -185,7 +199,7 @@ class Coalition():
 
 							# 1-1 check
 							agent_impacted.belieftree[0][cw_of_interest[best_action]][0] = \
-								self.one_minus_one_check2(agent_impacted.belieftree[0][cw_of_interest[best_action]][0])
+								self.one_minus_one_check(agent_impacted.belieftree[0][cw_of_interest[best_action]][0])
 							
 					# The state change is performed
 					if best_action == len(cw_of_interest):
@@ -214,7 +228,7 @@ class Coalition():
 
 							# 1-1 check
 							agent_impacted.belieftree[0][coalitions.issue][0] = \
-								self.one_minus_one_check2(agent_impacted.belieftree[0][coalitions.issue][0])
+								self.one_minus_one_check(agent_impacted.belieftree[0][coalitions.issue][0])
 
 					# The aim change is performed
 					if best_action == len(cw_of_interest) + 1:
@@ -242,7 +256,7 @@ class Coalition():
 
 							# 1-1 check
 							agent_impacted.belieftree[0][coalitions.issue][1] = \
-								self.one_minus_one_check2(agent_impacted.belieftree[0][coalitions.issue][1])
+								self.one_minus_one_check(agent_impacted.belieftree[0][coalitions.issue][1])
 					
 					# Updating the resources of the team
 					coalitions.resources[1] -= coalitions.resources[0]*0.1
@@ -427,19 +441,19 @@ class Coalition():
 						# print('After: ' + str(list_links_coalitions[acted_upon_agent].agent2.belieftree[0][len(deep_core) + len(policy_core) + len(secondary) + best_action - 1][0]))
 						# 1-1 check
 						list_links_coalitions[acted_upon_agent].agent2.belieftree[0][cw_of_interest[best_action]][0] = \
-							self.one_minus_one_check2(list_links_coalitions[acted_upon_agent].agent2.belieftree[0][cw_of_interest[best_action]][0])
+							self.one_minus_one_check(list_links_coalitions[acted_upon_agent].agent2.belieftree[0][cw_of_interest[best_action]][0])
 						# Exchange of knowledge - 0.2 - From acted upon to acting
 						coalitions.lead.belieftree[1 + acted_upon_agent][cw_of_interest[best_action]][0] = \
 						  list_links_coalitions[acted_upon_agent].agent2.belieftree[0][cw_of_interest[best_action]][0] + (random.random()/5) - 0.1
 						# 1-1 check
 						coalitions.lead.belieftree[1 + acted_upon_agent][cw_of_interest[best_action]][0] = \
-							self.one_minus_one_check2(coalitions.lead.belieftree[1 + acted_upon_agent][cw_of_interest[best_action]][0])
+							self.one_minus_one_check(coalitions.lead.belieftree[1 + acted_upon_agent][cw_of_interest[best_action]][0])
 						# Exchange of knowledge - 0.2 - From acting to acted upon
 						list_links_coalitions[acted_upon_agent].agent2.belieftree[1 + coalitions.lead.unique_id][cw_of_interest[best_action]][0] = \
 						  coalitions.lead.belieftree[0][cw_of_interest[best_action]][0] + (random.random()/5) - 0.1
 						# 1-1 check
 						list_links_coalitions[acted_upon_agent].agent2.belieftree[1 + coalitions.lead.unique_id][cw_of_interest[best_action]][0] = \
-							self.one_minus_one_check2(list_links_coalitions[acted_upon_agent].agent2.belieftree[1 + coalitions.lead.unique_id][cw_of_interest[best_action]][0])
+							self.one_minus_one_check(list_links_coalitions[acted_upon_agent].agent2.belieftree[1 + coalitions.lead.unique_id][cw_of_interest[best_action]][0])
 
 					# Implement state influence action
 					if best_action == len(cw_of_interest):
@@ -452,19 +466,19 @@ class Coalition():
 							coalitions.resources[0] * 0.1 * list_links_coalitions[acted_upon_agent].aware
 						# 1-1 check
 						list_links_coalitions[acted_upon_agent].agent2.belieftree[0][coalitions.issue][0] = \
-							self.one_minus_one_check2(list_links_coalitions[acted_upon_agent].agent2.belieftree[0][coalitions.issue][0])
+							self.one_minus_one_check(list_links_coalitions[acted_upon_agent].agent2.belieftree[0][coalitions.issue][0])
 						# Exchange of knowledge - 0.2 - From acted upon to acting
 						coalitions.lead.belieftree[1 + acted_upon_agent][coalitions.issue][0] = \
 						  list_links_coalitions[acted_upon_agent].agent2.belieftree[0][coalitions.issue][0] + (random.random()/5) - 0.1
 						# 1-1 check
 						coalitions.lead.belieftree[1 + acted_upon_agent][coalitions.issue][0] = \
-							self.one_minus_one_check2(coalitions.lead.belieftree[1 + acted_upon_agent][coalitions.issue][0])
+							self.one_minus_one_check(coalitions.lead.belieftree[1 + acted_upon_agent][coalitions.issue][0])
 						# Exchange of knowledge - 0.2 - From acting to acted upon
 						list_links_coalitions[acted_upon_agent].agent2.belieftree[1 + coalitions.lead.unique_id][coalitions.issue][0] = \
 						  coalitions.lead.belieftree[0][coalitions.issue][0] + (random.random()/5) - 0.1
 						# 1-1 check
 						list_links_coalitions[acted_upon_agent].agent2.belieftree[1 + coalitions.lead.unique_id][coalitions.issue][0] = \
-							self.one_minus_one_check2(list_links_coalitions[acted_upon_agent].agent2.belieftree[1 + coalitions.lead.unique_id][coalitions.issue][0])
+							self.one_minus_one_check(list_links_coalitions[acted_upon_agent].agent2.belieftree[1 + coalitions.lead.unique_id][coalitions.issue][0])
 
 					# Implement aim influence action
 					if best_action == len(cw_of_interest) + 1:
@@ -477,19 +491,19 @@ class Coalition():
 							coalitions.resources[0] * 0.1 * list_links_coalitions[acted_upon_agent].aware
 						# 1-1 check
 						list_links_coalitions[acted_upon_agent].agent2.belieftree[0][coalitions.issue][1] = \
-							self.one_minus_one_check2(list_links_coalitions[acted_upon_agent].agent2.belieftree[0][coalitions.issue][1])
+							self.one_minus_one_check(list_links_coalitions[acted_upon_agent].agent2.belieftree[0][coalitions.issue][1])
 						# Exchange of knowledge - 0.2 - From acted upon to acting
 						coalitions.lead.belieftree[1 + acted_upon_agent][coalitions.issue][1] = \
 						  list_links_coalitions[acted_upon_agent].agent2.belieftree[0][coalitions.issue][1] + (random.random()/5) - 0.1
 						# 1-1 check
 						coalitions.lead.belieftree[1 + acted_upon_agent][coalitions.issue][1] = \
-							self.one_minus_one_check2(coalitions.lead.belieftree[1 + acted_upon_agent][coalitions.issue][1])
+							self.one_minus_one_check(coalitions.lead.belieftree[1 + acted_upon_agent][coalitions.issue][1])
 						# Exchange of knowledge - 0.2 - From acting to acted upon
 						list_links_coalitions[acted_upon_agent].agent2.belieftree[1 + coalitions.lead.unique_id][coalitions.issue][1] = \
 						  coalitions.lead.belieftree[0][coalitions.issue][1] + (random.random()/5) - 0.1
 						# 1-1 check
 						list_links_coalitions[acted_upon_agent].agent2.belieftree[1 + coalitions.lead.unique_id][coalitions.issue][1] = \
-							self.one_minus_one_check2(list_links_coalitions[acted_upon_agent].agent2.belieftree[1 + coalitions.lead.unique_id][coalitions.issue][1])
+							self.one_minus_one_check(list_links_coalitions[acted_upon_agent].agent2.belieftree[1 + coalitions.lead.unique_id][coalitions.issue][1])
 
 
 					# Updating the resources of the team
@@ -501,6 +515,22 @@ class Coalition():
 			
 	def coalition_belief_actions_ACF_pf(self, coalitions, causalrelation_number, deep_core, policy_core, secondary, agent_action_list, ACF_link_list_pf, ACF_link_list_pf_total, \
 		ACF_link_id_pf, link_list, affiliation_weights, agenda_as_issue, instruments, conflict_level_coef):
+
+		"""
+		The coalition belief actions function (policy formulation)
+		===========================
+
+		This function is used to perform the actions of the coalitions
+		in the policy formulation. The actions of the coalitions are the 
+		same actions as the one of the individual agents. The main
+		differences here are the amount of resources used and the fact
+		that all actions are estimated and performed by the coalition
+		leader based on the coalition leader's partial knowledge.
+
+		Note: This function is the same as the previous one but with 
+		changes associated with the already selected agenda.
+
+		"""
 
 		len_DC = len(deep_core)
 		len_PC = len(policy_core)
@@ -683,7 +713,7 @@ class Coalition():
 
 							# 1-1 check
 							agent_impacted.belieftree[0][of_interest[0][best_action_index]][0] = \
-								self.one_minus_one_check2(agent_impacted.belieftree[0][of_interest[0][best_action_index]][0])
+								self.one_minus_one_check(agent_impacted.belieftree[0][of_interest[0][best_action_index]][0])
 							
 					# The state change is performed
 					elif best_action_index > len(cw_of_interest) - 1 and best_action_index < len(cw_of_interest) + len(issue_of_interest) - 1:
@@ -718,7 +748,7 @@ class Coalition():
 
 							# 1-1 check
 							agent_impacted.belieftree[0][best_action_index - len(cw_of_interest)][0] = \
-								self.one_minus_one_check2(agent_impacted.belieftree[0][best_action_index - len(cw_of_interest)][0])
+								self.one_minus_one_check(agent_impacted.belieftree[0][best_action_index - len(cw_of_interest)][0])
 
 					# The aim change is performed
 					elif best_action_index >= len(cw_of_interest) + len(issue_of_interest) - 1:
@@ -756,7 +786,7 @@ class Coalition():
 
 							# 1-1 check
 							agent_impacted.belieftree[0][of_interest[1][best_action_index - len(cw_of_interest) - len(cw_of_interest)]][1] = \
-								self.one_minus_one_check2(agent_impacted.belieftree[0][of_interest[1][best_action_index - len(cw_of_interest) - len(cw_of_interest)]][1])
+								self.one_minus_one_check(agent_impacted.belieftree[0][of_interest[1][best_action_index - len(cw_of_interest) - len(cw_of_interest)]][1])
 					
 					# Updating the resources of the team
 					coalitions.resources[1] -= coalitions.resources[0]*0.1
@@ -889,19 +919,19 @@ class Coalition():
 						# print('After: ' + str(list_links_coalitions[acted_upon_agent].agent2.belieftree[0][len(deep_core) + len(policy_core) + len(secondary) + best_action - 1][0]))
 						# 1-1 check
 						list_links_coalitions[acted_upon_agent].agent2.belieftree[0][of_interest[0][best_action]][0] = \
-							self.one_minus_one_check2(list_links_coalitions[acted_upon_agent].agent2.belieftree[0][of_interest[0][best_action]][0])
+							self.one_minus_one_check(list_links_coalitions[acted_upon_agent].agent2.belieftree[0][of_interest[0][best_action]][0])
 						# Exchange of knowledge - 0.2 - From acted upon to acting
 						coalitions.lead.belieftree[1 + acted_upon_agent][of_interest[0][best_action]][0] = \
 						  list_links_coalitions[acted_upon_agent].agent2.belieftree[0][of_interest[0][best_action]][0] + (random.random()/5) - 0.1
 						# 1-1 check
 						coalitions.lead.belieftree[1 + acted_upon_agent][of_interest[0][best_action]][0] = \
-							self.one_minus_one_check2(coalitions.lead.belieftree[1 + acted_upon_agent][of_interest[0][best_action]][0])
+							self.one_minus_one_check(coalitions.lead.belieftree[1 + acted_upon_agent][of_interest[0][best_action]][0])
 						# Exchange of knowledge - 0.2 - From acting to acted upon
 						list_links_coalitions[acted_upon_agent].agent2.belieftree[1 + coalitions.lead.unique_id][of_interest[0][best_action]][0] = \
 						  coalitions.lead.belieftree[0][of_interest[0][best_action]][0] + (random.random()/5) - 0.1
 						# 1-1 check
 						list_links_coalitions[acted_upon_agent].agent2.belieftree[1 + coalitions.lead.unique_id][of_interest[0][best_action]][0] = \
-							self.one_minus_one_check2(list_links_coalitions[acted_upon_agent].agent2.belieftree[1 + coalitions.lead.unique_id][of_interest[0][best_action]][0])
+							self.one_minus_one_check(list_links_coalitions[acted_upon_agent].agent2.belieftree[1 + coalitions.lead.unique_id][of_interest[0][best_action]][0])
 
 					# Implement state influence action
 					elif best_action > len(cw_of_interest) - 1 and best_action < len(cw_of_interest) + len(issue_of_interest) - 1:
@@ -917,19 +947,19 @@ class Coalition():
 							coalitions.resources[0] * 0.1 * list_links_coalitions[acted_upon_agent].aware
 						# 1-1 check
 						list_links_coalitions[acted_upon_agent].agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest)]][0] = \
-							self.one_minus_one_check2(list_links_coalitions[acted_upon_agent].agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest)]][0])
+							self.one_minus_one_check(list_links_coalitions[acted_upon_agent].agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest)]][0])
 						# Exchange of knowledge - 0.2 - From acted upon to acting
 						coalitions.lead.belieftree[1 + acted_upon_agent][of_interest[1][best_action - len(cw_of_interest)]][0] = \
 						  list_links_coalitions[acted_upon_agent].agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest)]][0] + (random.random()/5) - 0.1
 						# 1-1 check
 						coalitions.lead.belieftree[1 + acted_upon_agent][of_interest[1][best_action - len(cw_of_interest)]][0] = \
-							self.one_minus_one_check2(coalitions.lead.belieftree[1 + acted_upon_agent][of_interest[1][best_action - len(cw_of_interest)]][0])
+							self.one_minus_one_check(coalitions.lead.belieftree[1 + acted_upon_agent][of_interest[1][best_action - len(cw_of_interest)]][0])
 						# Exchange of knowledge - 0.2 - From acting to acted upon
 						list_links_coalitions[acted_upon_agent].agent2.belieftree[1 + coalitions.lead.unique_id][of_interest[1][best_action - len(cw_of_interest)]][0] = \
 						  coalitions.lead.belieftree[0][of_interest[1][best_action - len(cw_of_interest)]][0] + (random.random()/5) - 0.1
 						# 1-1 check
 						list_links_coalitions[acted_upon_agent].agent2.belieftree[1 + coalitions.lead.unique_id][of_interest[1][best_action - len(cw_of_interest)]][0] = \
-							self.one_minus_one_check2(list_links_coalitions[acted_upon_agent].agent2.belieftree[1 + coalitions.lead.unique_id][of_interest[1][best_action - len(cw_of_interest)]][0])
+							self.one_minus_one_check(list_links_coalitions[acted_upon_agent].agent2.belieftree[1 + coalitions.lead.unique_id][of_interest[1][best_action - len(cw_of_interest)]][0])
 
 					# Implement aim influence action
 					elif best_action >= len(cw_of_interest) + len(issue_of_interest) - 1:
@@ -945,19 +975,19 @@ class Coalition():
 							coalitions.resources[0] * 0.1 * list_links_coalitions[acted_upon_agent].aware
 						# 1-1 check
 						list_links_coalitions[acted_upon_agent].agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(cw_of_interest)]][1] = \
-							self.one_minus_one_check2(list_links_coalitions[acted_upon_agent].agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(cw_of_interest)]][1])
+							self.one_minus_one_check(list_links_coalitions[acted_upon_agent].agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(cw_of_interest)]][1])
 						# Exchange of knowledge - 0.2 - From acted upon to acting
 						coalitions.lead.belieftree[1 + acted_upon_agent][of_interest[1][best_action - len(cw_of_interest) - len(cw_of_interest)]][1] = \
 						  list_links_coalitions[acted_upon_agent].agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(cw_of_interest)]][1] + (random.random()/5) - 0.1
 						# 1-1 check
 						coalitions.lead.belieftree[1 + acted_upon_agent][of_interest[1][best_action - len(cw_of_interest) - len(cw_of_interest)]][1] = \
-							self.one_minus_one_check2(coalitions.lead.belieftree[1 + acted_upon_agent][of_interest[1][best_action - len(cw_of_interest) - len(cw_of_interest)]][1])
+							self.one_minus_one_check(coalitions.lead.belieftree[1 + acted_upon_agent][of_interest[1][best_action - len(cw_of_interest) - len(cw_of_interest)]][1])
 						# Exchange of knowledge - 0.2 - From acting to acted upon
 						list_links_coalitions[acted_upon_agent].agent2.belieftree[1 + coalitions.lead.unique_id][of_interest[1][best_action - len(cw_of_interest) - len(cw_of_interest)]][1] = \
 						  coalitions.lead.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(cw_of_interest)]][1] + (random.random()/5) - 0.1
 						# 1-1 check
 						list_links_coalitions[acted_upon_agent].agent2.belieftree[1 + coalitions.lead.unique_id][of_interest[1][best_action - len(cw_of_interest) - len(cw_of_interest)]][1] = \
-							self.one_minus_one_check2(list_links_coalitions[acted_upon_agent].agent2.belieftree[1 + coalitions.lead.unique_id][of_interest[1][best_action - len(cw_of_interest) - len(cw_of_interest)]][1])
+							self.one_minus_one_check(list_links_coalitions[acted_upon_agent].agent2.belieftree[1 + coalitions.lead.unique_id][of_interest[1][best_action - len(cw_of_interest) - len(cw_of_interest)]][1])
 
 
 					# Updating the resources of the team
@@ -968,6 +998,19 @@ class Coalition():
 						break
 	
 	def new_link_ACF_as(self, link_list, outsider_agent, coalitions, ACF_link_list_as, ACF_link_list_as_total, ACF_link_id_as, len_DC, len_PC, conflict_level_coef):
+
+		"""
+		The new link function - ACF shadow network (agenda setting)
+		===========================
+
+		This function is used to create new links for the coalitions shadow
+		networks. These links are obtained through looking at whichever
+		member in the coalition has the highest awareness level for that agent.
+
+		When creating a new link, the conflict level is also set along with the
+		awareness decay. This is the agenda setting version of the function. 
+
+		"""
 
 		# First we look for the highest aware level
 		team_aware = 0
@@ -1028,6 +1071,19 @@ class Coalition():
 		ACF_link_id_as[0] += 1
 
 	def new_link_ACF_pf(self, link_list, outsider_agent, coalitions, ACF_link_list_pf, ACF_link_list_pf_total, ACF_link_id_pf, len_DC, len_PC, len_S, conflict_level_coef):
+
+		"""
+		The new link function - ACF shadow network (policy formulation)
+		===========================
+
+		This function is used to create new links for the coalitions shadow
+		networks. These links are obtained through looking at whichever
+		member in the coalition has the highest awareness level for that agent.
+
+		When creating a new link, the conflict level is also set along with the
+		awareness decay. This is the policy formulation version of the function. 
+
+		"""
 
 		# First we look for the highest aware level
 		team_aware = 0
@@ -1093,6 +1149,20 @@ class Coalition():
 
 	def knowledge_exchange_coalition(self, team, cw_knowledge, parameter):
 
+		"""
+		Knowledge exchange function - coalitions
+		===========================
+
+		This function is used for the exchange of partial knowledge between agents
+		within the same coalition. This only regards the issue that is selected by the team
+		and is kept with a certain amount of randomness.
+
+		Note: This function seems to be incorrectly used in so far as it is used
+		for both policy and problem teams while it should only be used for problems
+		teams.
+		
+		"""
+
 		# Exchange of partial knowledge between the agents in the team
 		for agent_exchange1 in team.members:
 			for agent_exchange2 in team.members:
@@ -1107,39 +1177,16 @@ class Coalition():
 				if agent_exchange1.belieftree[1 + agent_exchange2.unique_id][cw_knowledge][parameter] < -1:
 					agent_exchange1.belieftree[1 + agent_exchange2.unique_id][cw_knowledge][parameter]  = -1
 
-	def knowledge_exchange_coalition_policy(self, team, cw_knowledge, parameter):
+	def one_minus_one_check(self, to_be_checked_parameter):
 
-		# Exchange of partial knowledge between the agents in the team
-		for agent_exchange1 in team.members:
-			for agent_exchange2 in team.members:
-				# Actual knowledge exchange with a randomness of 0.2
-				# print('Before: ' + str(agent_exchange1.belieftree[1 + agent_exchange2.unique_id][team.issue][0]))
-				agent_exchange1.belieftree_policy[1 + agent_exchange2.unique_id][cw_knowledge][parameter] = \
-				  agent_exchange2.belieftree_policy[0][cw_knowledge][0] + (random.random()/5) - 0.1
-				# print('After: ' + str(agent_exchange1.belieftree[1 + agent_exchange2.unique_id][team.issue][0]))
-				# 1-1 check
-				if agent_exchange1.belieftree_policy[1 + agent_exchange2.unique_id][cw_knowledge][parameter] > 1:
-					agent_exchange1.belieftree_policy[1 + agent_exchange2.unique_id][cw_knowledge][parameter] = 1
-				if agent_exchange1.belieftree_policy[1 + agent_exchange2.unique_id][cw_knowledge][parameter] < -1:
-					agent_exchange1.belieftree_policy[1 + agent_exchange2.unique_id][cw_knowledge][parameter]  = -1
+		"""
+		One minus one check function
+		===========================
 
-	def knowledge_exchange_coalition_instrument(self, team, cw_knowledge, parameter):
-
-		# Exchange of partial knowledge between the agents in the team
-		for agent_exchange1 in team.members:
-			for agent_exchange2 in team.members:
-				# Actual knowledge exchange with a randomness of 0.2
-				# print('Before: ' + str(agent_exchange1.belieftree[1 + agent_exchange2.unique_id][team.issue][0]))
-				agent_exchange1.belieftree_instrument[1 + agent_exchange2.unique_id][cw_knowledge][parameter] = \
-				  agent_exchange2.belieftree_instrument[0][cw_knowledge][0] + (random.random()/5) - 0.1
-				# print('After: ' + str(agent_exchange1.belieftree[1 + agent_exchange2.unique_id][team.issue][0]))
-				# 1-1 check
-				if agent_exchange1.belieftree_instrument[1 + agent_exchange2.unique_id][cw_knowledge][parameter] > 1:
-					agent_exchange1.belieftree_instrument[1 + agent_exchange2.unique_id][cw_knowledge][parameter] = 1
-				if agent_exchange1.belieftree_instrument[1 + agent_exchange2.unique_id][cw_knowledge][parameter] < -1:
-					agent_exchange1.belieftree_instrument[1 + agent_exchange2.unique_id][cw_knowledge][parameter]  = -1
-
-	def one_minus_one_check2(self, to_be_checked_parameter):
+		This function checks that a certain values does not got over one
+		and does not go below one due to the randomisation.
+		
+		"""
 
 		checked_parameter = 0
 		if to_be_checked_parameter > 1:

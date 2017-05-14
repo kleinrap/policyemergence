@@ -1,4 +1,0 @@
-Small tasks that still need to be performed:
-- Parametrise the 10% resources spent on coalition intra-actions
-- The belonging level function in the agents.py file is used for both policy and problem teams incorrectly. Two different functions should be used. This applies to both the agenda setting and the policy formulation functions.
-- The knowledge exchange function in the agents.py file is used for both policy and problem teams incorrectly. Two different functions be used.

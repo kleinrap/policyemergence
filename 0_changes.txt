@@ -7,3 +7,8 @@ Changes to the code:
 - For the pes/pms - policy formulation (B) - new likelihood for the calculation of the grades of the actions
 - For the pes/pms - agenda setting (B) - new impact action calculation
 - For the pes/pms - policy formulation (B) - new impact action calculation
+
+14 May:
+- Change of function name from one_minus_one_check2 to one_minus_one_check
+- Addition of comments for the functions in agents.py, agents_creation.py, coalition_creations.py
+- Moving of the knowledge exchange function for policies and instruments from the coalitions file to the teams files (not adapted and integrated yet)
