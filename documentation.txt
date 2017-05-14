@@ -19,7 +19,7 @@ Code files and partial documentation:
 	- Class Truth(Agent):
 	- Class Electorate(Agent):
 		- electorate_influence()
-		- one_minus_one_check2()
+		- one_minus_one_check()
 		- electorate_states_update()
 	- Class Externalparties(Agent):
 		- external_parties_states_update()
@@ -29,7 +29,7 @@ Code files and partial documentation:
 		- external_parties_actions_as_3S()
 		- external_parties_actions_pf_3S()
 		- preference_update_electorate()
-		- one_minus_one_check2()
+		- one_minus_one_check()
 	- Class Policymakers(Agent):
 		- policymakers_states_update()
 		- pm_pe_actions_as()
@@ -49,7 +49,7 @@ Code files and partial documentation:
 		- preference_update_as_PC()
 		- preference_update_pf_PC()
 		- instrument_preference_update()
-		- one_minus_one_check2()
+		- one_minus_one_check()
 - coalition_creation.py
 	- Class Coalition():
 		- coalition_belief_actions_ACF_as()

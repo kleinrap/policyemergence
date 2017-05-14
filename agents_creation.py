@@ -28,6 +28,18 @@ class Electorate(Agent):
 		self.representation = representation
 
 	def electorate_influence(self, agent, master_list, affiliation_number, electorate_influence_coefficient):
+
+		"""
+		Electorate influence function
+		===========================
+
+		This function calculates the influence of the electorates 
+		on the policy makers. It is dependent on the affiliations
+		of each of the agents. The electorate can only influence
+		policy makers with whom they share their affiliations.
+
+		"""
+
 		self.master_list = master_list
 
 		policymaker_list = []
@@ -52,14 +64,23 @@ class Electorate(Agent):
 							  (self.belieftree_electorate[k][1] - policymaker_list[j].belieftree[0][k][1]) * electorate_influence_coefficient
 							# Again the oneminusone check does not work here
 							policymaker_list[j].belieftree[0][k][1] = \
-								self.one_minus_one_check2(policymaker_list[j].belieftree[0][k][1])
+								self.one_minus_one_check(policymaker_list[j].belieftree[0][k][1])
 							# print('Afters change: ' + str(policymaker_list[j].belieftree[0][k][1]))
 						# print(policymaker_list[j].pos)
 				# print(self.belieftree_electorate)
 				# print(self.affiliation)
 				# print(self.pos)
 
-	def one_minus_one_check2(self, to_be_checked_parameter):
+	def one_minus_one_check(self, to_be_checked_parameter):
+
+		"""
+		One minus one check function
+		===========================
+
+		This function checks that a certain values does not got over one
+		and does not go below one due to the randomisation.
+		
+		"""
 
 		checked_parameter = 0
 		if to_be_checked_parameter > 1:
@@ -456,7 +477,7 @@ class Externalparties(Agent):
 
 				# 1-1 check
 				agents_el.belieftree_electorate[best_EInfluence][1] = \
-					self.one_minus_one_check2(agents_el.belieftree_electorate[best_EInfluence][1])
+					self.one_minus_one_check(agents_el.belieftree_electorate[best_EInfluence][1])
 
 				# Re-updating the preference levels
 				self.preference_udapte_electorate(agents_el, len_DC, len_PC, len_S)
@@ -608,20 +629,20 @@ class Externalparties(Agent):
 
 						# Check that it is not higher than 1 or lower than -1
 						agent_action_list[agents_BFraming].belieftree[0][cw_of_interest[best_BFraming]][0] = \
-							self.one_minus_one_check2(agent_action_list[agents_BFraming].belieftree[0][cw_of_interest[best_BFraming]][0])
+							self.one_minus_one_check(agent_action_list[agents_BFraming].belieftree[0][cw_of_interest[best_BFraming]][0])
 
 						# Providing partial knowledge - Blanket framing - 0.5 range from real value: (Acting agent)
 						agents.belieftree[1 + agent_action_list[agents_BFraming].unique_id][cw_of_interest[best_BFraming]][0] = \
 							agent_action_list[agents_BFraming].belieftree[0][cw_of_interest[best_BFraming]][0] + (random.random()/2) - 0.25
 						# 1-1 check
 						agents.belieftree[1 + agent_action_list[agents_BFraming].unique_id][cw_of_interest[best_BFraming]][0] = \
-							self.one_minus_one_check2(agents.belieftree[1 + agent_action_list[agents_BFraming].unique_id][cw_of_interest[best_BFraming]][0])
+							self.one_minus_one_check(agents.belieftree[1 + agent_action_list[agents_BFraming].unique_id][cw_of_interest[best_BFraming]][0])
 						# Providing partial knowledge - Blanket framing - 0.5 range from real value: (Acted upon agent)
 						agent_action_list[agents_BFraming].belieftree[1 + agents.unique_id][cw_of_interest[best_BFraming]][0] = \
 							agents.belieftree[0][cw_of_interest[best_BFraming]][0] + (random.random()/2) - 0.25
 						# 1-1 check
 						agent_action_list[agents_BFraming].belieftree[1 + agents.unique_id][cw_of_interest[best_BFraming]][0] = \
-							self.one_minus_one_check2(agent_action_list[agents_BFraming].belieftree[1 + agents.unique_id][cw_of_interest[best_BFraming]][0])
+							self.one_minus_one_check(agent_action_list[agents_BFraming].belieftree[1 + agents.unique_id][cw_of_interest[best_BFraming]][0])
 
 				agents.resources_actions_BFraming -= agents.resources[0] * 0.1
 				agents.resources_actions -= agents.resources[0] * 0.1
@@ -699,7 +720,7 @@ class Externalparties(Agent):
 
 				# Check for max and min:
 				agents_el.belieftree_electorate[issue_of_interest[best_EInfluence]][1] = \
-					self.one_minus_one_check2(agents_el.belieftree_electorate[issue_of_interest[best_EInfluence]][1])
+					self.one_minus_one_check(agents_el.belieftree_electorate[issue_of_interest[best_EInfluence]][1])
 
 			agents.resources_actions_EInfluence -= agents.resources[0] * 0.1
 			agents.resources_actions -= agents.resources[0] * 0.1
@@ -960,7 +981,7 @@ class Externalparties(Agent):
 
 					# 1-1 check
 					agents_el.belieftree_electorate[best_EInfluence][1] = \
-						self.one_minus_one_check2(agents_el.belieftree_electorate[best_EInfluence][1])
+						self.one_minus_one_check(agents_el.belieftree_electorate[best_EInfluence][1])
 
 					# Re-updating the preference levels
 					self.preference_udapte_electorate(agents_el, len_DC, len_PC, len_S)
@@ -1236,7 +1257,7 @@ class Externalparties(Agent):
 
 					# 1-1 check
 					agents_el.belieftree_electorate[best_EInfluence][1] = \
-						self.one_minus_one_check2(agents_el.belieftree_electorate[best_EInfluence][1])
+						self.one_minus_one_check(agents_el.belieftree_electorate[best_EInfluence][1])
 
 					# Re-updating the preference levels
 					self.preference_udapte_electorate(agents_el, len_DC, len_PC, len_S)
@@ -1298,7 +1319,16 @@ class Externalparties(Agent):
 			else:
 				agent.belieftree_electorate[len_DC + len_PC + i][2] = 0
 
-	def one_minus_one_check2(self, to_be_checked_parameter):
+	def one_minus_one_check(self, to_be_checked_parameter):
+
+		"""
+		One minus one check function
+		===========================
+
+		This function checks that a certain values does not got over one
+		and does not go below one due to the randomisation.
+		
+		"""
 
 		checked_parameter = 0
 		if to_be_checked_parameter > 1:
@@ -1487,7 +1517,7 @@ class Policymakers(Agent):
 							# 	agents.resources[0] * resources_weight_action * links.aware * resources_potency
 							# # 1-1 check
 							# agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = \
-							# 	self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0])
+							# 	self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0])
 							# # Update of the preferences for that partial knowledge agent
 							# self.preference_udapte_as_PC(agents, 1 + links.agent2.unique_id, len_DC, len_PC, len_S)
 							# # Calculation of the new grade - we check selected issue using partial knowledge updates
@@ -1545,7 +1575,7 @@ class Policymakers(Agent):
 							# 	agents.resources[0] * resources_weight_action * links.aware * resources_potency
 							# # 1-1 check
 							# agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] = \
-							# 	self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0])
+							# 	self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0])
 							# # Update of the preferences for that partial knowledge agent
 							# self.preference_udapte_as_PC(agents, 1 + links.agent1.unique_id, len_DC, len_PC, len_S)
 							# # Calculation of the new grade - we check selected issue using partial knowledge updates
@@ -1603,7 +1633,7 @@ class Policymakers(Agent):
 						# 	agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][agents.select_as_issue][1] * actionWeight * resources_potency
 						# # 1-1 check
 						# agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1] = \
-						# 	self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1])
+						# 	self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1])
 						# # Update of the preferences for that partial knowledge agent
 						# self.preference_udapte_as_PC(agents, 1 + links.agent2.unique_id, len_DC, len_PC, len_S)
 						# # Calculation of the new grade - we check selected issue using partial knowledge updates
@@ -1660,7 +1690,7 @@ class Policymakers(Agent):
 						# 	agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[1][agents.select_as_issue][1] * actionWeight * resources_potency
 						# # 1-1 check
 						# agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1] = \
-						# 	self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1])
+						# 	self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1])
 						# # Update of the preferences for that partial knowledge agent
 						# self.preference_udapte_as_PC(agents, 1 + links.agent1.unique_id, len_DC, len_PC, len_S)
 						# # Calculation of the new grade - we check selected issue using partial knowledge updates
@@ -1719,7 +1749,7 @@ class Policymakers(Agent):
 						# 	agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][agents.select_as_issue][0] * actionWeight * resources_potency
 						# # 1-1 check
 						# agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0] = \
-						# 	self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0])
+						# 	self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0])
 						# # Update of the preferences for that partial knowledge agent
 						# self.preference_udapte_as_PC(agents, 1 + links.agent2.unique_id, len_DC, len_PC, len_S)
 						# # Calculation of the new grade - we check selected issue using partial knowledge updates
@@ -1775,7 +1805,7 @@ class Policymakers(Agent):
 						# 	agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[1][agents.select_as_issue][0] * actionWeight * resources_potency
 						# # 1-1 check
 						# agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0] = \
-						# 	self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0])
+						# 	self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0])
 						# # Update of the preferences for that partial knowledge agent
 						# self.preference_udapte_as_PC(agents, 1 + links.agent1.unique_id, len_DC, len_PC, len_S)
 						# # Calculation of the new grade - we check selected issue using partial knowledge updates
@@ -1884,15 +1914,15 @@ class Policymakers(Agent):
 							
 							# Checks and transfer of partial knowledge
 							# 1-1 check
-							links.agent2.belieftree[0][best_action][0] = self.one_minus_one_check2(links.agent2.belieftree[0][best_action][0])
+							links.agent2.belieftree[0][best_action][0] = self.one_minus_one_check(links.agent2.belieftree[0][best_action][0])
 							# Providing partial knowledge - Framing - 0.2 range from real value: (Acting agent)
 							agents.belieftree[1 + links.agent2.unique_id][best_action][0] = links.agent2.belieftree[0][best_action][0] + (random.random()/5) - 0.1
 							# 1-1 check
-							agents.belieftree[1 + links.agent2.unique_id][best_action][0] = self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][best_action][0])
+							agents.belieftree[1 + links.agent2.unique_id][best_action][0] = self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][best_action][0])
 							# Providing partial knowledge - Framing - 0.2 range from real value: (Acted upon agent)
 							links.agent2.belieftree[1 + agents.unique_id][best_action][0] = agents.belieftree[0][best_action][0] + (random.random()/5) - 0.1
 							# 1-1 check
-							links.agent2.belieftree[1 + agents.unique_id][best_action][0] = self.one_minus_one_check2(links.agent2.belieftree[1 + agents.unique_id][best_action][0])
+							links.agent2.belieftree[1 + agents.unique_id][best_action][0] = self.one_minus_one_check(links.agent2.belieftree[1 + agents.unique_id][best_action][0])
 
 							# print(' ')
 							# print('Causal change')
@@ -1929,15 +1959,15 @@ class Policymakers(Agent):
 
 							# Checks and transfer of partial knowledge
 							# 1-1 check
-							links.agent1.belieftree[0][best_action][0] = self.one_minus_one_check2(links.agent1.belieftree[0][best_action][0])
+							links.agent1.belieftree[0][best_action][0] = self.one_minus_one_check(links.agent1.belieftree[0][best_action][0])
 							# Providing partial knowledge - Framing - 0.2 range from real value: (Acting agent)
 							agents.belieftree[1 + links.agent1.unique_id][best_action][0] = links.agent1.belieftree[0][best_action][0] + (random.random()/5) - 0.1
 							# 1-1 check
-							agents.belieftree[1 + links.agent1.unique_id][best_action][0] = self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][best_action][0])
+							agents.belieftree[1 + links.agent1.unique_id][best_action][0] = self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][best_action][0])
 							# Providing partial knowledge - Framing - 0.2 range from real value: (Acted upon agent)
 							links.agent1.belieftree[1 + agents.unique_id][best_action][0] = agents.belieftree[0][best_action][0] + (random.random()/5) - 0.1
 							# 1-1 check
-							links.agent1.belieftree[1 + agents.unique_id][best_action][0] = self.one_minus_one_check2(links.agent1.belieftree[1 + agents.unique_id][best_action][0])
+							links.agent1.belieftree[1 + agents.unique_id][best_action][0] = self.one_minus_one_check(links.agent1.belieftree[1 + agents.unique_id][best_action][0])
 
 							# print(' ')
 							# print('Causal change')
@@ -1979,15 +2009,15 @@ class Policymakers(Agent):
 
 							# Checks and transfer of partial knowledge
 							# 1-1 check
-							links.agent2.belieftree[0][agents.select_as_issue][1] = self.one_minus_one_check2(links.agent2.belieftree[0][agents.select_as_issue][1])
+							links.agent2.belieftree[0][agents.select_as_issue][1] = self.one_minus_one_check(links.agent2.belieftree[0][agents.select_as_issue][1])
 							# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acting agent)
 							agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1] = links.agent2.belieftree[0][agents.select_as_issue][1]
 							# 1-1 check
-							agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1] = self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1])
+							agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1] = self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1])
 							# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acted upon agent)
 							links.agent2.belieftree[1 + agents.unique_id][agents.select_as_issue][1] = agents.belieftree[0][agents.select_as_issue][1] + (random.random()/5) - 0.1
 							# 1-1 check
-							links.agent2.belieftree[1 + agents.unique_id][agents.select_as_issue][1] = self.one_minus_one_check2(links.agent2.belieftree[1 + agents.unique_id][agents.select_as_issue][1])
+							links.agent2.belieftree[1 + agents.unique_id][agents.select_as_issue][1] = self.one_minus_one_check(links.agent2.belieftree[1 + agents.unique_id][agents.select_as_issue][1])
 
 							# print(' ')
 							# print('Aim change')
@@ -2022,15 +2052,15 @@ class Policymakers(Agent):
 
 							# Checks and transfer of partial knowledge
 							# 1-1 check
-							links.agent1.belieftree[0][agents.select_as_issue][1] = self.one_minus_one_check2(links.agent1.belieftree[0][agents.select_as_issue][1])
+							links.agent1.belieftree[0][agents.select_as_issue][1] = self.one_minus_one_check(links.agent1.belieftree[0][agents.select_as_issue][1])
 							# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acting agent)
 							agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1] = links.agent2.belieftree[0][agents.select_as_issue][1]
 							# 1-1 check
-							agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1] = self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1])
+							agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1] = self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1])
 							# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acted upon agent)
 							links.agent1.belieftree[1 + agents.unique_id][agents.select_as_issue][1] = agents.belieftree[0][agents.select_as_issue][1] + (random.random()/5) - 0.1
 							# 1-1 check
-							links.agent1.belieftree[1 + agents.unique_id][agents.select_as_issue][1] = self.one_minus_one_check2(links.agent1.belieftree[1 + agents.unique_id][agents.select_as_issue][1])
+							links.agent1.belieftree[1 + agents.unique_id][agents.select_as_issue][1] = self.one_minus_one_check(links.agent1.belieftree[1 + agents.unique_id][agents.select_as_issue][1])
 
 
 					# If the index is in the first part of the list, then the state influence action is the best
@@ -2067,15 +2097,15 @@ class Policymakers(Agent):
 							# print('After: ' + str(links.agent2.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 
 							# Checks and transfer of partial knowledge
-							links.agent2.belieftree[0][agents.select_as_issue][0] = self.one_minus_one_check2(links.agent2.belieftree[0][agents.select_as_issue][0])
+							links.agent2.belieftree[0][agents.select_as_issue][0] = self.one_minus_one_check(links.agent2.belieftree[0][agents.select_as_issue][0])
 							# Providing partial knowledge - State problem - 0.2 range from real value: (Acting agent)
 							agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0] = links.agent2.belieftree[0][agents.select_as_issue][0] + (random.random()/5) - 0.1
 							# 1-1 check
-							agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0] = self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0])
+							agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0] = self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0])
 							# Providing partial knowledge - State problem - 0.2 range from real value: (Acted upon agent)
 							links.agent2.belieftree[1 + agents.unique_id][agents.select_as_issue][0] = agents.belieftree[0][agents.select_as_issue][0] + (random.random()/5) - 0.1
 							# 1-1 check
-							links.agent2.belieftree[1 + agents.unique_id][agents.select_as_issue][0] = self.one_minus_one_check2(links.agent2.belieftree[1 + agents.unique_id][agents.select_as_issue][0])
+							links.agent2.belieftree[1 + agents.unique_id][agents.select_as_issue][0] = self.one_minus_one_check(links.agent2.belieftree[1 + agents.unique_id][agents.select_as_issue][0])
 
 							# print(' ')
 							# print('State change')
@@ -2110,15 +2140,15 @@ class Policymakers(Agent):
 
 							# Checks and transfer of partial knowledge
 							# 1-1 check
-							links.agent1.belieftree[0][agents.select_as_issue][0] = self.one_minus_one_check2(links.agent1.belieftree[0][agents.select_as_issue][0])
+							links.agent1.belieftree[0][agents.select_as_issue][0] = self.one_minus_one_check(links.agent1.belieftree[0][agents.select_as_issue][0])
 							# Providing partial knowledge - State problem - 0.2 range from real value: (Acting agent)
 							agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0] = links.agent1.belieftree[0][agents.select_as_issue][0] + (random.random()/5) - 0.1
 							# 1-1 check
-							agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0] = self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0])
+							agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0] = self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0])
 							# Providing partial knowledge - State problem - 0.2 range from real value: (Acted upon agent)
 							links.agent1.belieftree[1 + agents.unique_id][agents.select_as_issue][0] = agents.belieftree[0][agents.select_as_issue][0] + (random.random()/5) - 0.1
 							# 1-1 check
-							links.agent1.belieftree[1 + agents.unique_id][agents.select_as_issue][0] = self.one_minus_one_check2(links.agent1.belieftree[1 + agents.unique_id][agents.select_as_issue][0])
+							links.agent1.belieftree[1 + agents.unique_id][agents.select_as_issue][0] = self.one_minus_one_check(links.agent1.belieftree[1 + agents.unique_id][agents.select_as_issue][0])
 
 							# print(' ')
 							# print('State change')
@@ -2218,7 +2248,7 @@ class Policymakers(Agent):
 							# # print('New value of the CR: ' + str(agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0]))
 							# # 1-1 check
 							# agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = \
-							# 	self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0])
+							# 	self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0])
 							# # Update the preferences for that partial knowledge agent
 							# self.instrument_preference_update(agents, 1 + links.agent2.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
 							# # Calculation of the new grade - Based on the preference for the instrument
@@ -2278,7 +2308,7 @@ class Policymakers(Agent):
 							# # print('New value of the CR: ' + str(agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0]))
 							# # 1-1 check
 							# agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] = \
-							# 	self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0])
+							# 	self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0])
 							# # Update the preferences for that partial knowledge agent
 							# self.instrument_preference_update(agents, 1 + links.agent1.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
 							# # Calculation of the new grade - Based on the preference for the instrument
@@ -2349,7 +2379,7 @@ class Policymakers(Agent):
 							# 		agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][issue_of_interest[issue_num]][1] * actionWeight * resources_potency
 							# 	# 1-1 check
 							# 	agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1] = \
-							# 		self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1])
+							# 		self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1])
 							# 	# Re-updating the preference levels
 							# 	self.instrument_preference_update(agents, 1 + links.agent2.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
 							# 	# Calculation of the new grade
@@ -2415,7 +2445,7 @@ class Policymakers(Agent):
 							# 		agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[1][issue_of_interest[issue_num]][1] * actionWeight * resources_potency
 							# 	# 1-1 check
 							# 	agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1] = \
-							# 		self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1])
+							# 		self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1])
 							# 	# Re-updating the preference levels
 							# 	self.instrument_preference_update(agents, 1 + links.agent1.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
 							# 	# Calculation of the new grade
@@ -2488,7 +2518,7 @@ class Policymakers(Agent):
 							# 		agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][issue_of_interest[issue_num]][0] * actionWeight * resources_potency
 							# 	# 1-1 check
 							# 	agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0] = \
-							# 		self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0])
+							# 		self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0])
 							# 	# Re-updating the preference levels
 							# 	self.instrument_preference_update(agents, 1 + links.agent2.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
 							# 	# Calculation of the new grade
@@ -2554,7 +2584,7 @@ class Policymakers(Agent):
 							# 		agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][issue_of_interest[issue_num]][0] * actionWeight * resources_potency
 							# 	# 1-1 check
 							# 	agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0] = \
-							# 		self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0])
+							# 		self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0])
 							# 	# Re-updating the preference levels
 							# 	self.instrument_preference_update(agents, 1 + links.agent1.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
 							# 	# Calculation of the new grade
@@ -2757,17 +2787,17 @@ class Policymakers(Agent):
 							# Checks and transfer of partial knowledge
 							# 1-1 check
 							links.agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest)]][1] = \
-								self.one_minus_one_check2(links.agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest)]][1])		
+								self.one_minus_one_check(links.agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest)]][1])		
 							# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acting agent)
 							agents.belieftree[1 + links.agent2.unique_id][of_interest[1][best_action - len(cw_of_interest)] ][1] = links.agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest)] ][1] + (random.random()/5) - 0.1
 							# 1-1 check
 							agents.belieftree[1 + links.agent2.unique_id][of_interest[1][best_action - len(cw_of_interest)] ][1] = \
-								self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][of_interest[1][best_action - len(cw_of_interest)] ][1])
+								self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][of_interest[1][best_action - len(cw_of_interest)] ][1])
 							# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acted upon agent)
 							links.agent2.belieftree[1 + agents.unique_id][of_interest[1][best_action - len(cw_of_interest)] ][1] = agents.belieftree[0][of_interest[1][best_action - len(cw_of_interest)] ][1] + (random.random()/5) - 0.1
 							# 1-1 check
 							links.agent2.belieftree[1 + agents.unique_id][of_interest[1][best_action - len(cw_of_interest)] ][1] = \
-								self.one_minus_one_check2(links.agent2.belieftree[1 + agents.unique_id][of_interest[1][best_action - len(cw_of_interest)] ][1])
+								self.one_minus_one_check(links.agent2.belieftree[1 + agents.unique_id][of_interest[1][best_action - len(cw_of_interest)] ][1])
 
 						if links.agent2 == agents:
 
@@ -2804,17 +2834,17 @@ class Policymakers(Agent):
 							# Checks and transfer of partial knowledge
 							# 1-1 check
 							links.agent1.belieftree[0][of_interest[1][best_action - len(cw_of_interest)]][1] = \
-								self.one_minus_one_check2(links.agent1.belieftree[0][of_interest[1][best_action - len(cw_of_interest)]][1]   )		
+								self.one_minus_one_check(links.agent1.belieftree[0][of_interest[1][best_action - len(cw_of_interest)]][1]   )		
 							# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acting agent)
 							agents.belieftree[1 + links.agent1.unique_id][of_interest[1][best_action - len(cw_of_interest)]][1] = links.agent1.belieftree[0][of_interest[1][best_action - len(cw_of_interest)] ][1] + (random.random()/5) - 0.1
 							# 1-1 check
 							agents.belieftree[1 + links.agent1.unique_id][of_interest[1][best_action - len(cw_of_interest)]][1] = \
-								self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][of_interest[1][best_action - len(cw_of_interest)]][1])
+								self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][of_interest[1][best_action - len(cw_of_interest)]][1])
 							# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acted upon agent)
 							links.agent1.belieftree[1 + agents.unique_id][of_interest[1][best_action - len(cw_of_interest)] ][1] = agents.belieftree[0][of_interest[1][best_action - len(cw_of_interest)] ][1] + (random.random()/5) - 0.1
 							# 1-1 check
 							links.agent1.belieftree[1 + agents.unique_id][of_interest[1][best_action - len(cw_of_interest)] ][1] = \
-								self.one_minus_one_check2(links.agent1.belieftree[1 + agents.unique_id][of_interest[1][best_action - len(cw_of_interest)] ][1])
+								self.one_minus_one_check(links.agent1.belieftree[1 + agents.unique_id][of_interest[1][best_action - len(cw_of_interest)] ][1])
 
 					# If the index is in the first part of the list, then the aim influence action on the policy is the best
 					if best_action >= len(cw_of_interest) + len(issue_of_interest) - 1:
@@ -2864,19 +2894,19 @@ class Policymakers(Agent):
 							# Checks and transfer of partial knowledge
 							# 1-1 check
 							links.agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0] = \
-								self.one_minus_one_check2(links.agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0])
+								self.one_minus_one_check(links.agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0])
 							# Providing partial knowledge - Aim policy - 0.2 range from real value: (Acting agent)
 							agents.belieftree[1 + links.agent2.unique_id][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0] = \
 								links.agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0] + (random.random()/5) - 0.1
 							# 1-1 check
 							agents.belieftree[1 + links.agent2.unique_id][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0] = \
-								self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0])
+								self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0])
 							# Providing partial knowledge - Aim policy - 0.2 range from real value: (Acted upon agent)
 							links.agent2.belieftree[1 + agents.unique_id][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0] = \
 								agents.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0] + (random.random()/5) - 0.1
 							# 1-1 check
 							links.agent2.belieftree[1 + agents.unique_id][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0] = \
-								self.one_minus_one_check2(links.agent2.belieftree[1 + agents.unique_id][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0])
+								self.one_minus_one_check(links.agent2.belieftree[1 + agents.unique_id][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0])
 
 						if links.agent2 == agents:
 
@@ -2914,19 +2944,19 @@ class Policymakers(Agent):
 							# Checks and transfer of partial knowledge
 							# 1-1 check
 							links.agent1.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0] = \
-								self.one_minus_one_check2(links.agent1.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0])
+								self.one_minus_one_check(links.agent1.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0])
 							# Providing partial knowledge - Aim policy - 0.2 range from real value: (Acting agent)
 							agents.belieftree[1 + links.agent1.unique_id][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0] = \
 								links.agent1.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0] + (random.random()/5) - 0.1
 							# 1-1 check
 							agents.belieftree[1 + links.agent1.unique_id][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0] = \
-								self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0])
+								self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0])
 							# Providing partial knowledge - Aim policy - 0.2 range from real value: (Acted upon agent)
 							links.agent1.belieftree[1 + agents.unique_id][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0] = \
 								agents.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0] + (random.random()/5) - 0.1
 							# 1-1 check
 							links.agent1.belieftree[1 + agents.unique_id][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0] = \
-								self.one_minus_one_check2(links.agent1.belieftree[1 + agents.unique_id][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0])
+								self.one_minus_one_check(links.agent1.belieftree[1 + agents.unique_id][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0])
 
 			# print('Resources left: ' + str(agents.resources_actions))
 			agents.resources_actions -= agents.resources[0] * resources_weight_action
@@ -3178,17 +3208,17 @@ class Policymakers(Agent):
 								# print('After: ' + str(links.agent2.belieftree[0][best_action][0]))
 								# 1-1 check
 								links.agent2.belieftree[0][best_action][0] = \
-									self.one_minus_one_check2(links.agent2.belieftree[0][best_action][0])
+									self.one_minus_one_check(links.agent2.belieftree[0][best_action][0])
 								# Providing partial knowledge - Framing - 0.2 range from real value: (Acting agent)
 								agents.belieftree[1 + links.agent2.unique_id][best_action][0] = links.agent2.belieftree[0][best_action][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								agents.belieftree[1 + links.agent2.unique_id][best_action][0] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][best_action][0])
+									self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][best_action][0])
 								# Providing partial knowledge - Framing - 0.2 range from real value: (Acted upon agent)
 								links.agent2.belieftree[1 + agents.unique_id][best_action][0] = agents.belieftree[0][best_action][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent2.belieftree[1 + agents.unique_id][best_action][0] = \
-									self.one_minus_one_check2(links.agent2.belieftree[1 + agents.unique_id][best_action][0])
+									self.one_minus_one_check(links.agent2.belieftree[1 + agents.unique_id][best_action][0])
 
 								# print(' ')
 								# print('Causal change')
@@ -3204,17 +3234,17 @@ class Policymakers(Agent):
 								# print('After: ' + str(links.agent1.belieftree[0][best_action][0]))
 								# 1-1 check
 								links.agent1.belieftree[0][best_action][0] = \
-									self.one_minus_one_check2(links.agent1.belieftree[0][best_action][0])
+									self.one_minus_one_check(links.agent1.belieftree[0][best_action][0])
 								# Providing partial knowledge - Framing - 0.2 range from real value: (Acting agent)
 								agents.belieftree[1 + links.agent1.unique_id][best_action][0] = links.agent1.belieftree[0][best_action][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								agents.belieftree[1 + links.agent1.unique_id][best_action][0] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][best_action][0])
+									self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][best_action][0])
 								# Providing partial knowledge - Framing - 0.2 range from real value: (Acted upon agent)
 								links.agent1.belieftree[1 + agents.unique_id][best_action][0] = agents.belieftree[0][best_action][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent1.belieftree[1 + agents.unique_id][best_action][0] = \
-									self.one_minus_one_check2(links.agent1.belieftree[1 + agents.unique_id][best_action][0])
+									self.one_minus_one_check(links.agent1.belieftree[1 + agents.unique_id][best_action][0])
 
 								# print(' ')
 								# print('Causal change')
@@ -3234,17 +3264,17 @@ class Policymakers(Agent):
 								# print('After: ' + str(links.agent2.belieftree[0][agents.select_problem_3S_as][1]))
 								# 1-1 check
 								links.agent2.belieftree[0][agents.select_problem_3S_as][1] = \
-									self.one_minus_one_check2(links.agent2.belieftree[0][agents.select_problem_3S_as][1])
+									self.one_minus_one_check(links.agent2.belieftree[0][agents.select_problem_3S_as][1])
 								# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acting agent)
 								agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_as][1] = links.agent2.belieftree[0][agents.select_problem_3S_as][1]
 								# 1-1 check
 								agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_as][1] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_as][1])
+									self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_as][1])
 								# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acted upon agent)
 								links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][1] = agents.belieftree[0][agents.select_problem_3S_as][1] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][1] = \
-									self.one_minus_one_check2(links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][1])
+									self.one_minus_one_check(links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][1])
 
 								# print(' ')
 								# print('Aim change')
@@ -3258,17 +3288,17 @@ class Policymakers(Agent):
 								# print('After: ' + str(links.agent1.belieftree[0][agents.select_problem_3S_as][1]))
 								# 1-1 check
 								links.agent1.belieftree[0][agents.select_problem_3S_as][1] = \
-									self.one_minus_one_check2(links.agent1.belieftree[0][agents.select_problem_3S_as][1])
+									self.one_minus_one_check(links.agent1.belieftree[0][agents.select_problem_3S_as][1])
 								# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acting agent)
 								agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_as][1] = links.agent2.belieftree[0][agents.select_problem_3S_as][1]
 								# 1-1 check
 								agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_as][1] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_as][1])
+									self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_as][1])
 								# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acted upon agent)
 								links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][1] = agents.belieftree[0][agents.select_problem_3S_as][1] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][1] = \
-									self.one_minus_one_check2(links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][1])
+									self.one_minus_one_check(links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][1])
 
 
 						# If the index is in the first part of the list, then the state influence action is the best
@@ -3283,17 +3313,17 @@ class Policymakers(Agent):
 									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent2.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								links.agent2.belieftree[0][agents.select_problem_3S_as][0] = \
-									self.one_minus_one_check2(links.agent2.belieftree[0][agents.select_problem_3S_as][0])
+									self.one_minus_one_check(links.agent2.belieftree[0][agents.select_problem_3S_as][0])
 								# Providing partial knowledge - State problem - 0.2 range from real value: (Acting agent)
 								agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_as][0] = links.agent2.belieftree[0][agents.select_problem_3S_as][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_as][0] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_as][0])
+									self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_as][0])
 								# Providing partial knowledge - State problem - 0.2 range from real value: (Acted upon agent)
 								links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][0] = agents.belieftree[0][agents.select_problem_3S_as][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][0] = \
-									self.one_minus_one_check2(links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][0])
+									self.one_minus_one_check(links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][0])
 
 								# print(' ')
 								# print('State change')
@@ -3306,17 +3336,17 @@ class Policymakers(Agent):
 								# print('After: ' + str(links.agent1.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								# 1-1 check
 								links.agent1.belieftree[0][agents.select_problem_3S_as][0] = \
-									self.one_minus_one_check2(links.agent1.belieftree[0][agents.select_problem_3S_as][0])
+									self.one_minus_one_check(links.agent1.belieftree[0][agents.select_problem_3S_as][0])
 								# Providing partial knowledge - State problem - 0.2 range from real value: (Acting agent)
 								agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_as][0] = links.agent1.belieftree[0][agents.select_problem_3S_as][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_as][0] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_as][0])
+									self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_as][0])
 								# Providing partial knowledge - State problem - 0.2 range from real value: (Acted upon agent)
 								links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][0] = agents.belieftree[0][agents.select_problem_3S_as][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][0] = \
-									self.one_minus_one_check2(links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][0])
+									self.one_minus_one_check(links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][0])
 
 								# print(' ')
 								# print('State change')
@@ -3347,17 +3377,17 @@ class Policymakers(Agent):
 								# print('After: ' + str(links.agent2.belieftree_policy[0][agents.select_policy_3S_as][best_action]))
 								# 1-1 check
 								links.agent2.belieftree_policy[0][agents.select_policy_3S_as][best_action] = \
-									self.one_minus_one_check2(links.agent2.belieftree_policy[0][agents.select_policy_3S_as][best_action])
+									self.one_minus_one_check(links.agent2.belieftree_policy[0][agents.select_policy_3S_as][best_action])
 								# Providing partial knowledge - Framing - 0.2 range from real value: (Acting agent)
 								agents.belieftree_policy[1 + links.agent2.unique_id][agents.select_policy_3S_as][best_action] = links.agent2.belieftree_policy[0][agents.select_policy_3S_as][best_action] + (random.random()/5) - 0.1
 								# 1-1 check
 								agents.belieftree_policy[1 + links.agent2.unique_id][agents.select_policy_3S_as][best_action] = \
-									self.one_minus_one_check2(agents.belieftree_policy[1 + links.agent2.unique_id][agents.select_policy_3S_as][best_action])
+									self.one_minus_one_check(agents.belieftree_policy[1 + links.agent2.unique_id][agents.select_policy_3S_as][best_action])
 								# Providing partial knowledge - Framing - 0.2 range from real value: (Acted upon agent)
 								links.agent2.belieftree_policy[1 + agents.unique_id][agents.select_policy_3S_as][best_action] = agents.belieftree_policy[0][agents.select_policy_3S_as][best_action] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent2.belieftree_policy[1 + agents.unique_id][agents.select_policy_3S_as][best_action] = \
-									self.one_minus_one_check2(links.agent2.belieftree_policy[1 + agents.unique_id][agents.select_policy_3S_as][best_action])
+									self.one_minus_one_check(links.agent2.belieftree_policy[1 + agents.unique_id][agents.select_policy_3S_as][best_action])
 
 								# print(' ')
 								# print('Causal change')
@@ -3374,17 +3404,17 @@ class Policymakers(Agent):
 								# print('After: ' + str(links.agent1.belieftree_policy[0][agents.select_policy_3S_as][best_action]))
 								# 1-1 check
 								links.agent1.belieftree_policy[0][agents.select_policy_3S_as][best_action] = \
-									self.one_minus_one_check2(links.agent1.belieftree_policy[0][agents.select_policy_3S_as][best_action])
+									self.one_minus_one_check(links.agent1.belieftree_policy[0][agents.select_policy_3S_as][best_action])
 								# Providing partial knowledge - Framing - 0.2 range from real value: (Acting agent)
 								agents.belieftree_policy[1 + links.agent1.unique_id][agents.select_policy_3S_as][best_action] = links.agent1.belieftree_policy[0][agents.select_policy_3S_as][best_action] + (random.random()/5) - 0.1
 								# 1-1 check
 								agents.belieftree_policy[1 + links.agent1.unique_id][agents.select_policy_3S_as][best_action] = \
-									self.one_minus_one_check2(agents.belieftree_policy[1 + links.agent1.unique_id][agents.select_policy_3S_as][best_action])
+									self.one_minus_one_check(agents.belieftree_policy[1 + links.agent1.unique_id][agents.select_policy_3S_as][best_action])
 								# Providing partial knowledge - Framing - 0.2 range from real value: (Acted upon agent)
 								links.agent1.belieftree_policy[1 + agents.unique_id][agents.select_policy_3S_as][best_action] = agents.belieftree_policy[0][agents.select_policy_3S_as][best_action] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent1.belieftree_policy[1 + agents.unique_id][agents.select_policy_3S_as][best_action] = \
-									self.one_minus_one_check2(links.agent1.belieftree_policy[1 + agents.unique_id][agents.select_policy_3S_as][best_action])
+									self.one_minus_one_check(links.agent1.belieftree_policy[1 + agents.unique_id][agents.select_policy_3S_as][best_action])
 
 								# print(' ')
 								# print('Causal change')
@@ -3404,17 +3434,17 @@ class Policymakers(Agent):
 								# print('After: ' + str(links.agent2.belieftree[0][agents.select_problem_3S_as][1]))
 								# 1-1 check
 								links.agent2.belieftree[0][agents.select_problem_3S_as][1] = \
-									self.one_minus_one_check2(links.agent2.belieftree[0][agents.select_problem_3S_as][1])
+									self.one_minus_one_check(links.agent2.belieftree[0][agents.select_problem_3S_as][1])
 								# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acting agent)
 								agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_as][1] = links.agent2.belieftree[0][agents.select_problem_3S_as][1]
 								# 1-1 check
 								agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_as][1] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_as][1])
+									self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_as][1])
 								# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acted upon agent)
 								links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][1] = agents.belieftree[0][agents.select_problem_3S_as][1] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][1] = \
-									self.one_minus_one_check2(links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][1])
+									self.one_minus_one_check(links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][1])
 
 								# print(' ')
 								# print('Aim change')
@@ -3428,17 +3458,17 @@ class Policymakers(Agent):
 								# print('After: ' + str(links.agent1.belieftree[0][agents.select_problem_3S_as][1]))
 								# 1-1 check
 								links.agent1.belieftree[0][agents.select_problem_3S_as][1] = \
-									self.one_minus_one_check2(links.agent1.belieftree[0][agents.select_problem_3S_as][1])
+									self.one_minus_one_check(links.agent1.belieftree[0][agents.select_problem_3S_as][1])
 								# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acting agent)
 								agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_as][1] = links.agent2.belieftree[0][agents.select_problem_3S_as][1]
 								# 1-1 check
 								agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_as][1] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_as][1])
+									self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_as][1])
 								# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acted upon agent)
 								links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][1] = agents.belieftree[0][agents.select_problem_3S_as][1] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][1] = \
-									self.one_minus_one_check2(links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][1])
+									self.one_minus_one_check(links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][1])
 
 
 						# If the index is in the first part of the list, then the state influence action is the best
@@ -3453,17 +3483,17 @@ class Policymakers(Agent):
 									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent2.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								links.agent2.belieftree[0][agents.select_problem_3S_as][0] = \
-									self.one_minus_one_check2(links.agent2.belieftree[0][agents.select_problem_3S_as][0])
+									self.one_minus_one_check(links.agent2.belieftree[0][agents.select_problem_3S_as][0])
 								# Providing partial knowledge - State problem - 0.2 range from real value: (Acting agent)
 								agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_as][0] = links.agent2.belieftree[0][agents.select_problem_3S_as][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_as][0] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_as][0])
+									self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_as][0])
 								# Providing partial knowledge - State problem - 0.2 range from real value: (Acted upon agent)
 								links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][0] = agents.belieftree[0][agents.select_problem_3S_as][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][0] = \
-									self.one_minus_one_check2(links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][0])
+									self.one_minus_one_check(links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][0])
 
 								# print(' ')
 								# print('State change')
@@ -3476,17 +3506,17 @@ class Policymakers(Agent):
 								# print('After: ' + str(links.agent1.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								# 1-1 check
 								links.agent1.belieftree[0][agents.select_problem_3S_as][0] = \
-									self.one_minus_one_check2(links.agent1.belieftree[0][agents.select_problem_3S_as][0])
+									self.one_minus_one_check(links.agent1.belieftree[0][agents.select_problem_3S_as][0])
 								# Providing partial knowledge - State problem - 0.2 range from real value: (Acting agent)
 								agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_as][0] = links.agent1.belieftree[0][agents.select_problem_3S_as][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_as][0] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_as][0])
+									self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_as][0])
 								# Providing partial knowledge - State problem - 0.2 range from real value: (Acted upon agent)
 								links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][0] = agents.belieftree[0][agents.select_problem_3S_as][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][0] = \
-									self.one_minus_one_check2(links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][0])
+									self.one_minus_one_check(links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][0])
 
 								# print(' ')
 								# print('State change')
@@ -3746,17 +3776,17 @@ class Policymakers(Agent):
 								# print('After: ' + str(links.agent2.belieftree[0][best_action][0]))
 								# 1-1 check
 								links.agent2.belieftree[0][best_action][0] = \
-									self.one_minus_one_check2(links.agent2.belieftree[0][best_action][0])
+									self.one_minus_one_check(links.agent2.belieftree[0][best_action][0])
 								# Providing partial knowledge - Framing - 0.2 range from real value: (Acting agent)
 								agents.belieftree[1 + links.agent2.unique_id][best_action][0] = links.agent2.belieftree[0][best_action][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								agents.belieftree[1 + links.agent2.unique_id][best_action][0] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][best_action][0])
+									self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][best_action][0])
 								# Providing partial knowledge - Framing - 0.2 range from real value: (Acted upon agent)
 								links.agent2.belieftree[1 + agents.unique_id][best_action][0] = agents.belieftree[0][best_action][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent2.belieftree[1 + agents.unique_id][best_action][0] = \
-									self.one_minus_one_check2(links.agent2.belieftree[1 + agents.unique_id][best_action][0])
+									self.one_minus_one_check(links.agent2.belieftree[1 + agents.unique_id][best_action][0])
 
 								# print(' ')
 								# print('Causal change')
@@ -3771,17 +3801,17 @@ class Policymakers(Agent):
 								# print('After: ' + str(links.agent1.belieftree[0][best_action][0]))
 								# 1-1 check
 								links.agent1.belieftree[0][best_action][0] = \
-									self.one_minus_one_check2(links.agent1.belieftree[0][best_action][0])
+									self.one_minus_one_check(links.agent1.belieftree[0][best_action][0])
 								# Providing partial knowledge - Framing - 0.2 range from real value: (Acting agent)
 								agents.belieftree[1 + links.agent1.unique_id][best_action][0] = links.agent1.belieftree[0][best_action][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								agents.belieftree[1 + links.agent1.unique_id][best_action][0] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][best_action][0])
+									self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][best_action][0])
 								# Providing partial knowledge - Framing - 0.2 range from real value: (Acted upon agent)
 								links.agent1.belieftree[1 + agents.unique_id][best_action][0] = agents.belieftree[0][best_action][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent1.belieftree[1 + agents.unique_id][best_action][0] = \
-									self.one_minus_one_check2(links.agent1.belieftree[1 + agents.unique_id][best_action][0])
+									self.one_minus_one_check(links.agent1.belieftree[1 + agents.unique_id][best_action][0])
 
 								# print(' ')
 								# print('Causal change')
@@ -3801,17 +3831,17 @@ class Policymakers(Agent):
 								# print('After: ' + str(links.agent2.belieftree[0][agents.select_problem_3S_pf][1]))
 								# 1-1 check
 								links.agent2.belieftree[0][agents.select_problem_3S_pf][1] = \
-									self.one_minus_one_check2(links.agent2.belieftree[0][agents.select_problem_3S_pf][1])
+									self.one_minus_one_check(links.agent2.belieftree[0][agents.select_problem_3S_pf][1])
 								# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acting agent)
 								agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_pf][1] = links.agent2.belieftree[0][agents.select_problem_3S_pf][1]
 								# 1-1 check
 								agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_pf][1] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_pf][1])
+									self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_pf][1])
 								# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acted upon agent)
 								links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][1] = agents.belieftree[0][agents.select_problem_3S_pf][1] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][1] = \
-									self.one_minus_one_check2(links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][1])
+									self.one_minus_one_check(links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][1])
 
 								# print(' ')
 								# print('Aim change')
@@ -3824,17 +3854,17 @@ class Policymakers(Agent):
 								# print('After: ' + str(links.agent1.belieftree[0][agents.select_problem_3S_pf][1]))
 								# 1-1 check
 								links.agent1.belieftree[0][agents.select_problem_3S_pf][1] = \
-									self.one_minus_one_check2(links.agent1.belieftree[0][agents.select_problem_3S_pf][1])
+									self.one_minus_one_check(links.agent1.belieftree[0][agents.select_problem_3S_pf][1])
 								# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acting agent)
 								agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_pf][1] = links.agent2.belieftree[0][agents.select_problem_3S_pf][1]
 								# 1-1 check
 								agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_pf][1] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_pf][1])
+									self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_pf][1])
 								# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acted upon agent)
 								links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][1] = agents.belieftree[0][agents.select_problem_3S_pf][1] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][1] = \
-									self.one_minus_one_check2(links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][1])
+									self.one_minus_one_check(links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][1])
 
 
 						# If the index is in the first part of the list, then the state influence action is the best
@@ -3849,17 +3879,17 @@ class Policymakers(Agent):
 									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent2.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								links.agent2.belieftree[0][agents.select_problem_3S_pf][0] = \
-									self.one_minus_one_check2(links.agent2.belieftree[0][agents.select_problem_3S_pf][0])
+									self.one_minus_one_check(links.agent2.belieftree[0][agents.select_problem_3S_pf][0])
 								# Providing partial knowledge - State problem - 0.2 range from real value: (Acting agent)
 								agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_pf][0] = links.agent2.belieftree[0][agents.select_problem_3S_pf][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_pf][0] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_pf][0])
+									self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_pf][0])
 								# Providing partial knowledge - State problem - 0.2 range from real value: (Acted upon agent)
 								links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][0] = agents.belieftree[0][agents.select_problem_3S_pf][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][0] = \
-									self.one_minus_one_check2(links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][0])
+									self.one_minus_one_check(links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][0])
 
 								# print(' ')
 								# print('State change')
@@ -3872,17 +3902,17 @@ class Policymakers(Agent):
 								# print('After: ' + str(links.agent1.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								# 1-1 check
 								links.agent1.belieftree[0][agents.select_problem_3S_pf][0] = \
-									self.one_minus_one_check2(links.agent1.belieftree[0][agents.select_problem_3S_pf][0])
+									self.one_minus_one_check(links.agent1.belieftree[0][agents.select_problem_3S_pf][0])
 								# Providing partial knowledge - State problem - 0.2 range from real value: (Acting agent)
 								agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_pf][0] = links.agent1.belieftree[0][agents.select_problem_3S_pf][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_pf][0] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_pf][0])
+									self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_pf][0])
 								# Providing partial knowledge - State problem - 0.2 range from real value: (Acted upon agent)
 								links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][0] = agents.belieftree[0][agents.select_problem_3S_pf][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][0] = \
-									self.one_minus_one_check2(links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][0])
+									self.one_minus_one_check(links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][0])
 
 								# print(' ')
 								# print('State change')
@@ -3913,17 +3943,17 @@ class Policymakers(Agent):
 								# print('After: ' + str(links.agent2.belieftree_instrument[0][agents.select_policy_3S_pf][best_action]))
 								# 1-1 check
 								links.agent2.belieftree_instrument[0][agents.select_policy_3S_pf][best_action] = \
-									self.one_minus_one_check2(links.agent2.belieftree_instrument[0][agents.select_policy_3S_pf][best_action])
+									self.one_minus_one_check(links.agent2.belieftree_instrument[0][agents.select_policy_3S_pf][best_action])
 								# Providing partial knowledge - Framing - 0.2 range from real value: (Acting agent)
 								agents.belieftree_instrument[1 + links.agent2.unique_id][agents.select_policy_3S_pf][best_action] = links.agent2.belieftree_instrument[0][agents.select_policy_3S_pf][best_action] + (random.random()/5) - 0.1
 								# 1-1 check
 								agents.belieftree_instrument[1 + links.agent2.unique_id][agents.select_policy_3S_pf][best_action] = \
-									self.one_minus_one_check2(agents.belieftree_instrument[1 + links.agent2.unique_id][agents.select_policy_3S_pf][best_action])
+									self.one_minus_one_check(agents.belieftree_instrument[1 + links.agent2.unique_id][agents.select_policy_3S_pf][best_action])
 								# Providing partial knowledge - Framing - 0.2 range from real value: (Acted upon agent)
 								links.agent2.belieftree_instrument[1 + agents.unique_id][agents.select_policy_3S_pf][best_action] = agents.belieftree_instrument[0][agents.select_policy_3S_pf][best_action] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent2.belieftree_instrument[1 + agents.unique_id][agents.select_policy_3S_pf][best_action] = \
-									self.one_minus_one_check2(links.agent2.belieftree_instrument[1 + agents.unique_id][agents.select_policy_3S_pf][best_action])
+									self.one_minus_one_check(links.agent2.belieftree_instrument[1 + agents.unique_id][agents.select_policy_3S_pf][best_action])
 
 								# print(' ')
 								# print('Causal change')
@@ -3940,17 +3970,17 @@ class Policymakers(Agent):
 								# print('After: ' + str(links.agent1.belieftree_instrument[0][agents.select_policy_3S_pf][best_action]))
 								# 1-1 check
 								links.agent1.belieftree_instrument[0][agents.select_policy_3S_pf][best_action] = \
-									self.one_minus_one_check2(links.agent1.belieftree_instrument[0][agents.select_policy_3S_pf][best_action])
+									self.one_minus_one_check(links.agent1.belieftree_instrument[0][agents.select_policy_3S_pf][best_action])
 								# Providing partial knowledge - Framing - 0.2 range from real value: (Acting agent)
 								agents.belieftree_instrument[1 + links.agent1.unique_id][agents.select_policy_3S_pf][best_action] = links.agent1.belieftree_instrument[0][agents.select_policy_3S_pf][best_action] + (random.random()/5) - 0.1
 								# 1-1 check
 								agents.belieftree_instrument[1 + links.agent1.unique_id][agents.select_policy_3S_pf][best_action] = \
-									self.one_minus_one_check2(agents.belieftree_instrument[1 + links.agent1.unique_id][agents.select_policy_3S_pf][best_action])
+									self.one_minus_one_check(agents.belieftree_instrument[1 + links.agent1.unique_id][agents.select_policy_3S_pf][best_action])
 								# Providing partial knowledge - Framing - 0.2 range from real value: (Acted upon agent)
 								links.agent1.belieftree_instrument[1 + agents.unique_id][agents.select_policy_3S_pf][best_action] = agents.belieftree_instrument[0][agents.select_policy_3S_pf][best_action] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent1.belieftree_instrument[1 + agents.unique_id][agents.select_policy_3S_pf][best_action] = \
-									self.one_minus_one_check2(links.agent1.belieftree_instrument[1 + agents.unique_id][agents.select_policy_3S_pf][best_action])
+									self.one_minus_one_check(links.agent1.belieftree_instrument[1 + agents.unique_id][agents.select_policy_3S_pf][best_action])
 
 								# print(' ')
 								# print('Causal change')
@@ -3970,17 +4000,17 @@ class Policymakers(Agent):
 								# print('After: ' + str(links.agent2.belieftree[0][agents.select_problem_3S_pf][1]))
 								# 1-1 check
 								links.agent2.belieftree[0][agents.select_problem_3S_pf][1] = \
-									self.one_minus_one_check2(links.agent2.belieftree[0][agents.select_problem_3S_pf][1])
+									self.one_minus_one_check(links.agent2.belieftree[0][agents.select_problem_3S_pf][1])
 								# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acting agent)
 								agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_pf][1] = links.agent2.belieftree[0][agents.select_problem_3S_pf][1]
 								# 1-1 check
 								agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_pf][1] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_pf][1])
+									self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_pf][1])
 								# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acted upon agent)
 								links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][1] = agents.belieftree[0][agents.select_problem_3S_pf][1] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][1] = \
-									self.one_minus_one_check2(links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][1])
+									self.one_minus_one_check(links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][1])
 
 								# print(' ')
 								# print('Aim change')
@@ -3994,17 +4024,17 @@ class Policymakers(Agent):
 								# print('After: ' + str(links.agent1.belieftree[0][agents.select_problem_3S_pf][1]))
 								# 1-1 check
 								links.agent1.belieftree[0][agents.select_problem_3S_pf][1] = \
-									self.one_minus_one_check2(links.agent1.belieftree[0][agents.select_problem_3S_pf][1])
+									self.one_minus_one_check(links.agent1.belieftree[0][agents.select_problem_3S_pf][1])
 								# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acting agent)
 								agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_pf][1] = links.agent2.belieftree[0][agents.select_problem_3S_pf][1]
 								# 1-1 check
 								agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_pf][1] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_pf][1])
+									self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_pf][1])
 								# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acted upon agent)
 								links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][1] = agents.belieftree[0][agents.select_problem_3S_pf][1] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][1] = \
-									self.one_minus_one_check2(links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][1])
+									self.one_minus_one_check(links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][1])
 
 
 						# If the index is in the first part of the list, then the state influence action is the best
@@ -4019,17 +4049,17 @@ class Policymakers(Agent):
 									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent2.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								links.agent2.belieftree[0][agents.select_problem_3S_pf][0] = \
-									self.one_minus_one_check2(links.agent2.belieftree[0][agents.select_problem_3S_pf][0])
+									self.one_minus_one_check(links.agent2.belieftree[0][agents.select_problem_3S_pf][0])
 								# Providing partial knowledge - State problem - 0.2 range from real value: (Acting agent)
 								agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_pf][0] = links.agent2.belieftree[0][agents.select_problem_3S_pf][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_pf][0] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_pf][0])
+									self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_pf][0])
 								# Providing partial knowledge - State problem - 0.2 range from real value: (Acted upon agent)
 								links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][0] = agents.belieftree[0][agents.select_problem_3S_pf][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][0] = \
-									self.one_minus_one_check2(links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][0])
+									self.one_minus_one_check(links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][0])
 
 								# print(' ')
 								# print('State change')
@@ -4042,17 +4072,17 @@ class Policymakers(Agent):
 								# print('After: ' + str(links.agent1.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								# 1-1 check
 								links.agent1.belieftree[0][agents.select_problem_3S_pf][0] = \
-									self.one_minus_one_check2(links.agent1.belieftree[0][agents.select_problem_3S_pf][0])
+									self.one_minus_one_check(links.agent1.belieftree[0][agents.select_problem_3S_pf][0])
 								# Providing partial knowledge - State problem - 0.2 range from real value: (Acting agent)
 								agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_pf][0] = links.agent1.belieftree[0][agents.select_problem_3S_pf][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_pf][0] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_pf][0])
+									self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_pf][0])
 								# Providing partial knowledge - State problem - 0.2 range from real value: (Acted upon agent)
 								links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][0] = agents.belieftree[0][agents.select_problem_3S_pf][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][0] = \
-									self.one_minus_one_check2(links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][0])
+									self.one_minus_one_check(links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][0])
 
 								# print(' ')
 								# print('State change')
@@ -4296,7 +4326,16 @@ class Policymakers(Agent):
 					else:
 						agent.instrument_preferences[who][i] = 0
 
-	def one_minus_one_check2(self, to_be_checked_parameter):
+	def one_minus_one_check(self, to_be_checked_parameter):
+
+		"""
+		One minus one check function
+		===========================
+
+		This function checks that a certain values does not got over one
+		and does not go below one due to the randomisation.
+		
+		"""
 
 		checked_parameter = 0
 		if to_be_checked_parameter > 1:
@@ -4486,7 +4525,7 @@ class Policyentres(Agent):
 							# 	agents.resources[0] * resources_weight_action * links.aware * resources_potency
 							# # 1-1 check
 							# agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = \
-							# 	self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0])
+							# 	self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0])
 							# # Update of the preferences for that partial knowledge agent
 							# self.preference_udapte_as_PC(agents, 1 + links.agent2.unique_id, len_DC, len_PC, len_S)
 							# # Calculation of the new grade - we check selected issue using partial knowledge updates
@@ -4544,7 +4583,7 @@ class Policyentres(Agent):
 							# 	agents.resources[0] * resources_weight_action * links.aware * resources_potency
 							# # 1-1 check
 							# agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] = \
-							# 	self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0])
+							# 	self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0])
 							# # Update of the preferences for that partial knowledge agent
 							# self.preference_udapte_as_PC(agents, 1 + links.agent1.unique_id, len_DC, len_PC, len_S)
 							# # Calculation of the new grade - we check selected issue using partial knowledge updates
@@ -4602,7 +4641,7 @@ class Policyentres(Agent):
 						# 	agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][agents.select_as_issue][1] * actionWeight * resources_potency
 						# # 1-1 check
 						# agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1] = \
-						# 	self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1])
+						# 	self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1])
 						# # Update of the preferences for that partial knowledge agent
 						# self.preference_udapte_as_PC(agents, 1 + links.agent2.unique_id, len_DC, len_PC, len_S)
 						# # Calculation of the new grade - we check selected issue using partial knowledge updates
@@ -4659,7 +4698,7 @@ class Policyentres(Agent):
 						# 	agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[1][agents.select_as_issue][1] * actionWeight * resources_potency
 						# # 1-1 check
 						# agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1] = \
-						# 	self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1])
+						# 	self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1])
 						# # Update of the preferences for that partial knowledge agent
 						# self.preference_udapte_as_PC(agents, 1 + links.agent1.unique_id, len_DC, len_PC, len_S)
 						# # Calculation of the new grade - we check selected issue using partial knowledge updates
@@ -4718,7 +4757,7 @@ class Policyentres(Agent):
 						# 	agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][agents.select_as_issue][0] * actionWeight * resources_potency
 						# # 1-1 check
 						# agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0] = \
-						# 	self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0])
+						# 	self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0])
 						# # Update of the preferences for that partial knowledge agent
 						# self.preference_udapte_as_PC(agents, 1 + links.agent2.unique_id, len_DC, len_PC, len_S)
 						# # Calculation of the new grade - we check selected issue using partial knowledge updates
@@ -4774,7 +4813,7 @@ class Policyentres(Agent):
 						# 	agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[1][agents.select_as_issue][0] * actionWeight * resources_potency
 						# # 1-1 check
 						# agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0] = \
-						# 	self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0])
+						# 	self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0])
 						# # Update of the preferences for that partial knowledge agent
 						# self.preference_udapte_as_PC(agents, 1 + links.agent1.unique_id, len_DC, len_PC, len_S)
 						# # Calculation of the new grade - we check selected issue using partial knowledge updates
@@ -4883,15 +4922,15 @@ class Policyentres(Agent):
 							
 							# Checks and transfer of partial knowledge
 							# 1-1 check
-							links.agent2.belieftree[0][best_action][0] = self.one_minus_one_check2(links.agent2.belieftree[0][best_action][0])
+							links.agent2.belieftree[0][best_action][0] = self.one_minus_one_check(links.agent2.belieftree[0][best_action][0])
 							# Providing partial knowledge - Framing - 0.2 range from real value: (Acting agent)
 							agents.belieftree[1 + links.agent2.unique_id][best_action][0] = links.agent2.belieftree[0][best_action][0] + (random.random()/5) - 0.1
 							# 1-1 check
-							agents.belieftree[1 + links.agent2.unique_id][best_action][0] = self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][best_action][0])
+							agents.belieftree[1 + links.agent2.unique_id][best_action][0] = self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][best_action][0])
 							# Providing partial knowledge - Framing - 0.2 range from real value: (Acted upon agent)
 							links.agent2.belieftree[1 + agents.unique_id][best_action][0] = agents.belieftree[0][best_action][0] + (random.random()/5) - 0.1
 							# 1-1 check
-							links.agent2.belieftree[1 + agents.unique_id][best_action][0] = self.one_minus_one_check2(links.agent2.belieftree[1 + agents.unique_id][best_action][0])
+							links.agent2.belieftree[1 + agents.unique_id][best_action][0] = self.one_minus_one_check(links.agent2.belieftree[1 + agents.unique_id][best_action][0])
 
 							# print(' ')
 							# print('Causal change')
@@ -4928,15 +4967,15 @@ class Policyentres(Agent):
 
 							# Checks and transfer of partial knowledge
 							# 1-1 check
-							links.agent1.belieftree[0][best_action][0] = self.one_minus_one_check2(links.agent1.belieftree[0][best_action][0])
+							links.agent1.belieftree[0][best_action][0] = self.one_minus_one_check(links.agent1.belieftree[0][best_action][0])
 							# Providing partial knowledge - Framing - 0.2 range from real value: (Acting agent)
 							agents.belieftree[1 + links.agent1.unique_id][best_action][0] = links.agent1.belieftree[0][best_action][0] + (random.random()/5) - 0.1
 							# 1-1 check
-							agents.belieftree[1 + links.agent1.unique_id][best_action][0] = self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][best_action][0])
+							agents.belieftree[1 + links.agent1.unique_id][best_action][0] = self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][best_action][0])
 							# Providing partial knowledge - Framing - 0.2 range from real value: (Acted upon agent)
 							links.agent1.belieftree[1 + agents.unique_id][best_action][0] = agents.belieftree[0][best_action][0] + (random.random()/5) - 0.1
 							# 1-1 check
-							links.agent1.belieftree[1 + agents.unique_id][best_action][0] = self.one_minus_one_check2(links.agent1.belieftree[1 + agents.unique_id][best_action][0])
+							links.agent1.belieftree[1 + agents.unique_id][best_action][0] = self.one_minus_one_check(links.agent1.belieftree[1 + agents.unique_id][best_action][0])
 
 							# print(' ')
 							# print('Causal change')
@@ -4978,15 +5017,15 @@ class Policyentres(Agent):
 
 							# Checks and transfer of partial knowledge
 							# 1-1 check
-							links.agent2.belieftree[0][agents.select_as_issue][1] = self.one_minus_one_check2(links.agent2.belieftree[0][agents.select_as_issue][1])
+							links.agent2.belieftree[0][agents.select_as_issue][1] = self.one_minus_one_check(links.agent2.belieftree[0][agents.select_as_issue][1])
 							# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acting agent)
 							agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1] = links.agent2.belieftree[0][agents.select_as_issue][1]
 							# 1-1 check
-							agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1] = self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1])
+							agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1] = self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][1])
 							# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acted upon agent)
 							links.agent2.belieftree[1 + agents.unique_id][agents.select_as_issue][1] = agents.belieftree[0][agents.select_as_issue][1] + (random.random()/5) - 0.1
 							# 1-1 check
-							links.agent2.belieftree[1 + agents.unique_id][agents.select_as_issue][1] = self.one_minus_one_check2(links.agent2.belieftree[1 + agents.unique_id][agents.select_as_issue][1])
+							links.agent2.belieftree[1 + agents.unique_id][agents.select_as_issue][1] = self.one_minus_one_check(links.agent2.belieftree[1 + agents.unique_id][agents.select_as_issue][1])
 
 							# print(' ')
 							# print('Aim change')
@@ -5021,15 +5060,15 @@ class Policyentres(Agent):
 
 							# Checks and transfer of partial knowledge
 							# 1-1 check
-							links.agent1.belieftree[0][agents.select_as_issue][1] = self.one_minus_one_check2(links.agent1.belieftree[0][agents.select_as_issue][1])
+							links.agent1.belieftree[0][agents.select_as_issue][1] = self.one_minus_one_check(links.agent1.belieftree[0][agents.select_as_issue][1])
 							# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acting agent)
 							agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1] = links.agent2.belieftree[0][agents.select_as_issue][1]
 							# 1-1 check
-							agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1] = self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1])
+							agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1] = self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][1])
 							# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acted upon agent)
 							links.agent1.belieftree[1 + agents.unique_id][agents.select_as_issue][1] = agents.belieftree[0][agents.select_as_issue][1] + (random.random()/5) - 0.1
 							# 1-1 check
-							links.agent1.belieftree[1 + agents.unique_id][agents.select_as_issue][1] = self.one_minus_one_check2(links.agent1.belieftree[1 + agents.unique_id][agents.select_as_issue][1])
+							links.agent1.belieftree[1 + agents.unique_id][agents.select_as_issue][1] = self.one_minus_one_check(links.agent1.belieftree[1 + agents.unique_id][agents.select_as_issue][1])
 
 
 					# If the index is in the first part of the list, then the state influence action is the best
@@ -5066,15 +5105,15 @@ class Policyentres(Agent):
 							# print('After: ' + str(links.agent2.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 
 							# Checks and transfer of partial knowledge
-							links.agent2.belieftree[0][agents.select_as_issue][0] = self.one_minus_one_check2(links.agent2.belieftree[0][agents.select_as_issue][0])
+							links.agent2.belieftree[0][agents.select_as_issue][0] = self.one_minus_one_check(links.agent2.belieftree[0][agents.select_as_issue][0])
 							# Providing partial knowledge - State problem - 0.2 range from real value: (Acting agent)
 							agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0] = links.agent2.belieftree[0][agents.select_as_issue][0] + (random.random()/5) - 0.1
 							# 1-1 check
-							agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0] = self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0])
+							agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0] = self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][agents.select_as_issue][0])
 							# Providing partial knowledge - State problem - 0.2 range from real value: (Acted upon agent)
 							links.agent2.belieftree[1 + agents.unique_id][agents.select_as_issue][0] = agents.belieftree[0][agents.select_as_issue][0] + (random.random()/5) - 0.1
 							# 1-1 check
-							links.agent2.belieftree[1 + agents.unique_id][agents.select_as_issue][0] = self.one_minus_one_check2(links.agent2.belieftree[1 + agents.unique_id][agents.select_as_issue][0])
+							links.agent2.belieftree[1 + agents.unique_id][agents.select_as_issue][0] = self.one_minus_one_check(links.agent2.belieftree[1 + agents.unique_id][agents.select_as_issue][0])
 
 							# print(' ')
 							# print('State change')
@@ -5109,15 +5148,15 @@ class Policyentres(Agent):
 
 							# Checks and transfer of partial knowledge
 							# 1-1 check
-							links.agent1.belieftree[0][agents.select_as_issue][0] = self.one_minus_one_check2(links.agent1.belieftree[0][agents.select_as_issue][0])
+							links.agent1.belieftree[0][agents.select_as_issue][0] = self.one_minus_one_check(links.agent1.belieftree[0][agents.select_as_issue][0])
 							# Providing partial knowledge - State problem - 0.2 range from real value: (Acting agent)
 							agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0] = links.agent1.belieftree[0][agents.select_as_issue][0] + (random.random()/5) - 0.1
 							# 1-1 check
-							agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0] = self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0])
+							agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0] = self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][agents.select_as_issue][0])
 							# Providing partial knowledge - State problem - 0.2 range from real value: (Acted upon agent)
 							links.agent1.belieftree[1 + agents.unique_id][agents.select_as_issue][0] = agents.belieftree[0][agents.select_as_issue][0] + (random.random()/5) - 0.1
 							# 1-1 check
-							links.agent1.belieftree[1 + agents.unique_id][agents.select_as_issue][0] = self.one_minus_one_check2(links.agent1.belieftree[1 + agents.unique_id][agents.select_as_issue][0])
+							links.agent1.belieftree[1 + agents.unique_id][agents.select_as_issue][0] = self.one_minus_one_check(links.agent1.belieftree[1 + agents.unique_id][agents.select_as_issue][0])
 
 							# print(' ')
 							# print('State change')
@@ -5217,7 +5256,7 @@ class Policyentres(Agent):
 							# # print('New value of the CR: ' + str(agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0]))
 							# # 1-1 check
 							# agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0] = \
-							# 	self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0])
+							# 	self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][cw_of_interest[cw]][0])
 							# # Update the preferences for that partial knowledge agent
 							# self.instrument_preference_update(agents, 1 + links.agent2.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
 							# # Calculation of the new grade - Based on the preference for the instrument
@@ -5277,7 +5316,7 @@ class Policyentres(Agent):
 							# # print('New value of the CR: ' + str(agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0]))
 							# # 1-1 check
 							# agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0] = \
-							# 	self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0])
+							# 	self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][cw_of_interest[cw]][0])
 							# # Update the preferences for that partial knowledge agent
 							# self.instrument_preference_update(agents, 1 + links.agent1.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
 							# # Calculation of the new grade - Based on the preference for the instrument
@@ -5348,7 +5387,7 @@ class Policyentres(Agent):
 							# 		agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][issue_of_interest[issue_num]][1] * actionWeight * resources_potency
 							# 	# 1-1 check
 							# 	agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1] = \
-							# 		self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1])
+							# 		self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][1])
 							# 	# Re-updating the preference levels
 							# 	self.instrument_preference_update(agents, 1 + links.agent2.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
 							# 	# Calculation of the new grade
@@ -5414,7 +5453,7 @@ class Policyentres(Agent):
 							# 		agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[1][issue_of_interest[issue_num]][1] * actionWeight * resources_potency
 							# 	# 1-1 check
 							# 	agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1] = \
-							# 		self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1])
+							# 		self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][1])
 							# 	# Re-updating the preference levels
 							# 	self.instrument_preference_update(agents, 1 + links.agent1.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
 							# 	# Calculation of the new grade
@@ -5487,7 +5526,7 @@ class Policyentres(Agent):
 							# 		agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][issue_of_interest[issue_num]][0] * actionWeight * resources_potency
 							# 	# 1-1 check
 							# 	agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0] = \
-							# 		self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0])
+							# 		self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][issue_of_interest[issue_num]][0])
 							# 	# Re-updating the preference levels
 							# 	self.instrument_preference_update(agents, 1 + links.agent2.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
 							# 	# Calculation of the new grade
@@ -5553,7 +5592,7 @@ class Policyentres(Agent):
 							# 		agents.resources[0] * resources_weight_action * links.aware * links.conflict_level[0][issue_of_interest[issue_num]][0] * actionWeight * resources_potency
 							# 	# 1-1 check
 							# 	agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0] = \
-							# 		self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0])
+							# 		self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][issue_of_interest[issue_num]][0])
 							# 	# Re-updating the preference levels
 							# 	self.instrument_preference_update(agents, 1 + links.agent1.unique_id, AS_theory, len_DC, len_PC, len_S, instruments)
 							# 	# Calculation of the new grade
@@ -5756,17 +5795,17 @@ class Policyentres(Agent):
 							# Checks and transfer of partial knowledge
 							# 1-1 check
 							links.agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest)]][1] = \
-								self.one_minus_one_check2(links.agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest)]][1])		
+								self.one_minus_one_check(links.agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest)]][1])		
 							# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acting agent)
 							agents.belieftree[1 + links.agent2.unique_id][of_interest[1][best_action - len(cw_of_interest)] ][1] = links.agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest)] ][1] + (random.random()/5) - 0.1
 							# 1-1 check
 							agents.belieftree[1 + links.agent2.unique_id][of_interest[1][best_action - len(cw_of_interest)] ][1] = \
-								self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][of_interest[1][best_action - len(cw_of_interest)] ][1])
+								self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][of_interest[1][best_action - len(cw_of_interest)] ][1])
 							# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acted upon agent)
 							links.agent2.belieftree[1 + agents.unique_id][of_interest[1][best_action - len(cw_of_interest)] ][1] = agents.belieftree[0][of_interest[1][best_action - len(cw_of_interest)] ][1] + (random.random()/5) - 0.1
 							# 1-1 check
 							links.agent2.belieftree[1 + agents.unique_id][of_interest[1][best_action - len(cw_of_interest)] ][1] = \
-								self.one_minus_one_check2(links.agent2.belieftree[1 + agents.unique_id][of_interest[1][best_action - len(cw_of_interest)] ][1])
+								self.one_minus_one_check(links.agent2.belieftree[1 + agents.unique_id][of_interest[1][best_action - len(cw_of_interest)] ][1])
 
 						if links.agent2 == agents:
 
@@ -5803,17 +5842,17 @@ class Policyentres(Agent):
 							# Checks and transfer of partial knowledge
 							# 1-1 check
 							links.agent1.belieftree[0][of_interest[1][best_action - len(cw_of_interest)]][1] = \
-								self.one_minus_one_check2(links.agent1.belieftree[0][of_interest[1][best_action - len(cw_of_interest)]][1]   )		
+								self.one_minus_one_check(links.agent1.belieftree[0][of_interest[1][best_action - len(cw_of_interest)]][1]   )		
 							# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acting agent)
 							agents.belieftree[1 + links.agent1.unique_id][of_interest[1][best_action - len(cw_of_interest)]][1] = links.agent1.belieftree[0][of_interest[1][best_action - len(cw_of_interest)] ][1] + (random.random()/5) - 0.1
 							# 1-1 check
 							agents.belieftree[1 + links.agent1.unique_id][of_interest[1][best_action - len(cw_of_interest)]][1] = \
-								self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][of_interest[1][best_action - len(cw_of_interest)]][1])
+								self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][of_interest[1][best_action - len(cw_of_interest)]][1])
 							# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acted upon agent)
 							links.agent1.belieftree[1 + agents.unique_id][of_interest[1][best_action - len(cw_of_interest)] ][1] = agents.belieftree[0][of_interest[1][best_action - len(cw_of_interest)] ][1] + (random.random()/5) - 0.1
 							# 1-1 check
 							links.agent1.belieftree[1 + agents.unique_id][of_interest[1][best_action - len(cw_of_interest)] ][1] = \
-								self.one_minus_one_check2(links.agent1.belieftree[1 + agents.unique_id][of_interest[1][best_action - len(cw_of_interest)] ][1])
+								self.one_minus_one_check(links.agent1.belieftree[1 + agents.unique_id][of_interest[1][best_action - len(cw_of_interest)] ][1])
 
 					# If the index is in the first part of the list, then the aim influence action on the policy is the best
 					if best_action >= len(cw_of_interest) + len(issue_of_interest) - 1:
@@ -5863,19 +5902,19 @@ class Policyentres(Agent):
 							# Checks and transfer of partial knowledge
 							# 1-1 check
 							links.agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0] = \
-								self.one_minus_one_check2(links.agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0])
+								self.one_minus_one_check(links.agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0])
 							# Providing partial knowledge - Aim policy - 0.2 range from real value: (Acting agent)
 							agents.belieftree[1 + links.agent2.unique_id][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0] = \
 								links.agent2.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0] + (random.random()/5) - 0.1
 							# 1-1 check
 							agents.belieftree[1 + links.agent2.unique_id][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0] = \
-								self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0])
+								self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0])
 							# Providing partial knowledge - Aim policy - 0.2 range from real value: (Acted upon agent)
 							links.agent2.belieftree[1 + agents.unique_id][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0] = \
 								agents.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0] + (random.random()/5) - 0.1
 							# 1-1 check
 							links.agent2.belieftree[1 + agents.unique_id][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0] = \
-								self.one_minus_one_check2(links.agent2.belieftree[1 + agents.unique_id][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0])
+								self.one_minus_one_check(links.agent2.belieftree[1 + agents.unique_id][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0])
 
 						if links.agent2 == agents:
 
@@ -5913,19 +5952,19 @@ class Policyentres(Agent):
 							# Checks and transfer of partial knowledge
 							# 1-1 check
 							links.agent1.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0] = \
-								self.one_minus_one_check2(links.agent1.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0])
+								self.one_minus_one_check(links.agent1.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0])
 							# Providing partial knowledge - Aim policy - 0.2 range from real value: (Acting agent)
 							agents.belieftree[1 + links.agent1.unique_id][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0] = \
 								links.agent1.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0] + (random.random()/5) - 0.1
 							# 1-1 check
 							agents.belieftree[1 + links.agent1.unique_id][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0] = \
-								self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0])
+								self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0])
 							# Providing partial knowledge - Aim policy - 0.2 range from real value: (Acted upon agent)
 							links.agent1.belieftree[1 + agents.unique_id][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0] = \
 								agents.belieftree[0][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0] + (random.random()/5) - 0.1
 							# 1-1 check
 							links.agent1.belieftree[1 + agents.unique_id][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0] = \
-								self.one_minus_one_check2(links.agent1.belieftree[1 + agents.unique_id][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0])
+								self.one_minus_one_check(links.agent1.belieftree[1 + agents.unique_id][of_interest[1][best_action - len(cw_of_interest) - len(issue_of_interest)]][0])
 
 			# print('Resources left: ' + str(agents.resources_actions))
 			agents.resources_actions -= agents.resources[0] * resources_weight_action
@@ -6178,17 +6217,17 @@ class Policyentres(Agent):
 								# print('After: ' + str(links.agent2.belieftree[0][best_action][0]))
 								# 1-1 check
 								links.agent2.belieftree[0][best_action][0] = \
-									self.one_minus_one_check2(links.agent2.belieftree[0][best_action][0])
+									self.one_minus_one_check(links.agent2.belieftree[0][best_action][0])
 								# Providing partial knowledge - Framing - 0.2 range from real value: (Acting agent)
 								agents.belieftree[1 + links.agent2.unique_id][best_action][0] = links.agent2.belieftree[0][best_action][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								agents.belieftree[1 + links.agent2.unique_id][best_action][0] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][best_action][0])
+									self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][best_action][0])
 								# Providing partial knowledge - Framing - 0.2 range from real value: (Acted upon agent)
 								links.agent2.belieftree[1 + agents.unique_id][best_action][0] = agents.belieftree[0][best_action][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent2.belieftree[1 + agents.unique_id][best_action][0] = \
-									self.one_minus_one_check2(links.agent2.belieftree[1 + agents.unique_id][best_action][0])
+									self.one_minus_one_check(links.agent2.belieftree[1 + agents.unique_id][best_action][0])
 
 								# print(' ')
 								# print('Causal change')
@@ -6204,17 +6243,17 @@ class Policyentres(Agent):
 								# print('After: ' + str(links.agent1.belieftree[0][best_action][0]))
 								# 1-1 check
 								links.agent1.belieftree[0][best_action][0] = \
-									self.one_minus_one_check2(links.agent1.belieftree[0][best_action][0])
+									self.one_minus_one_check(links.agent1.belieftree[0][best_action][0])
 								# Providing partial knowledge - Framing - 0.2 range from real value: (Acting agent)
 								agents.belieftree[1 + links.agent1.unique_id][best_action][0] = links.agent1.belieftree[0][best_action][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								agents.belieftree[1 + links.agent1.unique_id][best_action][0] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][best_action][0])
+									self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][best_action][0])
 								# Providing partial knowledge - Framing - 0.2 range from real value: (Acted upon agent)
 								links.agent1.belieftree[1 + agents.unique_id][best_action][0] = agents.belieftree[0][best_action][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent1.belieftree[1 + agents.unique_id][best_action][0] = \
-									self.one_minus_one_check2(links.agent1.belieftree[1 + agents.unique_id][best_action][0])
+									self.one_minus_one_check(links.agent1.belieftree[1 + agents.unique_id][best_action][0])
 
 								# print(' ')
 								# print('Causal change')
@@ -6234,17 +6273,17 @@ class Policyentres(Agent):
 								# print('After: ' + str(links.agent2.belieftree[0][agents.select_problem_3S_as][1]))
 								# 1-1 check
 								links.agent2.belieftree[0][agents.select_problem_3S_as][1] = \
-									self.one_minus_one_check2(links.agent2.belieftree[0][agents.select_problem_3S_as][1])
+									self.one_minus_one_check(links.agent2.belieftree[0][agents.select_problem_3S_as][1])
 								# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acting agent)
 								agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_as][1] = links.agent2.belieftree[0][agents.select_problem_3S_as][1]
 								# 1-1 check
 								agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_as][1] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_as][1])
+									self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_as][1])
 								# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acted upon agent)
 								links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][1] = agents.belieftree[0][agents.select_problem_3S_as][1] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][1] = \
-									self.one_minus_one_check2(links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][1])
+									self.one_minus_one_check(links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][1])
 
 								# print(' ')
 								# print('Aim change')
@@ -6258,17 +6297,17 @@ class Policyentres(Agent):
 								# print('After: ' + str(links.agent1.belieftree[0][agents.select_problem_3S_as][1]))
 								# 1-1 check
 								links.agent1.belieftree[0][agents.select_problem_3S_as][1] = \
-									self.one_minus_one_check2(links.agent1.belieftree[0][agents.select_problem_3S_as][1])
+									self.one_minus_one_check(links.agent1.belieftree[0][agents.select_problem_3S_as][1])
 								# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acting agent)
 								agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_as][1] = links.agent2.belieftree[0][agents.select_problem_3S_as][1]
 								# 1-1 check
 								agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_as][1] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_as][1])
+									self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_as][1])
 								# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acted upon agent)
 								links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][1] = agents.belieftree[0][agents.select_problem_3S_as][1] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][1] = \
-									self.one_minus_one_check2(links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][1])
+									self.one_minus_one_check(links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][1])
 
 
 						# If the index is in the first part of the list, then the state influence action is the best
@@ -6283,17 +6322,17 @@ class Policyentres(Agent):
 									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent2.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								links.agent2.belieftree[0][agents.select_problem_3S_as][0] = \
-									self.one_minus_one_check2(links.agent2.belieftree[0][agents.select_problem_3S_as][0])
+									self.one_minus_one_check(links.agent2.belieftree[0][agents.select_problem_3S_as][0])
 								# Providing partial knowledge - State problem - 0.2 range from real value: (Acting agent)
 								agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_as][0] = links.agent2.belieftree[0][agents.select_problem_3S_as][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_as][0] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_as][0])
+									self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_as][0])
 								# Providing partial knowledge - State problem - 0.2 range from real value: (Acted upon agent)
 								links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][0] = agents.belieftree[0][agents.select_problem_3S_as][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][0] = \
-									self.one_minus_one_check2(links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][0])
+									self.one_minus_one_check(links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][0])
 
 								# print(' ')
 								# print('State change')
@@ -6306,17 +6345,17 @@ class Policyentres(Agent):
 								# print('After: ' + str(links.agent1.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								# 1-1 check
 								links.agent1.belieftree[0][agents.select_problem_3S_as][0] = \
-									self.one_minus_one_check2(links.agent1.belieftree[0][agents.select_problem_3S_as][0])
+									self.one_minus_one_check(links.agent1.belieftree[0][agents.select_problem_3S_as][0])
 								# Providing partial knowledge - State problem - 0.2 range from real value: (Acting agent)
 								agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_as][0] = links.agent1.belieftree[0][agents.select_problem_3S_as][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_as][0] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_as][0])
+									self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_as][0])
 								# Providing partial knowledge - State problem - 0.2 range from real value: (Acted upon agent)
 								links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][0] = agents.belieftree[0][agents.select_problem_3S_as][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][0] = \
-									self.one_minus_one_check2(links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][0])
+									self.one_minus_one_check(links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][0])
 
 								# print(' ')
 								# print('State change')
@@ -6347,17 +6386,17 @@ class Policyentres(Agent):
 								# print('After: ' + str(links.agent2.belieftree_policy[0][agents.select_policy_3S_as][best_action]))
 								# 1-1 check
 								links.agent2.belieftree_policy[0][agents.select_policy_3S_as][best_action] = \
-									self.one_minus_one_check2(links.agent2.belieftree_policy[0][agents.select_policy_3S_as][best_action])
+									self.one_minus_one_check(links.agent2.belieftree_policy[0][agents.select_policy_3S_as][best_action])
 								# Providing partial knowledge - Framing - 0.2 range from real value: (Acting agent)
 								agents.belieftree_policy[1 + links.agent2.unique_id][agents.select_policy_3S_as][best_action] = links.agent2.belieftree_policy[0][agents.select_policy_3S_as][best_action] + (random.random()/5) - 0.1
 								# 1-1 check
 								agents.belieftree_policy[1 + links.agent2.unique_id][agents.select_policy_3S_as][best_action] = \
-									self.one_minus_one_check2(agents.belieftree_policy[1 + links.agent2.unique_id][agents.select_policy_3S_as][best_action])
+									self.one_minus_one_check(agents.belieftree_policy[1 + links.agent2.unique_id][agents.select_policy_3S_as][best_action])
 								# Providing partial knowledge - Framing - 0.2 range from real value: (Acted upon agent)
 								links.agent2.belieftree_policy[1 + agents.unique_id][agents.select_policy_3S_as][best_action] = agents.belieftree_policy[0][agents.select_policy_3S_as][best_action] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent2.belieftree_policy[1 + agents.unique_id][agents.select_policy_3S_as][best_action] = \
-									self.one_minus_one_check2(links.agent2.belieftree_policy[1 + agents.unique_id][agents.select_policy_3S_as][best_action])
+									self.one_minus_one_check(links.agent2.belieftree_policy[1 + agents.unique_id][agents.select_policy_3S_as][best_action])
 
 								# print(' ')
 								# print('Causal change')
@@ -6374,17 +6413,17 @@ class Policyentres(Agent):
 								# print('After: ' + str(links.agent1.belieftree_policy[0][agents.select_policy_3S_as][best_action]))
 								# 1-1 check
 								links.agent1.belieftree_policy[0][agents.select_policy_3S_as][best_action] = \
-									self.one_minus_one_check2(links.agent1.belieftree_policy[0][agents.select_policy_3S_as][best_action])
+									self.one_minus_one_check(links.agent1.belieftree_policy[0][agents.select_policy_3S_as][best_action])
 								# Providing partial knowledge - Framing - 0.2 range from real value: (Acting agent)
 								agents.belieftree_policy[1 + links.agent1.unique_id][agents.select_policy_3S_as][best_action] = links.agent1.belieftree_policy[0][agents.select_policy_3S_as][best_action] + (random.random()/5) - 0.1
 								# 1-1 check
 								agents.belieftree_policy[1 + links.agent1.unique_id][agents.select_policy_3S_as][best_action] = \
-									self.one_minus_one_check2(agents.belieftree_policy[1 + links.agent1.unique_id][agents.select_policy_3S_as][best_action])
+									self.one_minus_one_check(agents.belieftree_policy[1 + links.agent1.unique_id][agents.select_policy_3S_as][best_action])
 								# Providing partial knowledge - Framing - 0.2 range from real value: (Acted upon agent)
 								links.agent1.belieftree_policy[1 + agents.unique_id][agents.select_policy_3S_as][best_action] = agents.belieftree_policy[0][agents.select_policy_3S_as][best_action] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent1.belieftree_policy[1 + agents.unique_id][agents.select_policy_3S_as][best_action] = \
-									self.one_minus_one_check2(links.agent1.belieftree_policy[1 + agents.unique_id][agents.select_policy_3S_as][best_action])
+									self.one_minus_one_check(links.agent1.belieftree_policy[1 + agents.unique_id][agents.select_policy_3S_as][best_action])
 
 								# print(' ')
 								# print('Causal change')
@@ -6404,17 +6443,17 @@ class Policyentres(Agent):
 								# print('After: ' + str(links.agent2.belieftree[0][agents.select_problem_3S_as][1]))
 								# 1-1 check
 								links.agent2.belieftree[0][agents.select_problem_3S_as][1] = \
-									self.one_minus_one_check2(links.agent2.belieftree[0][agents.select_problem_3S_as][1])
+									self.one_minus_one_check(links.agent2.belieftree[0][agents.select_problem_3S_as][1])
 								# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acting agent)
 								agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_as][1] = links.agent2.belieftree[0][agents.select_problem_3S_as][1]
 								# 1-1 check
 								agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_as][1] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_as][1])
+									self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_as][1])
 								# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acted upon agent)
 								links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][1] = agents.belieftree[0][agents.select_problem_3S_as][1] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][1] = \
-									self.one_minus_one_check2(links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][1])
+									self.one_minus_one_check(links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][1])
 
 								# print(' ')
 								# print('Aim change')
@@ -6428,17 +6467,17 @@ class Policyentres(Agent):
 								# print('After: ' + str(links.agent1.belieftree[0][agents.select_problem_3S_as][1]))
 								# 1-1 check
 								links.agent1.belieftree[0][agents.select_problem_3S_as][1] = \
-									self.one_minus_one_check2(links.agent1.belieftree[0][agents.select_problem_3S_as][1])
+									self.one_minus_one_check(links.agent1.belieftree[0][agents.select_problem_3S_as][1])
 								# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acting agent)
 								agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_as][1] = links.agent2.belieftree[0][agents.select_problem_3S_as][1]
 								# 1-1 check
 								agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_as][1] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_as][1])
+									self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_as][1])
 								# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acted upon agent)
 								links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][1] = agents.belieftree[0][agents.select_problem_3S_as][1] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][1] = \
-									self.one_minus_one_check2(links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][1])
+									self.one_minus_one_check(links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][1])
 
 
 						# If the index is in the first part of the list, then the state influence action is the best
@@ -6453,17 +6492,17 @@ class Policyentres(Agent):
 									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent2.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								links.agent2.belieftree[0][agents.select_problem_3S_as][0] = \
-									self.one_minus_one_check2(links.agent2.belieftree[0][agents.select_problem_3S_as][0])
+									self.one_minus_one_check(links.agent2.belieftree[0][agents.select_problem_3S_as][0])
 								# Providing partial knowledge - State problem - 0.2 range from real value: (Acting agent)
 								agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_as][0] = links.agent2.belieftree[0][agents.select_problem_3S_as][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_as][0] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_as][0])
+									self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_as][0])
 								# Providing partial knowledge - State problem - 0.2 range from real value: (Acted upon agent)
 								links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][0] = agents.belieftree[0][agents.select_problem_3S_as][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][0] = \
-									self.one_minus_one_check2(links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][0])
+									self.one_minus_one_check(links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][0])
 
 								# print(' ')
 								# print('State change')
@@ -6476,17 +6515,17 @@ class Policyentres(Agent):
 								# print('After: ' + str(links.agent1.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								# 1-1 check
 								links.agent1.belieftree[0][agents.select_problem_3S_as][0] = \
-									self.one_minus_one_check2(links.agent1.belieftree[0][agents.select_problem_3S_as][0])
+									self.one_minus_one_check(links.agent1.belieftree[0][agents.select_problem_3S_as][0])
 								# Providing partial knowledge - State problem - 0.2 range from real value: (Acting agent)
 								agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_as][0] = links.agent1.belieftree[0][agents.select_problem_3S_as][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_as][0] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_as][0])
+									self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_as][0])
 								# Providing partial knowledge - State problem - 0.2 range from real value: (Acted upon agent)
 								links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][0] = agents.belieftree[0][agents.select_problem_3S_as][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][0] = \
-									self.one_minus_one_check2(links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][0])
+									self.one_minus_one_check(links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_as][0])
 
 								# print(' ')
 								# print('State change')
@@ -6746,17 +6785,17 @@ class Policyentres(Agent):
 								# print('After: ' + str(links.agent2.belieftree[0][best_action][0]))
 								# 1-1 check
 								links.agent2.belieftree[0][best_action][0] = \
-									self.one_minus_one_check2(links.agent2.belieftree[0][best_action][0])
+									self.one_minus_one_check(links.agent2.belieftree[0][best_action][0])
 								# Providing partial knowledge - Framing - 0.2 range from real value: (Acting agent)
 								agents.belieftree[1 + links.agent2.unique_id][best_action][0] = links.agent2.belieftree[0][best_action][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								agents.belieftree[1 + links.agent2.unique_id][best_action][0] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][best_action][0])
+									self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][best_action][0])
 								# Providing partial knowledge - Framing - 0.2 range from real value: (Acted upon agent)
 								links.agent2.belieftree[1 + agents.unique_id][best_action][0] = agents.belieftree[0][best_action][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent2.belieftree[1 + agents.unique_id][best_action][0] = \
-									self.one_minus_one_check2(links.agent2.belieftree[1 + agents.unique_id][best_action][0])
+									self.one_minus_one_check(links.agent2.belieftree[1 + agents.unique_id][best_action][0])
 
 								# print(' ')
 								# print('Causal change')
@@ -6771,17 +6810,17 @@ class Policyentres(Agent):
 								# print('After: ' + str(links.agent1.belieftree[0][best_action][0]))
 								# 1-1 check
 								links.agent1.belieftree[0][best_action][0] = \
-									self.one_minus_one_check2(links.agent1.belieftree[0][best_action][0])
+									self.one_minus_one_check(links.agent1.belieftree[0][best_action][0])
 								# Providing partial knowledge - Framing - 0.2 range from real value: (Acting agent)
 								agents.belieftree[1 + links.agent1.unique_id][best_action][0] = links.agent1.belieftree[0][best_action][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								agents.belieftree[1 + links.agent1.unique_id][best_action][0] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][best_action][0])
+									self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][best_action][0])
 								# Providing partial knowledge - Framing - 0.2 range from real value: (Acted upon agent)
 								links.agent1.belieftree[1 + agents.unique_id][best_action][0] = agents.belieftree[0][best_action][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent1.belieftree[1 + agents.unique_id][best_action][0] = \
-									self.one_minus_one_check2(links.agent1.belieftree[1 + agents.unique_id][best_action][0])
+									self.one_minus_one_check(links.agent1.belieftree[1 + agents.unique_id][best_action][0])
 
 								# print(' ')
 								# print('Causal change')
@@ -6801,17 +6840,17 @@ class Policyentres(Agent):
 								# print('After: ' + str(links.agent2.belieftree[0][agents.select_problem_3S_pf][1]))
 								# 1-1 check
 								links.agent2.belieftree[0][agents.select_problem_3S_pf][1] = \
-									self.one_minus_one_check2(links.agent2.belieftree[0][agents.select_problem_3S_pf][1])
+									self.one_minus_one_check(links.agent2.belieftree[0][agents.select_problem_3S_pf][1])
 								# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acting agent)
 								agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_pf][1] = links.agent2.belieftree[0][agents.select_problem_3S_pf][1]
 								# 1-1 check
 								agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_pf][1] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_pf][1])
+									self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_pf][1])
 								# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acted upon agent)
 								links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][1] = agents.belieftree[0][agents.select_problem_3S_pf][1] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][1] = \
-									self.one_minus_one_check2(links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][1])
+									self.one_minus_one_check(links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][1])
 
 								# print(' ')
 								# print('Aim change')
@@ -6824,17 +6863,17 @@ class Policyentres(Agent):
 								# print('After: ' + str(links.agent1.belieftree[0][agents.select_problem_3S_pf][1]))
 								# 1-1 check
 								links.agent1.belieftree[0][agents.select_problem_3S_pf][1] = \
-									self.one_minus_one_check2(links.agent1.belieftree[0][agents.select_problem_3S_pf][1])
+									self.one_minus_one_check(links.agent1.belieftree[0][agents.select_problem_3S_pf][1])
 								# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acting agent)
 								agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_pf][1] = links.agent2.belieftree[0][agents.select_problem_3S_pf][1]
 								# 1-1 check
 								agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_pf][1] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_pf][1])
+									self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_pf][1])
 								# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acted upon agent)
 								links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][1] = agents.belieftree[0][agents.select_problem_3S_pf][1] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][1] = \
-									self.one_minus_one_check2(links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][1])
+									self.one_minus_one_check(links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][1])
 
 
 						# If the index is in the first part of the list, then the state influence action is the best
@@ -6849,17 +6888,17 @@ class Policyentres(Agent):
 									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent2.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								links.agent2.belieftree[0][agents.select_problem_3S_pf][0] = \
-									self.one_minus_one_check2(links.agent2.belieftree[0][agents.select_problem_3S_pf][0])
+									self.one_minus_one_check(links.agent2.belieftree[0][agents.select_problem_3S_pf][0])
 								# Providing partial knowledge - State problem - 0.2 range from real value: (Acting agent)
 								agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_pf][0] = links.agent2.belieftree[0][agents.select_problem_3S_pf][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_pf][0] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_pf][0])
+									self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_pf][0])
 								# Providing partial knowledge - State problem - 0.2 range from real value: (Acted upon agent)
 								links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][0] = agents.belieftree[0][agents.select_problem_3S_pf][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][0] = \
-									self.one_minus_one_check2(links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][0])
+									self.one_minus_one_check(links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][0])
 
 								# print(' ')
 								# print('State change')
@@ -6872,17 +6911,17 @@ class Policyentres(Agent):
 								# print('After: ' + str(links.agent1.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								# 1-1 check
 								links.agent1.belieftree[0][agents.select_problem_3S_pf][0] = \
-									self.one_minus_one_check2(links.agent1.belieftree[0][agents.select_problem_3S_pf][0])
+									self.one_minus_one_check(links.agent1.belieftree[0][agents.select_problem_3S_pf][0])
 								# Providing partial knowledge - State problem - 0.2 range from real value: (Acting agent)
 								agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_pf][0] = links.agent1.belieftree[0][agents.select_problem_3S_pf][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_pf][0] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_pf][0])
+									self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_pf][0])
 								# Providing partial knowledge - State problem - 0.2 range from real value: (Acted upon agent)
 								links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][0] = agents.belieftree[0][agents.select_problem_3S_pf][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][0] = \
-									self.one_minus_one_check2(links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][0])
+									self.one_minus_one_check(links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][0])
 
 								# print(' ')
 								# print('State change')
@@ -6913,17 +6952,17 @@ class Policyentres(Agent):
 								# print('After: ' + str(links.agent2.belieftree_instrument[0][agents.select_policy_3S_pf][best_action]))
 								# 1-1 check
 								links.agent2.belieftree_instrument[0][agents.select_policy_3S_pf][best_action] = \
-									self.one_minus_one_check2(links.agent2.belieftree_instrument[0][agents.select_policy_3S_pf][best_action])
+									self.one_minus_one_check(links.agent2.belieftree_instrument[0][agents.select_policy_3S_pf][best_action])
 								# Providing partial knowledge - Framing - 0.2 range from real value: (Acting agent)
 								agents.belieftree_instrument[1 + links.agent2.unique_id][agents.select_policy_3S_pf][best_action] = links.agent2.belieftree_instrument[0][agents.select_policy_3S_pf][best_action] + (random.random()/5) - 0.1
 								# 1-1 check
 								agents.belieftree_instrument[1 + links.agent2.unique_id][agents.select_policy_3S_pf][best_action] = \
-									self.one_minus_one_check2(agents.belieftree_instrument[1 + links.agent2.unique_id][agents.select_policy_3S_pf][best_action])
+									self.one_minus_one_check(agents.belieftree_instrument[1 + links.agent2.unique_id][agents.select_policy_3S_pf][best_action])
 								# Providing partial knowledge - Framing - 0.2 range from real value: (Acted upon agent)
 								links.agent2.belieftree_instrument[1 + agents.unique_id][agents.select_policy_3S_pf][best_action] = agents.belieftree_instrument[0][agents.select_policy_3S_pf][best_action] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent2.belieftree_instrument[1 + agents.unique_id][agents.select_policy_3S_pf][best_action] = \
-									self.one_minus_one_check2(links.agent2.belieftree_instrument[1 + agents.unique_id][agents.select_policy_3S_pf][best_action])
+									self.one_minus_one_check(links.agent2.belieftree_instrument[1 + agents.unique_id][agents.select_policy_3S_pf][best_action])
 
 								# print(' ')
 								# print('Causal change')
@@ -6940,17 +6979,17 @@ class Policyentres(Agent):
 								# print('After: ' + str(links.agent1.belieftree_instrument[0][agents.select_policy_3S_pf][best_action]))
 								# 1-1 check
 								links.agent1.belieftree_instrument[0][agents.select_policy_3S_pf][best_action] = \
-									self.one_minus_one_check2(links.agent1.belieftree_instrument[0][agents.select_policy_3S_pf][best_action])
+									self.one_minus_one_check(links.agent1.belieftree_instrument[0][agents.select_policy_3S_pf][best_action])
 								# Providing partial knowledge - Framing - 0.2 range from real value: (Acting agent)
 								agents.belieftree_instrument[1 + links.agent1.unique_id][agents.select_policy_3S_pf][best_action] = links.agent1.belieftree_instrument[0][agents.select_policy_3S_pf][best_action] + (random.random()/5) - 0.1
 								# 1-1 check
 								agents.belieftree_instrument[1 + links.agent1.unique_id][agents.select_policy_3S_pf][best_action] = \
-									self.one_minus_one_check2(agents.belieftree_instrument[1 + links.agent1.unique_id][agents.select_policy_3S_pf][best_action])
+									self.one_minus_one_check(agents.belieftree_instrument[1 + links.agent1.unique_id][agents.select_policy_3S_pf][best_action])
 								# Providing partial knowledge - Framing - 0.2 range from real value: (Acted upon agent)
 								links.agent1.belieftree_instrument[1 + agents.unique_id][agents.select_policy_3S_pf][best_action] = agents.belieftree_instrument[0][agents.select_policy_3S_pf][best_action] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent1.belieftree_instrument[1 + agents.unique_id][agents.select_policy_3S_pf][best_action] = \
-									self.one_minus_one_check2(links.agent1.belieftree_instrument[1 + agents.unique_id][agents.select_policy_3S_pf][best_action])
+									self.one_minus_one_check(links.agent1.belieftree_instrument[1 + agents.unique_id][agents.select_policy_3S_pf][best_action])
 
 								# print(' ')
 								# print('Causal change')
@@ -6970,17 +7009,17 @@ class Policyentres(Agent):
 								# print('After: ' + str(links.agent2.belieftree[0][agents.select_problem_3S_pf][1]))
 								# 1-1 check
 								links.agent2.belieftree[0][agents.select_problem_3S_pf][1] = \
-									self.one_minus_one_check2(links.agent2.belieftree[0][agents.select_problem_3S_pf][1])
+									self.one_minus_one_check(links.agent2.belieftree[0][agents.select_problem_3S_pf][1])
 								# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acting agent)
 								agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_pf][1] = links.agent2.belieftree[0][agents.select_problem_3S_pf][1]
 								# 1-1 check
 								agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_pf][1] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_pf][1])
+									self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_pf][1])
 								# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acted upon agent)
 								links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][1] = agents.belieftree[0][agents.select_problem_3S_pf][1] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][1] = \
-									self.one_minus_one_check2(links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][1])
+									self.one_minus_one_check(links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][1])
 
 								# print(' ')
 								# print('Aim change')
@@ -6994,17 +7033,17 @@ class Policyentres(Agent):
 								# print('After: ' + str(links.agent1.belieftree[0][agents.select_problem_3S_pf][1]))
 								# 1-1 check
 								links.agent1.belieftree[0][agents.select_problem_3S_pf][1] = \
-									self.one_minus_one_check2(links.agent1.belieftree[0][agents.select_problem_3S_pf][1])
+									self.one_minus_one_check(links.agent1.belieftree[0][agents.select_problem_3S_pf][1])
 								# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acting agent)
 								agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_pf][1] = links.agent2.belieftree[0][agents.select_problem_3S_pf][1]
 								# 1-1 check
 								agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_pf][1] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_pf][1])
+									self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_pf][1])
 								# Providing partial knowledge - Aim problem - 0.2 range from real value: (Acted upon agent)
 								links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][1] = agents.belieftree[0][agents.select_problem_3S_pf][1] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][1] = \
-									self.one_minus_one_check2(links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][1])
+									self.one_minus_one_check(links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][1])
 
 
 						# If the index is in the first part of the list, then the state influence action is the best
@@ -7019,17 +7058,17 @@ class Policyentres(Agent):
 									agents.resources[0] * resources_weight_action * links.aware * resources_potency
 								# print('After: ' + str(links.agent2.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								links.agent2.belieftree[0][agents.select_problem_3S_pf][0] = \
-									self.one_minus_one_check2(links.agent2.belieftree[0][agents.select_problem_3S_pf][0])
+									self.one_minus_one_check(links.agent2.belieftree[0][agents.select_problem_3S_pf][0])
 								# Providing partial knowledge - State problem - 0.2 range from real value: (Acting agent)
 								agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_pf][0] = links.agent2.belieftree[0][agents.select_problem_3S_pf][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_pf][0] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_pf][0])
+									self.one_minus_one_check(agents.belieftree[1 + links.agent2.unique_id][agents.select_problem_3S_pf][0])
 								# Providing partial knowledge - State problem - 0.2 range from real value: (Acted upon agent)
 								links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][0] = agents.belieftree[0][agents.select_problem_3S_pf][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][0] = \
-									self.one_minus_one_check2(links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][0])
+									self.one_minus_one_check(links.agent2.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][0])
 
 								# print(' ')
 								# print('State change')
@@ -7042,17 +7081,17 @@ class Policyentres(Agent):
 								# print('After: ' + str(links.agent1.belieftree[0][len(self.deep_core) + agents.select_problem][0]))
 								# 1-1 check
 								links.agent1.belieftree[0][agents.select_problem_3S_pf][0] = \
-									self.one_minus_one_check2(links.agent1.belieftree[0][agents.select_problem_3S_pf][0])
+									self.one_minus_one_check(links.agent1.belieftree[0][agents.select_problem_3S_pf][0])
 								# Providing partial knowledge - State problem - 0.2 range from real value: (Acting agent)
 								agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_pf][0] = links.agent1.belieftree[0][agents.select_problem_3S_pf][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_pf][0] = \
-									self.one_minus_one_check2(agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_pf][0])
+									self.one_minus_one_check(agents.belieftree[1 + links.agent1.unique_id][agents.select_problem_3S_pf][0])
 								# Providing partial knowledge - State problem - 0.2 range from real value: (Acted upon agent)
 								links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][0] = agents.belieftree[0][agents.select_problem_3S_pf][0] + (random.random()/5) - 0.1
 								# 1-1 check
 								links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][0] = \
-									self.one_minus_one_check2(links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][0])
+									self.one_minus_one_check(links.agent1.belieftree[1 + agents.unique_id][agents.select_problem_3S_pf][0])
 
 								# print(' ')
 								# print('State change')
@@ -7296,7 +7335,16 @@ class Policyentres(Agent):
 					else:
 						agent.instrument_preferences[who][i] = 0
 
-	def one_minus_one_check2(self, to_be_checked_parameter):
+	def one_minus_one_check(self, to_be_checked_parameter):
+
+		"""
+		One minus one check function
+		===========================
+
+		This function checks that a certain values does not got over one
+		and does not go below one due to the randomisation.
+		
+		"""
 
 		checked_parameter = 0
 		if to_be_checked_parameter > 1:
