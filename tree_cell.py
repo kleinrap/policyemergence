@@ -28,6 +28,16 @@ class TreeCell(Agent):
 
     def step(self, thin_burning_probability, firefighter_force):
 
+    	"""
+		Step function for the forest fire model
+		===========================
+
+		This function is used to advance one step forward within
+		the forest fire agent based model. Each cell can perform
+		one actions.
+		
+		"""
+
         self.thin_burning_probability = thin_burning_probability
         if self.thin_burning_probability > 0.010:
             print('Warning - the probability of burning of thin forests is too high! (>0.01)')
@@ -37,7 +47,6 @@ class TreeCell(Agent):
         self.firefighter_force = firefighter_force
         if self.firefighter_force >0.5:
             print('Warning - the firefigher force is too higher! (>0.5)')
-
 
         """
         If the tree is on fire, spread it to fine trees nearby.

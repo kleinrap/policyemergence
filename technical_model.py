@@ -18,10 +18,32 @@ class Technical_Model():
 		# print(self.cells_repository[self.pos])
 
 	def cell_count(self, condition_name):
+
+		"""
+		Cell count function
+		===========================
+
+		This function is used to count the number of cells.
+		This is a test function.
+		
+		"""
+
 		return sum(test.condition == condition_name for test in self.cells_repository)
 
-	# Counting the colours and shapes in the list of cells:
 	def states_update(self, height, width, belieftree_truth, thin_burning_probability, firefighter_force):
+
+		"""
+		States update function
+		===========================
+
+		This function is used to update the states based on the current state
+		of the forest fire model.
+
+		First, all of the cells are counted. Then each of the issues present
+		in the belief tree are assessed one by one. These use equations
+		presented within the formalisation.
+		
+		"""
 
 		# print(self.cells_repository)
 		self.total_cells = height*width
@@ -142,6 +164,15 @@ class Technical_Model():
 
 	def measures_implementation(self, agenda_instrument, instruments, instrument_campSites, instrument_planting, \
 		thin_burning_probability, firefighter_force, instrument_prevention):
+
+		"""
+		Policy implementation function
+		===========================
+
+		This function is used to implement the policies chosen
+		by the agents. 
+		
+		"""
 
 		'''
 

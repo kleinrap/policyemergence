@@ -1153,12 +1153,8 @@ class Coalition():
 		===========================
 
 		This function is used for the exchange of partial knowledge between agents
-		within the same coalition. This only regards the issue that is selected by the team
-		and is kept with a certain amount of randomness.
-
-		Note: This function seems to be incorrectly used in so far as it is used
-		for both policy and problem teams while it should only be used for problems
-		teams.
+		within the same coalition. This only regards the issue that is selected by the
+		coalition and is kept with a certain amount of randomness.
 		
 		"""
 
