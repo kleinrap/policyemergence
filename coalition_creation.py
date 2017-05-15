@@ -41,7 +41,7 @@ class Coalition():
 		len_PC = len(policy_core)
 		len_S = len(secondary)
 
-		print(coalitions)
+		# print(coalitions)
 
 		# print('The belief actions now have to be performed for each team!')
 		# Make sure that the coalition actually axists:
@@ -635,7 +635,7 @@ class Coalition():
 		len_PC = len(policy_core)
 		len_S = len(secondary)
 
-		print(coalitions)
+		# print(coalitions)
 
 		# print('The belief actions now have to be performed for each team!')
 		# Make sure that the coalition actually axists:
