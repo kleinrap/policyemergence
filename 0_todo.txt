@@ -14,12 +14,4 @@ Small tasks that still need to be performed:
 - Check if teams.issue is split between AS and PF - they seem to overlap creating potential problems.
 - Address the actionweight parameters for the intra-coalition actions (currently not implemented)
 - Address the actionweight parameters for the intra-team actions (currently not implemented)
-
-Regarding the likelihood and impact actions changes:
-- Teams
-	- AS
-		- Intra-team likelihood (policy)
-		- Intra-team impact (policy)
-	- PF
-		- Intra-team likelihood (policy)
-		- Intra-team impact (policy)
+- Make the code leaner, the 3S AS and PF are mostly the same, adapt it to only have one function.
