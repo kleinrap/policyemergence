@@ -14,14 +14,6 @@ Small tasks that still need to be performed:
 - Check if teams.issue is split between AS and PF - they seem to overlap creating potential problems.
 
 Regarding the likelihood and impact actions changes:
-- Coalitions (these require large changes to algorithms):
-	- Check the inter-team if statements for affiliations - might be incorrect
-	- AS
-		- Intra-coalition actions likelihood
-		- Intra-coalition actions impact
-	- PF
-		- Intra-coalition actions likelihood
-		- Intra-coalition actions impact
 - Teams
 	- AS
 		- Intra-team likelihood (policy)
@@ -29,8 +21,6 @@ Regarding the likelihood and impact actions changes:
 		- Intra-team likelihood (problem)
 		- Intra-team impact (problem)
 	- PF
-		- Inter-team likelihood (policy)
-		- Inter-team impact (policy)
 		- Intra-team likelihood (policy)
 		- Intra-team impact (policy)
 		- Intra-team likelihood (problem)

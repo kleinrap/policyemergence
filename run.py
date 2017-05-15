@@ -32,7 +32,7 @@ DC_ACF_interest = 0
 # Note right now several parts of the model require that the same method be used for both
 # parts of the model - this is mostly related to the input method. This will be changed
 # in the future.
-AS_theory = 2
+AS_theory = 3
 PF_theory = AS_theory
 
 # This is set up to use only in the case of exploration
