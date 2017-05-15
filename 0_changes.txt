@@ -42,3 +42,7 @@ Changes to the code:
 - Intra-coalition actions (AS) (ACF) - new impact calculation
 - Intra-coalition actions (PF) (ACF) - new likelihood for the calculation of the grades of the actions
 - Intra-coalition actions (PF) (ACF) - new impact calculation
+- Intra-coalition actions (AS) (ACF) Problem - new likelihood for the calculation of the grades of the actions
+- Intra-coalition actions (AS) (ACF) Problem - new impact calculation
+- Intra-coalition actions (PF) (ACF) Problem - new likelihood for the calculation of the grades of the actions
+- Intra-coalition actions (PF) (ACF) Problem - new impact calculation
