@@ -2350,6 +2350,7 @@ class Policymakers(Agent):
 					for cw in range(len(cw_of_interest)):
 						# Checking which agent in the link is the original agent
 						if links.agent1 == agents:
+							
 							# Grade calculation using the likelihood method
 							# Same affiliation
 							if links.agent1.affiliation == links.agent2.affiliation:

@@ -5,13 +5,16 @@ Small tasks that still need to be performed:
 - The knowledge exchange function in the agents.py file is used for both policy and problem teams incorrectly. Two different functions be used.
 - Address the decrease in partial knowledge of all agents when participating in teams or coalitions are the partial knowledge is only transmitted between agents interacting leading to a small exchange of knowledge for all of the members.
 - Address the lack of update of the awareness decay for the agents that are part of a coalition or a team as their awareness decay is not stopped when the coalition or the team is performing an action. This leads to an overall depletion of the awareness levels for all the agents within the system.
-- Address the dynamics issue with the coalitions and teams shadow networks. How is the network of these groups evolving? Are they updated with the latest awareness of all of their members or are there all static throughout the simulation (answer is they are static). This should be addressed either by the re-creation of the shadow network for each tick or through the update of the shadow network.
 - Add the fact that the external parties have selective states interest - this has very very large ramification throughout the entire code and cannot be implemented in steps without robust safeguards.
 - In the file team_creation, knowledge_exchange_team() is used inappropriately for policy and problems. The policy and instrument functions should be used in the case that the team is using a policy.
 - Address the issue of initialisation of the policy hierarchy partial beliefs (3S). This has an major impact on the conflict level calculations.
+- Address the fact that for the conflict level of the shadow network of the teams, the full knowledge is used to constitute the conflict level which puts the teams at an advantage in their actions compared to individuals.
+- Address the actionweight parameter for the inter-team actions (currently not working)
+- Address the lack of resource potency parameter in the inter-team actions (AS)
 
 Regarding the likelihood and impact actions changes:
 - Coalitions (these require large changes to algorithms):
+	- Check the inter-team if statements for affiliations - might be incorrect
 	- AS
 		- Intra-coalition actions likelihood
 		- Intra-coalition actions impact
@@ -22,8 +25,6 @@ Regarding the likelihood and impact actions changes:
 	- AS
 		- Inter-team likelihood (policy)
 		- Inter-team impact (policy)
-		- Inter-team likelihood (problem)
-		- Inter-team impact (problem)
 		- Intra-team likelihood (policy)
 		- Intra-team impact (policy)
 		- Intra-team likelihood (problem)

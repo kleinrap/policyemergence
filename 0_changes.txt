@@ -22,9 +22,12 @@ Changes to the code:
 - For the pes/pms - (AS) (3S) Problem - new impact calculation
 
 15 May:
-- For the pes/oms - (AS) (3S) Policy - new likelihood for the calculation of the grades of the actions
+- For the pes/pms - (AS) (3S) Policy - new likelihood for the calculation of the grades of the actions
 - For the pes/pms - (AS) (3S) Policy - new impact calculation
 - For the pes/pms - (PF) (3S) Problem - new likelihood for the calculation of the grades of the actions
 - For the pes/pms - (PF) (3S) Policy - new likelihood for the calculation of the grades of the actions
 - For the pes/pms - (PF) (3S) Problem - new impact calculation
 - For the pes/pms - (PF) (3S) Policy - new impact calculation
+- Addition of the causal relation conflict level to the shadow networks of teams (AS)
+- Inter-team actions (AS) (3S) Problem - new likelihood for the calculation of the grades of the actions
+- Inter-team actions (AS) (3S) Problem - new impact calculation
