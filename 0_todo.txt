@@ -31,8 +31,6 @@ Regarding the likelihood and impact actions changes:
 	- PF
 		- Inter-team likelihood (policy)
 		- Inter-team impact (policy)
-		- Inter-team likelihood (problem)
-		- Inter-team impact (problem)
 		- Intra-team likelihood (policy)
 		- Intra-team impact (policy)
 		- Intra-team likelihood (problem)
