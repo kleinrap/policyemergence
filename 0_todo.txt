@@ -8,6 +8,7 @@ Small tasks that still need to be performed:
 - Address the dynamics issue with the coalitions and teams shadow networks. How is the network of these groups evolving? Are they updated with the latest awareness of all of their members or are there all static throughout the simulation (answer is they are static). This should be addressed either by the re-creation of the shadow network for each tick or through the update of the shadow network.
 - Add the fact that the external parties have selective states interest - this has very very large ramification throughout the entire code and cannot be implemented in steps without robust safeguards.
 - In the file team_creation, knowledge_exchange_team() is used inappropriately for policy and problems. The policy and instrument functions should be used in the case that the team is using a policy.
+- Address the issue of initialisation of the policy hierarchy partial beliefs (3S). This has an major impact on the conflict level calculations.
 
 Regarding the likelihood and impact actions changes:
 - Coalitions (these require large changes to algorithms):
@@ -17,15 +18,6 @@ Regarding the likelihood and impact actions changes:
 	- PF
 		- Intra-coalition actions likelihood
 		- Intra-coalition actions impact
-- 3S
-	- AS
-		- Individual likelihood (policy)
-		- Individual impact (policy)
-	- PF
-		- Individual likelihood (policy)
-		- Individual impact (policy)
-		- Individual likelihood (problem)
-		- Individual impact (problem)
 - Teams
 	- AS
 		- Inter-team likelihood (policy)

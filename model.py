@@ -622,7 +622,7 @@ class PolicyEmergence(Model):
 					if type(agents) == Policymakers or type(agents) == Policyentres:
 					# if type(agents) == Policymakers:
 						agents.pm_pe_actions_as_3S(agents, link_list_shuffle, self.deep_core, self.policy_core, self.secondary, \
-							self.resources_weight_action, self.resources_potency, self.affiliation_weights)
+							self.resources_weight_action, self.resources_potency, self.affiliation_weights, self.conflict_level_coef)
 
 			print('... cleared.')
 			print('   ')
@@ -910,7 +910,7 @@ class PolicyEmergence(Model):
 					# print('THIS IS A TEMPORARY CHANGE THAT WILL NEED TO BE REVERSED!')
 					if type(agents) == Policymakers or type(agents) == Policyentres:
 						agents.pm_pe_actions_pf_3S(agents, link_list_shuffle, self.deep_core, self.policy_core, self.secondary, \
-							self.resources_weight_action, self.resources_potency, self.agenda_prob_3S_as)
+							self.resources_weight_action, self.resources_potency, self.agenda_prob_3S_as, self.affiliation_weights, self.conflict_level_coef)
 
 			print('... cleared.')
 			print('   ')
