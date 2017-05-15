@@ -968,14 +968,23 @@ class Team():
 						break
 
 			# If the team is advocating for a policy, the following tasks are completed
+
 			if teams.issue_type == 'policy':
+
+				impact_number = len(teams.lead.belieftree_policy[0][teams.issue])
+
+				# Calculation of the average of the belief for each of the impacts
+				impact_average = []
+				for p in range(impact_number):
+					per_agent_list = []
+					for agent_cf in teams.members:
+						per_agent_list.append(agent_cf.belieftree_policy[0][teams.issue][p])
+					impact_average.append(sum(per_agent_list)/len(per_agent_list))
 
 				# As long as there are enough resources (50% of the total)
 				while True:
 
 					# print('Performing inter-team actions')
-
-					impact_number = len(teams.lead.belieftree_policy[0][teams.issue])
 
 					# Going through each of the agents that are part of the team
 					total_agent_grades = []
@@ -997,41 +1006,124 @@ class Team():
 									actionWeight = 1
 									# Framing actions:
 									for impact in range(impact_number):
-										check_none = 0
-										if agents_in_team.belieftree_policy[1 + links.agent2.unique_id][teams.issue][impact] == None:
-											agents_in_team.belieftree_policy[1 + links.agent2.unique_id][teams.issue][impact] = 0
-											check_none = 1
-										impact_grade = abs((agents_in_team.belieftree_policy[0][teams.issue][impact] - \
-										  agents_in_team.belieftree_policy[1 + links.agent2.unique_id][teams.issue][impact]) * \
-										  teams.resources[0] * 0.1 * links.aware * actionWeight)
-										total_agent_grades.append(impact_grade)
-										# None reset
-										if check_none == 1:
-											agents_in_team.belieftree_policy[1 + links.agent2.unique_id][teams.issue][impact] = None
+
+										# Calculation of the conflict level per impact:
+										belief_diff = abs(agents_in_team.belieftree_policy[0][teams.issue][impact] - impact_average[impact])
+
+										if belief_diff <= 0.25:
+											conflict_level_impact = conflict_level_coef[0]
+										if belief_diff > 0.25 and belief_diff <= 1.75:
+											conflict_level_impact = conflict_level_coef[2]
+										if belief_diff > 1.75:
+											conflict_level_impact = conflict_level_coef[1]
+
+										# Grade calculation using the likelihood method
+										# Same affiliation
+										if agents_in_team.affiliation == links.agent2.affiliation:
+											impact_grade = conflict_level_impact * links.aware * actionWeight
+											total_agent_grades.append(impact_grade)
+
+										# Affiliation 1-2
+										if (agents_in_team.affiliation == 0 and links.agent2.affiliation == 1) or \
+											(agents_in_team.affiliation == 1 and links.agent2.affiliation == 0):
+											impact_grade = conflict_level_impact * links.aware * actionWeight * affiliation_weights[0]
+											total_agent_grades.append(impact_grade)
+
+										# Affiliation 1-3
+										if (agents_in_team.affiliation == 0 and links.agent2.affiliation == 2) or \
+											(agents_in_team.affiliation == 2 and links.agent2.affiliation == 0):
+											impact_grade = conflict_level_impact * links.aware * actionWeight * affiliation_weights[1]
+											total_agent_grades.append(impact_grade)
+
+										# Affiliation 2-3
+										if (agents_in_team.affiliation == 1 and links.agent2.affiliation == 2) or \
+											(agents_in_team.affiliation == 2 and links.agent2.affiliation == 1):
+											impact_grade = conflict_level_impact * links.aware * actionWeight * affiliation_weights[2]
+											total_agent_grades.append(impact_grade)	
+
+										# check_none = 0
+										# if agents_in_team.belieftree_policy[1 + links.agent2.unique_id][teams.issue][impact] == None:
+										# 	agents_in_team.belieftree_policy[1 + links.agent2.unique_id][teams.issue][impact] = 0
+										# 	check_none = 1
+										# impact_grade = abs((agents_in_team.belieftree_policy[0][teams.issue][impact] - \
+										#   agents_in_team.belieftree_policy[1 + links.agent2.unique_id][teams.issue][impact]) * \
+										#   teams.resources[0] * 0.1 * links.aware * actionWeight)
+										# total_agent_grades.append(impact_grade)
+										# # None reset
+										# if check_none == 1:
+										# 	agents_in_team.belieftree_policy[1 + links.agent2.unique_id][teams.issue][impact] = None
 										
 									# State influence actions
-									check_none = 0
-									if agents_in_team.belieftree[1 + links.agent2.unique_id][teams.issue][0] == None:
-										agents_in_team.belieftree[1 + links.agent2.unique_id][teams.issue][0] = 0
-										check_none = 1
-									state_grade = abs((agents_in_team.belieftree[0][teams.issue][0] - \
-									  agents_in_team.belieftree[1 + links.agent2.unique_id][teams.issue][0]) * teams.resources[0] * 0.1 * links.aware * links.conflict_level[0] * actionWeight)
-									total_agent_grades.append(state_grade)
-									# None reset
-									if check_none == 1:
-										agents_in_team.belieftree[1 + links.agent2.unique_id][teams.issue][0] = None
+									# Grade calculation using the likelihood method
+									# Same affiliation
+									if agents_in_team.affiliation == links.agent2.affiliation:
+										state_grade = links.conflict_level[0] * links.aware * actionWeight
+										total_agent_grades.append(state_grade)
+
+									# Affiliation 1-2
+									if (agents_in_team.affiliation == 0 and links.agent2.affiliation == 1) or \
+										(agents_in_team.affiliation == 1 and links.agent2.affiliation == 0):
+										state_grade = links.conflict_level[0] * links.aware * actionWeight * affiliation_weights[0]
+										total_agent_grades.append(state_grade)
+
+									# Affiliation 1-3
+									if (agents_in_team.affiliation == 0 and links.agent2.affiliation == 2) or \
+										(agents_in_team.affiliation == 2 and links.agent2.affiliation == 0):
+										state_grade = links.conflict_level[0] * links.aware * actionWeight * affiliation_weights[1]
+										total_agent_grades.append(state_grade)
+
+									# Affiliation 2-3
+									if (agents_in_team.affiliation == 1 and links.agent2.affiliation == 2) or \
+										(agents_in_team.affiliation == 2 and links.agent2.affiliation == 1):
+										state_grade = links.conflict_level[0] * links.aware * actionWeight * affiliation_weights[2]
+										total_agent_grades.append(state_grade)
+
+									# check_none = 0
+									# if agents_in_team.belieftree[1 + links.agent2.unique_id][teams.issue][0] == None:
+									# 	agents_in_team.belieftree[1 + links.agent2.unique_id][teams.issue][0] = 0
+									# 	check_none = 1
+									# state_grade = abs((agents_in_team.belieftree[0][teams.issue][0] - \
+									#   agents_in_team.belieftree[1 + links.agent2.unique_id][teams.issue][0]) * teams.resources[0] * 0.1 * links.aware * links.conflict_level[0] * actionWeight)
+									# total_agent_grades.append(state_grade)
+									# # None reset
+									# if check_none == 1:
+									# 	agents_in_team.belieftree[1 + links.agent2.unique_id][teams.issue][0] = None
 
 									# Aim influence actions
-									check_none = 0
-									if agents_in_team.belieftree[1 + links.agent2.unique_id][teams.issue][1] == None:
-										agents_in_team.belieftree[1 + links.agent2.unique_id][teams.issue][1] = 0
-										check_none = 1
-									aim_grade = abs((agents_in_team.belieftree[0][teams.issue][1] - \
-									  agents_in_team.belieftree[1 + links.agent2.unique_id][teams.issue][1]) * teams.resources[0] * 0.1 * links.aware * links.conflict_level[1] * actionWeight)
-									total_agent_grades.append(aim_grade)
-									# None reset
-									if check_none == 1:
-										agents_in_team.belieftree[1 + links.agent2.unique_id][teams.issue][1] = None									
+									# Grade calculation using the likelihood method
+									# Same affiliation
+									if agents_in_team.affiliation == links.agent2.affiliation:
+										state_grade = links.conflict_level[1] * links.aware * actionWeight
+										total_agent_grades.append(state_grade)
+
+									# Affiliation 1-2
+									if (agents_in_team.affiliation == 0 and links.agent2.affiliation == 1) or \
+										(agents_in_team.affiliation == 1 and links.agent2.affiliation == 0):
+										state_grade = links.conflict_level[1] * links.aware * actionWeight * affiliation_weights[0]
+										total_agent_grades.append(state_grade)
+
+									# Affiliation 1-3
+									if (agents_in_team.affiliation == 0 and links.agent2.affiliation == 2) or \
+										(agents_in_team.affiliation == 2 and links.agent2.affiliation == 0):
+										state_grade = links.conflict_level[1] * links.aware * actionWeight * affiliation_weights[1]
+										total_agent_grades.append(state_grade)
+
+									# Affiliation 2-3
+									if (agents_in_team.affiliation == 1 and links.agent2.affiliation == 2) or \
+										(agents_in_team.affiliation == 2 and links.agent2.affiliation == 1):
+										state_grade = links.conflict_level[1] * links.aware * actionWeight * affiliation_weights[2]
+										total_agent_grades.append(state_grade)
+
+									# check_none = 0
+									# if agents_in_team.belieftree[1 + links.agent2.unique_id][teams.issue][1] == None:
+									# 	agents_in_team.belieftree[1 + links.agent2.unique_id][teams.issue][1] = 0
+									# 	check_none = 1
+									# aim_grade = abs((agents_in_team.belieftree[0][teams.issue][1] - \
+									#   agents_in_team.belieftree[1 + links.agent2.unique_id][teams.issue][1]) * teams.resources[0] * 0.1 * links.aware * links.conflict_level[1] * actionWeight)
+									# total_agent_grades.append(aim_grade)
+									# # None reset
+									# if check_none == 1:
+									# 	agents_in_team.belieftree[1 + links.agent2.unique_id][teams.issue][1] = None									
 
 					# Check that some actions were performed
 					if len(total_agent_grades) == 0:
@@ -1070,23 +1162,45 @@ class Team():
 						# print('best_action: ' + str(best_action))
 
 						# print('Before: ' + str(list_links_teams[acted_upon_agent].agent2.belieftree[0][len(deep_core) + len(policy_core) + len(secondary) + best_action][0]))
-						list_links_teams[acted_upon_agent].agent2.belieftree_policy[0][teams.issue][best_action] += \
-						  (teams.members[acting_agent].belieftree_policy[0][teams.issue][best_action] - \
-						  list_links_teams[acted_upon_agent].agent2.belieftree_policy[0][teams.issue][best_action]) * \
-						  teams.resources[0] * 0.1 * list_links_teams[acted_upon_agent].aware
+
+						# Same affiliation
+						if teams.members[acting_agent].affiliation == list_links_teams[acted_upon_agent].agent2.affiliation:
+							list_links_teams[acted_upon_agent].agent2.belieftree_policy[0][teams.issue][best_action] += \
+								(teams.members[acting_agent].belieftree_policy[0][teams.issue][best_action] - list_links_teams[acted_upon_agent].agent2.belieftree_policy[0][teams.issue][best_action]) * \
+								teams.resources[0] * 0.1
+
+						# Affiliation 1-2
+						if (teams.members[acting_agent].affiliation == 0 and list_links_teams[acted_upon_agent].agent2.affiliation == 1) or \
+							(teams.members[acting_agent].affiliation == 1 and list_links_teams[acted_upon_agent].agent2.affiliation == 0):
+							list_links_teams[acted_upon_agent].agent2.belieftree_policy[0][teams.issue][best_action] += \
+								(teams.members[acting_agent].belieftree_policy[0][teams.issue][best_action] - list_links_teams[acted_upon_agent].agent2.belieftree_policy[0][teams.issue][best_action]) * \
+								teams.resources[0] * 0.1 * affiliation_weights[0]
+
+						# Affiliation 1-3
+						if (teams.members[acting_agent].affiliation == 0 and list_links_teams[acted_upon_agent].agent2.affiliation == 2) or \
+							(teams.members[acting_agent].affiliation == 2 and list_links_teams[acted_upon_agent].agent2.affiliation == 0):
+							list_links_teams[acted_upon_agent].agent2.belieftree_policy[0][teams.issue][best_action] += \
+								(teams.members[acting_agent].belieftree_policy[0][teams.issue][best_action] - list_links_teams[acted_upon_agent].agent2.belieftree_policy[0][teams.issue][best_action]) * \
+								teams.resources[0] * 0.1 * affiliation_weights[1]
+
+						# Affiliation 2-3
+						if (teams.members[acting_agent].affiliation == 1 and list_links_teams[acted_upon_agent].agent2.affiliation == 2) or \
+							(teams.members[acting_agent].affiliation == 2 and list_links_teams[acted_upon_agent].agent2.affiliation == 1):
+							list_links_teams[acted_upon_agent].agent2.belieftree_policy[0][teams.issue][best_action] += \
+								(teams.members[acting_agent].belieftree_policy[0][teams.issue][best_action] - list_links_teams[acted_upon_agent].agent2.belieftree_policy[0][teams.issue][best_action]) * \
+								teams.resources[0] * 0.1 * affiliation_weights[2]
+
 						# print('After: ' + str(list_links_teams[acted_upon_agent].agent2.belieftree[0][len(deep_core) + len(policy_core) + len(secondary) + best_action][0]))
+						
+						# Checks and transfer of partial knowledge
 						# 1-1 check
-						list_links_teams[acted_upon_agent].agent2.belieftree_policy[0][teams.issue][best_action] = \
-							self.one_minus_one_check(list_links_teams[acted_upon_agent].agent2.belieftree_policy[0][teams.issue][best_action])
+						list_links_teams[acted_upon_agent].agent2.belieftree_policy[0][teams.issue][best_action] = self.one_minus_one_check(list_links_teams[acted_upon_agent].agent2.belieftree_policy[0][teams.issue][best_action])
 						# Exchange of knowledge - 0.2 - From acted upon to acting
-						teams.members[acting_agent].belieftree_policy[1 + acted_upon_agent][teams.issue][best_action] = \
-						  list_links_teams[acted_upon_agent].agent2.belieftree_policy[0][teams.issue][best_action] + (random.random()/5) - 0.1
+						teams.members[acting_agent].belieftree_policy[1 + acted_upon_agent][teams.issue][best_action] = list_links_teams[acted_upon_agent].agent2.belieftree_policy[0][teams.issue][best_action] + (random.random()/5) - 0.1
 						# 1-1 check
-						teams.members[acting_agent].belieftree_policy[1 + acted_upon_agent][teams.issue][best_action] = \
-							self.one_minus_one_check(teams.members[acting_agent].belieftree_policy[1 + acted_upon_agent][teams.issue][best_action])
+						teams.members[acting_agent].belieftree_policy[1 + acted_upon_agent][teams.issue][best_action] = self.one_minus_one_check(teams.members[acting_agent].belieftree_policy[1 + acted_upon_agent][teams.issue][best_action])
 						# Exchange of knowledge - 0.2 - From acting to acted upon
-						list_links_teams[acted_upon_agent].agent2.belieftree_policy[1 + acting_agent][teams.issue][best_action] = \
-						  teams.members[acting_agent].belieftree_policy[0][teams.issue][best_action] + (random.random()/5) - 0.1
+						list_links_teams[acted_upon_agent].agent2.belieftree_policy[1 + acting_agent][teams.issue][best_action] = teams.members[acting_agent].belieftree_policy[0][teams.issue][best_action] + (random.random()/5) - 0.1
 						# 1-1 check
 						list_links_teams[acted_upon_agent].agent2.belieftree_policy[1 + acting_agent][teams.issue][best_action] = \
 							self.one_minus_one_check(list_links_teams[acted_upon_agent].agent2.belieftree_policy[1 + acting_agent][teams.issue][best_action])
@@ -1097,24 +1211,39 @@ class Team():
 						# print('Performing a state change action')
 						# print('best_action: ' + str(best_action))
 
-						list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][0] += (teams.members[acting_agent].belieftree[0][teams.issue][0] - \
-						  list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][0]) * teams.resources[0] * 0.1 * \
-						  list_links_teams[acted_upon_agent].aware
+						if teams.members[acting_agent].affiliation == list_links_teams[acted_upon_agent].agent2.affiliation:
+							list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][0] += \
+								(teams.members[acting_agent].belieftree[0][teams.issue][0] - list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][0]) * teams.resources[0] * 0.1
+
+						# Affiliation 1-2
+						if (teams.members[acting_agent].affiliation == 0 and list_links_teams[acted_upon_agent].agent2.affiliation == 1) or \
+							(teams.members[acting_agent].affiliation == 1 and list_links_teams[acted_upon_agent].agent2.affiliation == 0):
+							list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][0] += \
+								(teams.members[acting_agent].belieftree[0][teams.issue][0] - list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][0]) * teams.resources[0] * 0.1 * affiliation_weights[0]
+
+						# Affiliation 1-3
+						if (teams.members[acting_agent].affiliation == 0 and list_links_teams[acted_upon_agent].agent2.affiliation == 2) or \
+							(teams.members[acting_agent].affiliation == 2 and list_links_teams[acted_upon_agent].agent2.affiliation == 0):
+							list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][0] += \
+								(teams.members[acting_agent].belieftree[0][teams.issue][0] - list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][0]) * teams.resources[0] * 0.1 * affiliation_weights[1]
+
+						# Affiliation 2-3
+						if (teams.members[acting_agent].affiliation == 1 and list_links_teams[acted_upon_agent].agent2.affiliation == 2) or \
+							(teams.members[acting_agent].affiliation == 2 and list_links_teams[acted_upon_agent].agent2.affiliation == 1):
+							list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][0] += \
+								(teams.members[acting_agent].belieftree[0][teams.issue][0] - list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][0]) * teams.resources[0] * 0.1 * affiliation_weights[2]
+						
+						# Checks and transfer of partial knowledge
 						# 1-1 check
-						list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][0] = \
-							self.one_minus_one_check(list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][0])
+						list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][0] = self.one_minus_one_check(list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][0])
 						# Exchange of knowledge - 0.2 - From acted upon to acting
-						teams.members[acting_agent].belieftree[1 + acted_upon_agent][teams.issue][0] = \
-						  list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][0] + (random.random()/5) - 0.1
+						teams.members[acting_agent].belieftree[1 + acted_upon_agent][teams.issue][0] = list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][0] + (random.random()/5) - 0.1
 						# 1-1 check
-						teams.members[acting_agent].belieftree[1 + acted_upon_agent][teams.issue][0] = \
-							self.one_minus_one_check(teams.members[acting_agent].belieftree[1 + acted_upon_agent][teams.issue][0])
+						teams.members[acting_agent].belieftree[1 + acted_upon_agent][teams.issue][0] = self.one_minus_one_check(teams.members[acting_agent].belieftree[1 + acted_upon_agent][teams.issue][0])
 						# Exchange of knowledge - 0.2 - From acting to acted upon
-						list_links_teams[acted_upon_agent].agent2.belieftree[1 + acting_agent][teams.issue][0] = \
-						  teams.members[acting_agent].belieftree[0][teams.issue][0] + (random.random()/5) - 0.1
+						list_links_teams[acted_upon_agent].agent2.belieftree[1 + acting_agent][teams.issue][0] = teams.members[acting_agent].belieftree[0][teams.issue][0] + (random.random()/5) - 0.1
 						# 1-1 check
-						list_links_teams[acted_upon_agent].agent2.belieftree[1 + acting_agent][teams.issue][0] = \
-							self.one_minus_one_check(list_links_teams[acted_upon_agent].agent2.belieftree[1 + acting_agent][teams.issue][0])
+						list_links_teams[acted_upon_agent].agent2.belieftree[1 + acting_agent][teams.issue][0] = self.one_minus_one_check(list_links_teams[acted_upon_agent].agent2.belieftree[1 + acting_agent][teams.issue][0])
 
 					# Implement aim influence action
 					if best_action == impact_number + 1:
@@ -1122,24 +1251,39 @@ class Team():
 						# print('Performing an aim change action')
 						# print('best_action: ' + str(best_action))
 
-						list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][1] += (teams.members[acting_agent].belieftree[0][teams.issue][1] - \
-						  list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][1]) * teams.resources[0] * 0.1 * \
-						  list_links_teams[acted_upon_agent].aware
+						if teams.members[acting_agent].affiliation == list_links_teams[acted_upon_agent].agent2.affiliation:
+							list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][1] += \
+								(teams.members[acting_agent].belieftree[0][teams.issue][1] - list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][1]) * teams.resources[0] * 0.1
+
+						# Affiliation 1-2
+						if (teams.members[acting_agent].affiliation == 0 and list_links_teams[acted_upon_agent].agent2.affiliation == 1) or \
+							(teams.members[acting_agent].affiliation == 1 and list_links_teams[acted_upon_agent].agent2.affiliation == 0):
+							list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][1] += \
+								(teams.members[acting_agent].belieftree[0][teams.issue][1] - list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][1]) * teams.resources[0] * 0.1 * affiliation_weights[0]
+
+						# Affiliation 1-3
+						if (teams.members[acting_agent].affiliation == 0 and list_links_teams[acted_upon_agent].agent2.affiliation == 2) or \
+							(teams.members[acting_agent].affiliation == 2 and list_links_teams[acted_upon_agent].agent2.affiliation == 0):
+							llist_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][1] += \
+								(teams.members[acting_agent].belieftree[0][teams.issue][1] - list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][1]) * teams.resources[0] * 0.1 * affiliation_weights[1]
+
+						# Affiliation 2-3
+						if (teams.members[acting_agent].affiliation == 1 and list_links_teams[acted_upon_agent].agent2.affiliation == 2) or \
+							(teams.members[acting_agent].affiliation == 2 and list_links_teams[acted_upon_agent].agent2.affiliation == 1):
+							list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][1] += \
+								(teams.members[acting_agent].belieftree[0][teams.issue][1] - list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][1]) * teams.resources[0] * 0.1 * affiliation_weights[2]
+						
+						# Checks and transfer of partial knowledge
 						# 1-1 check
-						list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][1] = \
-							self.one_minus_one_check(list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][1])
+						list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][1] = self.one_minus_one_check(list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][1])
 						# Exchange of knowledge - 0.2 - From acted upon to acting
-						teams.members[acting_agent].belieftree[1 + acted_upon_agent][teams.issue][1] = \
-						  list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][1] + (random.random()/5) - 0.1
+						teams.members[acting_agent].belieftree[1 + acted_upon_agent][teams.issue][1] = list_links_teams[acted_upon_agent].agent2.belieftree[0][teams.issue][1] + (random.random()/5) - 0.1
 						# 1-1 check
-						teams.members[acting_agent].belieftree[1 + acted_upon_agent][teams.issue][1] = \
-							self.one_minus_one_check(teams.members[acting_agent].belieftree[1 + acted_upon_agent][teams.issue][1])
+						teams.members[acting_agent].belieftree[1 + acted_upon_agent][teams.issue][1] = self.one_minus_one_check(teams.members[acting_agent].belieftree[1 + acted_upon_agent][teams.issue][1])
 						# Exchange of knowledge - 0.2 - From acting to acted upon
-						list_links_teams[acted_upon_agent].agent2.belieftree[1 + acting_agent][teams.issue][1] = \
-						  teams.members[acting_agent].belieftree[0][teams.issue][1] + (random.random()/5) - 0.1
+						list_links_teams[acted_upon_agent].agent2.belieftree[1 + acting_agent][teams.issue][1] = teams.members[acting_agent].belieftree[0][teams.issue][1] + (random.random()/5) - 0.1
 						# 1-1 check
-						list_links_teams[acted_upon_agent].agent2.belieftree[1 + acting_agent][teams.issue][1] = \
-							self.one_minus_one_check(list_links_teams[acted_upon_agent].agent2.belieftree[1 + acting_agent][teams.issue][1])
+						list_links_teams[acted_upon_agent].agent2.belieftree[1 + acting_agent][teams.issue][1] = self.one_minus_one_check(list_links_teams[acted_upon_agent].agent2.belieftree[1 + acting_agent][teams.issue][1])
 
 					# Updating the resources of the team
 					teams.resources[1] -= teams.resources[0]*0.1
@@ -2046,9 +2190,9 @@ class Team():
 
 					# Implement framing action
 					if best_action <= impact_number - 1:
-						print(' ')
-						print('Performing a causal relation framing action')
-						print('best_action: ' + str(best_action))
+						# print(' ')
+						# print('Performing a causal relation framing action')
+						# print('best_action: ' + str(best_action))
 
 						# print('Before: ' + str(list_links_teams[acted_upon_agent].agent2.belieftree[0][len(deep_core) + len(policy_core) + len(secondary) + best_action][0]))
 						list_links_teams[acted_upon_agent].agent2.belieftree_instrument[0][teams.issue][best_action] += \

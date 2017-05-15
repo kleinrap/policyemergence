@@ -31,3 +31,5 @@ Changes to the code:
 - Addition of the causal relation conflict level to the shadow networks of teams (AS)
 - Inter-team actions (AS) (3S) Problem - new likelihood for the calculation of the grades of the actions
 - Inter-team actions (AS) (3S) Problem - new impact calculation
+- Inter-team actions (AS) (3S) Policy - new likelihood for the calculation of the grades of the actions
+- Inter-team actions (AS) (3S) Policy - new impact calculation

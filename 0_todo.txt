@@ -10,7 +10,8 @@ Small tasks that still need to be performed:
 - Address the issue of initialisation of the policy hierarchy partial beliefs (3S). This has an major impact on the conflict level calculations.
 - Address the fact that for the conflict level of the shadow network of the teams, the full knowledge is used to constitute the conflict level which puts the teams at an advantage in their actions compared to individuals.
 - Address the actionweight parameter for the inter-team actions (currently not working)
-- Address the lack of resource potency parameter in the inter-team actions (AS)
+- Address the lack of resource potency parameter in the inter-team actions (AS) (3S)
+- Check if teams.issue is split between AS and PF - they seem to overlap creating potential problems.
 
 Regarding the likelihood and impact actions changes:
 - Coalitions (these require large changes to algorithms):
@@ -23,8 +24,6 @@ Regarding the likelihood and impact actions changes:
 		- Intra-coalition actions impact
 - Teams
 	- AS
-		- Inter-team likelihood (policy)
-		- Inter-team impact (policy)
 		- Intra-team likelihood (policy)
 		- Intra-team impact (policy)
 		- Intra-team likelihood (problem)
