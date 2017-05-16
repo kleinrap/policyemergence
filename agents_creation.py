@@ -1257,17 +1257,21 @@ class Externalparties(Agent):
 		len_PC = len(policy_core)
 		len_S = len(secondary)
 
+		# Assignment of the resources for the two main types of actions:
+		agents.resources_actions_BFraming = agents.resources_actions
+		agents.resources_actions_EInfluence = agents.resources_actions * 0.2
+
+		############################################################################################################
+		# 1. Blanket framing, grading of actions and implementation of the best actions until resources run out 
+		# 100% of the resources (from actions)
+
+		# This will need to be adjusted at a later point
+		actionWeight = 1
+
 		cw_of_interest = []
 		# We only consider the causal relations related to the problem on the agenda
 		for cw_choice in range(len(deep_core)):
 				cw_of_interest.append(len_DC + len_PC + len_S + (agents.select_problem_3S_as - len_DC) + cw_choice * len(policy_core))
-
-		agents.resources_actions_BFraming = agents.resources_actions
-		agents.resources_actions_EInfluence = agents.resources_actions * 0.2
-		# 1. Blanket framing, grading of actions and implementation of the best actions until resources run out 
-
-		# This will need to be adjusted at a later point
-		actionWeight = 1
 
 		# If the team is advocating for a problem, the following tasks are completed
 		if agents.select_issue_3S_as == 'problem':
@@ -1952,8 +1956,9 @@ class Externalparties(Agent):
 				agents.resources_actions_BFraming -= agents.resources[0] * 0.1
 				agents.resources_actions -= agents.resources[0] * 0.1
 
+		############################################################################################################
 		# 2. Electorate influence, grading of actions and implementation of the best actions until resources run out 
-		# 50% of the resources (from actions)
+		# 20% of the resources (from actions)
 		while agents.resources_actions_EInfluence > 0.001:
 			actions_EP_grades_EInfluence = []
 			# FIRST - Calculation of the best option
@@ -2103,6 +2108,9 @@ class Externalparties(Agent):
 		# 1. Blanket framing, grading of actions and implementation of the best actions until resources run out 
 		# 100% of the resources (from actions)
 
+		# This will need to be adjusted at a later point
+		actionWeight = 1
+
 		# Selection of the cw of interest
 		cw_of_interest = []
 		# Select one by one the DC
@@ -2115,9 +2123,7 @@ class Externalparties(Agent):
 			if (agents.belieftree[0][len_DC + len_PC + len_S + len_PC*len_DC + (j-len_DC) + k*len_PC][0] < 0 and (agents.belieftree[0][j][1] - agents.belieftree[0][j][0]) < 0) \
 			  or (agents.belieftree[0][len_DC + len_PC + len_S + len_PC*len_DC + (j-len_DC) + k*len_PC][0] > 0 and (agents.belieftree[0][j][1] - agents.belieftree[0][j][0]) > 0):
 				cw_of_interest.append(len_DC + len_PC + len_S + len_PC*len_DC + (j-len_DC) + k*len_PC)
-
-		# This will need to be adjusted at a later point
-		actionWeight = 1
+		
 
 		# If the team is advocating for a problem, the following tasks are completed
 		if agents.select_issue_3S_pf == 'problem':
