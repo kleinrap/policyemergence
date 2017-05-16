@@ -2095,9 +2095,13 @@ class Externalparties(Agent):
 		len_PC = len(policy_core)
 		len_S = len(secondary)
 
-		agents.resources_actions_BFraming = agents.resources_actions * 0.5
-		agents.resources_actions_EInfluence = agents.resources_actions * 0.5
+		# Assignment of the resources for the two main types of actions:
+		agents.resources_actions_BFraming = agents.resources_actions
+		agents.resources_actions_EInfluence = agents.resources_actions * 0.2
+
+		############################################################################################################
 		# 1. Blanket framing, grading of actions and implementation of the best actions until resources run out 
+		# 100% of the resources (from actions)
 
 		# Selection of the cw of interest
 		cw_of_interest = []
@@ -2798,10 +2802,9 @@ class Externalparties(Agent):
 				agents.resources_actions_BFraming -= agents.resources[0] * 0.1
 				agents.resources_actions -= agents.resources[0] * 0.1
 
-
-
+		############################################################################################################
 		# 2. Electorate influence, grading of actions and implementation of the best actions until resources run out 
-		# 50% of the resources (from actions)
+		# 20% of the resources (from actions)
 		while agents.resources_actions_EInfluence > 0.001:
 				actions_EP_grades_EInfluence = []
 				# FIRST - Calculation of the best option
