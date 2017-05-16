@@ -174,65 +174,65 @@ class Coalition():
 					# We then go through all agents
 					for agent_inspected in coalitions.members:
 						# Take the list of links
-							for links in link_list:
-								# Check that the list has an awareness level
-								if links.aware != -1:
-									# Check that only the link of interest is selected
-									if links.agent1 == coalitions.lead and links.agent2 == agent_inspected or links.agent2 == coalitions.lead and links.agent1 == agent_inspected:
+						for links in link_list:
+							# Check that the list has an awareness level
+							if links.aware != -1:
+								# Check that only the link of interest is selected
+								if links.agent1 == coalitions.lead and links.agent2 == agent_inspected or links.agent2 == coalitions.lead and links.agent1 == agent_inspected:
 
-										# Make sure to look at the right direction of the conflict level
-										if links.agent1 == coalitions.lead:
-										
-											# Grade calculation using the likelihood method
-											# Same affiliation
-											if links.agent1.affiliation == links.agent2.affiliation:
-												state_grade = links.conflict_level[0][coalitions.issue][0] * links.aware * actionWeight
+									# Make sure to look at the right direction of the conflict level
+									if links.agent1 == coalitions.lead:
+									
+										# Grade calculation using the likelihood method
+										# Same affiliation
+										if links.agent1.affiliation == links.agent2.affiliation:
+											state_grade = links.conflict_level[0][coalitions.issue][0] * links.aware * actionWeight
 
-											# Affiliation 1-2
-											if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
-												(links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
-												state_grade = links.conflict_level[0][coalitions.issue][0] * links.aware * actionWeight * affiliation_weights[0]
+										# Affiliation 1-2
+										if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
+											(links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
+											state_grade = links.conflict_level[0][coalitions.issue][0] * links.aware * actionWeight * affiliation_weights[0]
 
-											# Affiliation 1-3
-											if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
-												(links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
-												state_grade = links.conflict_level[0][coalitions.issue][0] * links.aware * actionWeight * affiliation_weights[1]
+										# Affiliation 1-3
+										if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
+											(links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
+											state_grade = links.conflict_level[0][coalitions.issue][0] * links.aware * actionWeight * affiliation_weights[1]
 
-											# Affiliation 2-3
-											if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
-												(links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
-												state_grade = links.conflict_level[0][coalitions.issue][0] * links.aware * actionWeight * affiliation_weights[2]
+										# Affiliation 2-3
+										if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
+											(links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
+											state_grade = links.conflict_level[0][coalitions.issue][0] * links.aware * actionWeight * affiliation_weights[2]
 
-											state_grade_list.append(state_grade)
+										state_grade_list.append(state_grade)
 
-										if links.agent2 == coalitions.lead:
-										
-											# Grade calculation using the likelihood method
-											# Same affiliation
-											if links.agent1.affiliation == links.agent2.affiliation:
-												state_grade = links.conflict_level[1][coalitions.issue][0] * links.aware * actionWeight
+									if links.agent2 == coalitions.lead:
+									
+										# Grade calculation using the likelihood method
+										# Same affiliation
+										if links.agent1.affiliation == links.agent2.affiliation:
+											state_grade = links.conflict_level[1][coalitions.issue][0] * links.aware * actionWeight
 
-											# Affiliation 1-2
-											if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
-												(links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
-												state_grade = links.conflict_level[1][coalitions.issue][0] * links.aware * actionWeight * affiliation_weights[0]
+										# Affiliation 1-2
+										if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
+											(links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
+											state_grade = links.conflict_level[1][coalitions.issue][0] * links.aware * actionWeight * affiliation_weights[0]
 
-											# Affiliation 1-3
-											if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
-												(links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
-												state_grade = links.conflict_level[1][coalitions.issue][0] * links.aware * actionWeight * affiliation_weights[1]
+										# Affiliation 1-3
+										if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
+											(links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
+											state_grade = links.conflict_level[1][coalitions.issue][0] * links.aware * actionWeight * affiliation_weights[1]
 
-											# Affiliation 2-3
-											if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
-												(links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
-												state_grade = links.conflict_level[1][coalitions.issue][0] * links.aware * actionWeight * affiliation_weights[2]
-										
-											state_grade_list.append(state_grade)
-								# If the link has a negative awareness, set the grade of the action to 0
-								else:
-									# Check that only the link of interest is selected
-									if links.agent1 == coalitions.lead and links.agent2 == agent_inspected or links.agent2 == coalitions.lead and links.agent1 == agent_inspected:
-										state_grade_list.append(0)
+										# Affiliation 2-3
+										if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
+											(links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
+											state_grade = links.conflict_level[1][coalitions.issue][0] * links.aware * actionWeight * affiliation_weights[2]
+									
+										state_grade_list.append(state_grade)
+							# If the link has a negative awareness, set the grade of the action to 0
+							else:
+								# Check that only the link of interest is selected
+								if links.agent1 == coalitions.lead and links.agent2 == agent_inspected or links.agent2 == coalitions.lead and links.agent1 == agent_inspected:
+									state_grade_list.append(0)
 
 
 
@@ -262,65 +262,65 @@ class Coalition():
 					# We then go through all agents
 					for agent_inspected in coalitions.members:
 						# Take the list of links
-							for links in link_list:
-								# Check that the list has an awareness level
-								if links.aware != -1:
-									# Check that only the link of interest is selected
-									if links.agent1 == coalitions.lead and links.agent2 == agent_inspected or links.agent2 == coalitions.lead and links.agent1 == agent_inspected:
+						for links in link_list:
+							# Check that the list has an awareness level
+							if links.aware != -1:
+								# Check that only the link of interest is selected
+								if links.agent1 == coalitions.lead and links.agent2 == agent_inspected or links.agent2 == coalitions.lead and links.agent1 == agent_inspected:
 
-										# Make sure to look at the right direction of the conflict level
-										if links.agent1 == coalitions.lead:
-										
-											# Grade calculation using the likelihood method
-											# Same affiliation
-											if links.agent1.affiliation == links.agent2.affiliation:
-												aim_grade = links.conflict_level[0][coalitions.issue][1] * links.aware * actionWeight
+									# Make sure to look at the right direction of the conflict level
+									if links.agent1 == coalitions.lead:
+									
+										# Grade calculation using the likelihood method
+										# Same affiliation
+										if links.agent1.affiliation == links.agent2.affiliation:
+											aim_grade = links.conflict_level[0][coalitions.issue][1] * links.aware * actionWeight
 
-											# Affiliation 1-2
-											if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
-												(links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
-												aim_grade = links.conflict_level[0][coalitions.issue][1] * links.aware * actionWeight * affiliation_weights[0]
+										# Affiliation 1-2
+										if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
+											(links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
+											aim_grade = links.conflict_level[0][coalitions.issue][1] * links.aware * actionWeight * affiliation_weights[0]
 
-											# Affiliation 1-3
-											if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
-												(links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
-												aim_grade = links.conflict_level[0][coalitions.issue][1] * links.aware * actionWeight * affiliation_weights[1]
+										# Affiliation 1-3
+										if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
+											(links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
+											aim_grade = links.conflict_level[0][coalitions.issue][1] * links.aware * actionWeight * affiliation_weights[1]
 
-											# Affiliation 2-3
-											if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
-												(links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
-												aim_grade = links.conflict_level[0][coalitions.issue][1] * links.aware * actionWeight * affiliation_weights[2]
+										# Affiliation 2-3
+										if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
+											(links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
+											aim_grade = links.conflict_level[0][coalitions.issue][1] * links.aware * actionWeight * affiliation_weights[2]
 
-											aim_grade_list.append(aim_grade)
+										aim_grade_list.append(aim_grade)
 
-										if links.agent1 == coalitions.lead:
-										
-											# Grade calculation using the likelihood method
-											# Same affiliation
-											if links.agent1.affiliation == links.agent2.affiliation:
-												aim_grade = links.conflict_level[1][coalitions.issue][1] * links.aware * actionWeight
+									if links.agent1 == coalitions.lead:
+									
+										# Grade calculation using the likelihood method
+										# Same affiliation
+										if links.agent1.affiliation == links.agent2.affiliation:
+											aim_grade = links.conflict_level[1][coalitions.issue][1] * links.aware * actionWeight
 
-											# Affiliation 1-2
-											if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
-												(links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
-												aim_grade = links.conflict_level[1][coalitions.issue][1] * links.aware * actionWeight * affiliation_weights[0]
+										# Affiliation 1-2
+										if (links.agent1.affiliation == 0 and links.agent2.affiliation == 1) or \
+											(links.agent1.affiliation == 1 and links.agent2.affiliation == 0):
+											aim_grade = links.conflict_level[1][coalitions.issue][1] * links.aware * actionWeight * affiliation_weights[0]
 
-											# Affiliation 1-3
-											if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
-												(links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
-												aim_grade = links.conflict_level[1][coalitions.issue][1] * links.aware * actionWeight * affiliation_weights[1]
+										# Affiliation 1-3
+										if (links.agent1.affiliation == 0 and links.agent2.affiliation == 2) or \
+											(links.agent1.affiliation == 2 and links.agent2.affiliation == 0):
+											aim_grade = links.conflict_level[1][coalitions.issue][1] * links.aware * actionWeight * affiliation_weights[1]
 
-											# Affiliation 2-3
-											if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
-												(links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
-												aim_grade = links.conflict_level[1][coalitions.issue][1] * links.aware * actionWeight * affiliation_weights[2]
-										
-											aim_grade_list.append(aim_grade)
-								# If the link has a negative awareness, set the grade of the action to 0
-								else:
-									# Check that only the link of interest is selected
-									if links.agent1 == coalitions.lead and links.agent2 == agent_inspected or links.agent2 == coalitions.lead and links.agent1 == agent_inspected:
-										aim_grade_list.append(0)
+										# Affiliation 2-3
+										if (links.agent1.affiliation == 1 and links.agent2.affiliation == 2) or \
+											(links.agent1.affiliation == 2 and links.agent2.affiliation == 1):
+											aim_grade = links.conflict_level[1][coalitions.issue][1] * links.aware * actionWeight * affiliation_weights[2]
+									
+										aim_grade_list.append(aim_grade)
+							# If the link has a negative awareness, set the grade of the action to 0
+							else:
+								# Check that only the link of interest is selected
+								if links.agent1 == coalitions.lead and links.agent2 == agent_inspected or links.agent2 == coalitions.lead and links.agent1 == agent_inspected:
+									aim_grade_list.append(0)
 
 						# if coalitions.lead.affiliation == agent_inspected.affiliation:
 						# 	aim_grade = abs((coalitions.lead.belieftree[0][coalitions.issue][1] - \
@@ -385,8 +385,7 @@ class Coalition():
 									coalitions.resources[0] * 0.1 * affiliation_weights[2] / len(coalitions.members)
 
 							# 1-1 check
-							agent_impacted.belieftree[0][cw_of_interest[best_action]][0] = \
-								self.one_minus_one_check(agent_impacted.belieftree[0][cw_of_interest[best_action]][0])
+							agent_impacted.belieftree[0][cw_of_interest[best_action]][0] = self.one_minus_one_check(agent_impacted.belieftree[0][cw_of_interest[best_action]][0])
 							
 					# The state change is performed
 					if best_action == len(cw_of_interest):
@@ -414,8 +413,7 @@ class Coalition():
 								  agent_impacted.belieftree[0][coalitions.issue][0]) * coalitions.resources[0] * 0.1 * affiliation_weights[2] / (len(coalitions.members))
 
 							# 1-1 check
-							agent_impacted.belieftree[0][coalitions.issue][0] = \
-								self.one_minus_one_check(agent_impacted.belieftree[0][coalitions.issue][0])
+							agent_impacted.belieftree[0][coalitions.issue][0] = self.one_minus_one_check(agent_impacted.belieftree[0][coalitions.issue][0])
 
 					# The aim change is performed
 					if best_action == len(cw_of_interest) + 1:
@@ -442,8 +440,7 @@ class Coalition():
 								  agent_impacted.belieftree[0][coalitions.issue][1]) * coalitions.resources[0] * 0.1 * affiliation_weights[2] / (len(coalitions.members))
 
 							# 1-1 check
-							agent_impacted.belieftree[0][coalitions.issue][1] = \
-								self.one_minus_one_check(agent_impacted.belieftree[0][coalitions.issue][1])
+							agent_impacted.belieftree[0][coalitions.issue][1] = self.one_minus_one_check(agent_impacted.belieftree[0][coalitions.issue][1])
 					
 					# Updating the resources of the team
 					coalitions.resources[1] -= coalitions.resources[0]*0.1

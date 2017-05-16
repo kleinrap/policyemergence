@@ -593,7 +593,7 @@ class PolicyEmergence(Model):
 					# 1 - Looking at the external parties
 					if type(agents) == Externalparties:
 						agents.external_parties_actions_as(agents, self.agent_action_list, self.causalrelation_number, self.affiliation_weights, \
-							self.deep_core, self.policy_core, self.secondary, self.electorate_number, self.action_agent_number, self.master_list)
+							self.deep_core, self.policy_core, self.secondary, self.electorate_number, self.action_agent_number, self.master_list, self.link_list)
 
 					# 2 - Looking at the policy makers and policy entrepreneurs
 					# Shuffle of the list of links for the actions
@@ -886,7 +886,7 @@ class PolicyEmergence(Model):
 					if type(agents) == Externalparties:
 						agents.external_parties_actions_pf(agents, self.agent_action_list, self.causalrelation_number, \
 							self.affiliation_weights, self.deep_core, self.policy_core, self.secondary, self.electorate_number, \
-							self.action_agent_number, self.agenda_as_issue, self.instruments, self.master_list)
+							self.action_agent_number, self.agenda_as_issue, self.instruments, self.master_list, self.link_list)
 
 					# 2 - Looking at the policy makers and policy entrepreneurs
 					if type(agents) == Policymakers or type(agents) == Policyentres:
