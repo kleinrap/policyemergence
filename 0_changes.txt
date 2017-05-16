@@ -54,3 +54,6 @@ Changes to the code:
 16 May:
 - Change of the allocation resources for the actions of the external parties (AS) (B+/ACF)
 - External parties new actions (AS) (B+/ACF)
+- External parties new actions (PF) (B+/ACF)
+- External parties new actions (AS) (3S) Policy and problem
+- External parties new actions (PF) (3S) Policy and problem
