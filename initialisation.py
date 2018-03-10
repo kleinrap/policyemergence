@@ -250,7 +250,7 @@ def initial_values(inputs_dict, experiment_input, run_number, agent_inputs, AS_t
 	belieftree_electorate = [None for i in range(issues_number)]
 	# For all other agents
 	causalrelation_number = len_DC*len_PC + len_PC*len_S
-	belieftree = [[None] for i in range(total_agent_number)]
+	belieftree = [[None] for i in range(len_DC + len_PC + len_S + causalrelation_number)]
 	for i in range(len(belieftree)):
 		# STATE - AIM - PREFERENCE for the issues and None - VALUE - NONE for the causal relations
 		belieftree[i] = [[None, None, None] for i in range(len_DC + len_PC + len_S + causalrelation_number)]

@@ -577,7 +577,7 @@ def initial_values_exploration(inputs_dict, experiment_input, run_number, agent_
 				belieftree[0][7][1] = 1			# S3 - Monitoring
 				belieftree[0][8][1] = 1			# S4 - Firefighters
 				belieftree[0][9][1] = 1			# S5 - Prevention
-				belieftree[0][10][0] = 1		# DC1 - PC1§
+				belieftree[0][10][0] = 1		# DC1 - PC1
 				belieftree[0][11][0] = 1		# DC1 - PC2
 				belieftree[0][12][0] = 1		# DC1 - PC3
 				belieftree[0][13][0] = 1		# DC2 - PC1
